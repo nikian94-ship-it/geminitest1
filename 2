@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL iBT Mastery: 3-Passage Reading Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden { display: none; }
+        .correct { background-color: #d1fae5; border: 2px solid #10b981; }
+        .incorrect { background-color: #fee2e2; border: 2px solid #ef4444; }
+        .selected { border: 2px solid #3b82f6; background-color: #eff6ff; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+<div id="app" class="max-w-6xl mx-auto p-4 md:p-6 lg:p-10">
+    <!-- Header -->
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b pb-6 border-slate-200">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-800">TOEFL iBT Reading Simulator</h1>
+            <p class="text-slate-500 font-medium">Academic Level 12-14 | High-Density Text Analysis</p>
+        </div>
+        <div id="timer-display" class="mt-4 md:mt-0 px-4 py-2 bg-slate-800 text-white rounded-lg font-mono text-xl">
+            00:00:00
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-250px)]">
+        <!-- Left Column: Reading Passage -->
+        <div id="passage-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 overflow-y-auto scrollbar-hide">
+            <div id="passage-content" class="prose prose-slate max-w-none">
+                <!-- Content dynamically injected here -->
+            </div>
+        </div>
+
+        <!-- Right Column: Question Interface -->
+        <div id="quiz-container" class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col overflow-hidden">
+            <!-- Progress Tracker -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    <span id="progress-text">Question 1 of 30</span>
+                    <span id="topic-badge" class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">LIFE SCIENCE</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-500" style="width: 3.33%"></div>
+                </div>
+            </div>
+
+            <!-- Question Content -->
+            <div id="question-area" class="p-6 flex-grow overflow-y-auto">
+                <div id="hint-box" class="mb-4 p-3 bg-amber-50 border-l-4 border-amber-400 text-sm text-amber-800 hidden">
+                    <!-- Hint text -->
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-bold text-slate-800 mb-6 leading-snug"></h2>
+
+                <div id="options-list" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Area (Only in Review Mode) -->
+                <div id="feedback-area" class="mt-8 p-4 rounded-lg bg-slate-100 hidden">
+                    <h3 class="font-bold text-sm mb-2 uppercase text-slate-500">Explanation</h3>
+                    <p id="explanation-text" class="text-sm leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="p-4 border-t border-slate-100 bg-white flex justify-between items-center">
+                <button id="prev-btn" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition">
+                    Back
+                </button>
+                <button id="hint-btn" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition">
+                    Show Paragraph Reference
+                </button>
+                <button id="next-btn" class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm shadow-blue-200 transition">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 text-center">
+            <div class="mb-6 inline-flex p-4 bg-blue-50 text-blue-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-black text-slate-800 mb-2">Practice Complete</h2>
+            <p class="text-slate-500 mb-8">You have successfully navigated through 3 academic passages.</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-4 bg-slate-50 rounded-xl">
+                    <span class="block text-4xl font-black text-blue-600" id="final-score">0</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase">Total Score / 30</span>
+                </div>
+                <div id="section-breakdown" class="text-left space-y-2 py-2 px-4 border-l border-slate-200">
+                    <!-- Section scores -->
+                </div>
+            </div>
+
+            <button id="review-btn" class="w-full py-4 bg-slate-800 text-white rounded-xl font-bold text-lg hover:bg-slate-900 transition">
+                Review Mistakes & Explanations
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- PASSAGE DATA ---
+    const passages = {
+        "Life Science": `
+            <h2 class="text-2xl font-bold mb-4">Passage 1: The Cambrian Explosion</h2>
+            <p class="mb-4"><strong>[Paragraph 1]</strong> The Cambrian period, beginning approximately 541 million years ago, represents a pivotal juncture in evolutionary biology characterized by the rapid diversification of multicellular organisms. This epochal transition, commonly termed the "Cambrian Explosion," saw the emergence of virtually every major animal phylum recognized today. Prior to this, the Ediacaran biota—soft-bodied organisms with simple architectures—dominated the marine landscape. In stark contrast, Cambrian life introduced complex body plans, specialized tissues, and bilateral symmetry. This shift wasn't merely a numerical increase in species but a fundamental leap in biological complexity that challenged Darwin's gradualist perspective of evolution.</p>
+            <p class="mb-4"><strong>[Paragraph 2]</strong> Central to this rapid diversification was the development of the "genetic toolkit," specifically the Hox gene clusters. These master regulatory genes govern the longitudinal patterning of an embryo, determining where limbs, antennae, or segments appear. The genetic plasticity inherent in these early lineages allowed for significant morphological experimentation without compromising the fundamental viability of the organism. By modulating the expression of these genes, evolution could produce disparate body plans—from the calcified shells of brachiopods to the segmented bodies of trilobites—within a relatively brief geological window.</p>
+            <p class="mb-4"><strong>[Paragraph 3]</strong> Ecological interactions also accelerated this evolutionary pace. The rise of active predation fundamentally altered selection pressures, initiating a biological "arms race." Organisms developed defensive adaptations such as exoskeletons and sensory organs, while predators like <em>Anomalocaris</em> evolved sophisticated locomotion and appendages for capture. This heightened competition forced lineages into specialized niches, moving away from the generalized scavenger strategies of the preceding era. The ocean floor became a complex theater of behavioral interactions, from burrowing into sediment to complex swimming behaviors.</p>
+            <p class="mb-4"><strong>[Paragraph 4]</strong> Environmental factors provided the necessary substrate for these biological advancements. A significant rise in atmospheric oxygen, potentially linked to tectonic activity and the flooding of continental shelves, facilitated the synthesis of collagen—a structural protein requiring high oxygen levels for production. Collagen served as the essential scaffolding for complex tissues and larger body sizes. Furthermore, the expansion of shallow marine environments created diverse habitats, providing the "real estate" necessary for disparate lineages to colonize and diverge. While no single factor fully explains the Cambrian Explosion, it is increasingly viewed as a synergistic event where genetic readiness met favorable environmental conditions and intense ecological competition.</p>
+        `,
+        "Social Science": `
+            <h2 class="text-2xl font-bold mb-4">Passage 2: The Advent of Sedentism</h2>
+            <p class="mb-4"><strong>[Paragraph 1]</strong> The transition from a mobile hunter-gatherer existence to a sedentary lifestyle represents one of the most profound shifts in human social organization. Traditionally, archaeologists posited that agriculture was the catalyst for permanent settlement. However, the Natufian culture of the Levant (c. 12,500–9,500 BCE) presents a compelling counter-narrative. The Natufians lived in stable, year-round villages well before the full domestication of plants and animals. Their ability to remain stationary was predicated on the "Broad Spectrum Revolution," a shift toward intensive exploitation of varied local resources like wild cereals and nuts that became abundant as the climate warmed after the last glacial maximum.</p>
+            <p class="mb-4"><strong>[Paragraph 2]</strong> Sedentism was not merely a matter of choice but an investment in physical capital. The Natufians developed heavy, stationary technology, most notably stone mortars and pestles used for processing wild grains. Once a group invested significant labor into constructing stone houses and heavy grinding equipment, the "cost" of mobility—the energy required to transport or rebuild such assets—increased exponentially. This investment effectively anchored the population to specific locales, fostering a sense of territoriality and communal identity that had been absent in previous nomadic bands.</p>
+            <p class="mb-4"><strong>[Paragraph 3]</strong> The demographic repercussions of permanent settlement were immediate and transformative. Permanent residency typically leads to a decrease in birth spacing, as mothers no longer need to carry toddlers over long distances, and soft weaning foods (such as cereal porridges) become more accessible. This population surge necessitated new social structures to manage conflict and resource allocation. Unlike nomadic groups that rely on simple kinship ties, sedentary villages required formal mechanisms for decision-making. The appearance of elaborate burial sites and differentiated grave goods suggests the emergence of social hierarchies and ritualized leadership roles during this period.</p>
+            <p class="mb-4"><strong>[Paragraph 4]</strong> However, this transition was not without its perils. The "Younger Dryas," a sudden cold and dry period around 10,800 BCE, drastically reduced the availability of the wild resources the Natufians relied upon. This environmental crisis forced some groups to return to a more mobile lifestyle, while others doubled down on sedentism by actively managing and tending to specific plant species—a precursor to true agriculture. Thus, sedentism acted as both a luxury of abundance and a trap of necessity, eventually propelling humanity toward the Neolithic Revolution and the subsequent rise of urban civilizations.</p>
+        `,
+        "Physical Science": `
+            <h2 class="text-2xl font-bold mb-4">Passage 3: Stellar Nucleosynthesis</h2>
+            <p class="mb-4"><strong>[Paragraph 1]</strong> The chemical composition of the modern universe is a testament to the life and death cycles of stars. In the immediate aftermath of the Big Bang, the universe was elemental in the simplest sense, consisting almost entirely of hydrogen and helium, with only trace amounts of lithium. All heavier elements—from the carbon in our DNA to the gold in our jewelry—were forged through the process of stellar nucleosynthesis. This process begins within the scorching cores of stars, where gravity exerts enough pressure to overcome the electrostatic repulsion between atomic nuclei.</p>
+            <p class="mb-4"><strong>[Paragraph 2]</strong> For the majority of a star's life, it exists in a state of hydrostatic equilibrium, where outward radiation pressure from hydrogen fusion balances the inward pull of gravity. However, as massive stars age and exhaust their core hydrogen, they begin fusing heavier elements like helium, carbon, and oxygen. This progression continues until the star develops an iron core. Iron represents a critical thermodynamic threshold; fusing nuclei heavier than iron is endothermic, meaning it consumes more energy than it releases. Without the outward pressure from fusion, the star's core collapses in milliseconds, triggering a catastrophic Type II supernova.</p>
+            <p class="mb-4"><strong>[Paragraph 3]</strong> It is during these violent terminal events that the universe's heaviest elements are created via the "r-process" (rapid neutron capture). In a supernova's extreme environment, atoms are bombarded with neutrons so quickly that they don't have time to undergo radioactive decay before capturing additional neutrons. This allows for the creation of unstable, heavy isotopes that eventually decay into stable elements like uranium and platinum. This contrasts with the "s-process" (slow neutron capture) occurring in aging red giants, which produces lighter "heavy" elements like strontium over thousands of years.</p>
+            <p class="mb-4"><strong>[Paragraph 4]</strong> Recent astrophysical observations have identified an even more prolific environment for the r-process: the merger of two neutron stars, known as a kilonova. These events release colossal amounts of neutron-rich matter, accounting for a significant portion of the universe's heavy metals. The dispersal of these elements into the interstellar medium provides the raw materials for future generations of stars and planets. As astronomer Carl Sagan famously remarked, "we are made of starstuff," a poetic acknowledgment that the very atoms in the human body are the literal remnants of stellar death and cosmic collisions.</p>
+        `
+    };
+
+    // --- QUESTIONS DATA ---
+    const questions = [
+        // Passage 1: 1-10
+        { topic: "Life Science", text: "What distinguishes Cambrian organisms from the earlier Ediacaran biota?", options: ["The presence of simple multicellular structures.", "The absence of specialized tissues.", "The development of complex body plans and bilateral symmetry.", "A sedentary lifestyle on the ocean floor."], answer: 2, hint: "Check Paragraph 1: Mention of 'complex body plans, specialized tissues, and bilateral symmetry'.", explanation: "Paragraph 1 contrasts the 'simple architectures' of the Ediacaran biota with the 'complex body plans' and 'bilateral symmetry' of the Cambrian organisms." },
+        { topic: "Life Science", text: "The word 'modulating' in paragraph 2 is closest in meaning to:", options: ["Accelerating", "Adjusting", "Discovering", "Maintaining"], answer: 1, hint: "Context: 'By modulating the expression of these genes...'", explanation: "In this context, modulating refers to adjusting or regulating the degree or manner of gene expression." },
+        { topic: "Life Science", text: "According to paragraph 2, what was the primary role of Hox genes?", options: ["Determining the sequence of DNA replication.", "Directing the spatial arrangement of body segments during development.", "Producing the oxygen necessary for large-scale growth.", "Encoding the proteins used for calcified shells."], answer: 1, hint: "Look at Paragraph 2: 'govern the longitudinal patterning of an embryo'.", explanation: "The text states Hox genes determine where limbs, antennae, or segments appear." },
+        { topic: "Life Science", text: "Which of the following is NOT mentioned in paragraph 3 as a result of the 'arms race'?", options: ["The development of exoskeletons.", "The evolution of sophisticated sensory organs.", "The decrease in competitive pressure among species.", "Specialization into unique ecological niches."], answer: 2, hint: "Paragraph 3 discusses the 'heightened competition'.", explanation: "The text says competition was 'heightened' and forced lineages into specialized niches, making a 'decrease in pressure' incorrect." },
+        { topic: "Life Science", text: "Why does the author mention 'Anomalocaris' in paragraph 3?", options: ["To illustrate a passive scavenger strategy.", "To show that some Cambrian animals lacked appendages.", "To provide an example of a predator that drove evolutionary change.", "To argue that predation was less important than climate."], answer: 2, hint: "Paragraph 3: '...predators like Anomalocaris evolved sophisticated locomotion...'", explanation: "Anomalocaris is cited as a 'formidable predator' in the context of the ecological arms race." },
+        { topic: "Life Science", text: "The word 'facilitated' in paragraph 4 is closest in meaning to:", options: ["Complicated", "Eased", "Restricted", "Identified"], answer: 1, hint: "Context: '...facilitated the synthesis of collagen'.", explanation: "Facilitate means to make a process easier or possible." },
+        { topic: "Life Science", text: "It can be inferred from paragraph 4 that collagen was essential because:", options: ["It served as the primary source of nutrition.", "It provided the physical structure required for larger, complex organisms.", "It allowed animals to survive in low-oxygen environments.", "It was the only protein produced by Ediacaran biota."], answer: 1, hint: "Paragraph 4: 'essential scaffolding for complex tissues and larger body sizes'.", explanation: "The passage links collagen to 'complex tissues' and 'larger body sizes'." },
+        { topic: "Life Science", text: "In paragraph 4, what does the author imply about the cause of the Cambrian Explosion?", options: ["It was caused by a single geological event.", "It resulted from a combination of genetic and environmental factors.", "It was a purely random event with no specific cause.", "It was a slow process that took billions of years."], answer: 1, hint: "Last sentence of Paragraph 4.", explanation: "The author describes it as a 'synergistic event' involving genetic readiness, environment, and competition." },
+        { topic: "Life Science", text: "Which of the following best describes the rhetorical purpose of paragraph 1?", options: ["To challenge the existence of the Cambrian period.", "To introduce the topic by contrasting it with the preceding era.", "To list all 30 animal phyla found in the Cambrian.", "To provide a biography of Charles Darwin."], answer: 1, hint: "Paragraph 1 contrasts Ediacaran with Cambrian life.", explanation: "Paragraph 1 sets the stage by comparing the simple Ediacaran life with the complex Cambrian explosion." },
+        { topic: "Life Science", text: "Sentence Insertion: 'This developmental flexibility enabled the sudden appearance of diverse morphologies.' Where would it fit best?", options: ["After the first sentence of Para 2.", "After the mention of 'Hox gene clusters' in Para 2.", "At the end of Para 2.", "Before the first sentence of Para 3."], answer: 1, hint: "Keyword: 'developmental flexibility' refers to the Hox genes.", explanation: "It explains the result of the master regulatory genes mentioned earlier in the paragraph." },
+
+        // Passage 2: 11-20
+        { topic: "Social Science", text: "The word 'predicated' in paragraph 1 is closest in meaning to:", options: ["Predicted", "Based", "Simplified", "Interrupted"], answer: 1, hint: "Context: 'Their ability to remain stationary was predicated on...'", explanation: "Predicated on means based on or founded on a certain premise." },
+        { topic: "Social Science", text: "According to paragraph 1, how did the Natufians differ from previous models of settlement?", options: ["They farmed before they settled.", "They settled permanently before they developed agriculture.", "They remained nomadic throughout their history.", "They only lived in villages during the winter."], answer: 1, hint: "Paragraph 1: '...a change that predated the actual domestication...'", explanation: "The text notes they lived in 'stable, year-round villages well before the full domestication'." },
+        { topic: "Social Science", text: "The 'Broad Spectrum Revolution' refers to:", options: ["A change in the wavelength of solar radiation.", "A shift toward using a wider variety of local food resources.", "The invention of the wheel for transport.", "The discovery of bronze for tool making."], answer: 1, hint: "Paragraph 1: '...intensive exploitation of varied local resources'.", explanation: "It is defined in the text as the exploitation of varied resources like wild cereals and nuts." },
+        { topic: "Social Science", text: "Why does the author mention 'stone mortars and pestles' in paragraph 2?", options: ["To show that Natufians had no interest in permanent homes.", "To explain why Natufians had to move frequently.", "To illustrate heavy equipment that discouraged mobility.", "To argue that stone tools were less effective than bone tools."], answer: 2, hint: "Paragraph 2: 'investment in physical capital'.", explanation: "The passage uses heavy tools as an example of physical capital that 'anchored' the population." },
+        { topic: "Social Science", text: "The word 'fostering' in paragraph 2 is closest in meaning to:", options: ["Discouraging", "Encouraging", "Neglecting", "Replacing"], answer: 1, hint: "Context: '...fostering a sense of territoriality'.", explanation: "Fostering means encouraging the development of something." },
+        { topic: "Social Science", text: "According to paragraph 3, sedentism often leads to a population increase because:", options: ["Mothers no longer need to transport toddlers over long distances.", "People in villages were healthier than nomads.", "Food was distributed equally among all social classes.", "Natural predators were completely eliminated from the Levant."], answer: 0, hint: "Paragraph 3: 'mothers no longer need to carry toddlers...'", explanation: "The text explicitly links reduced birth spacing to the lack of need for transport and soft weaning foods." },
+        { topic: "Social Science", text: "In paragraph 3, what evidence is provided for the emergence of social hierarchies?", options: ["Written records from Natufian leaders.", "The size of stone houses in villages.", "Elaborate burial sites and differentiated grave goods.", "The use of irrigation systems for farming."], answer: 2, hint: "Paragraph 3: 'appearance of elaborate burial sites...'", explanation: "The text cites burials as the indicator of emerging hierarchies and leadership." },
+        { topic: "Social Science", text: "The word 'perils' in paragraph 4 is closest in meaning to:", options: ["Advantages", "Changes", "Dangers", "Traditions"], answer: 2, hint: "Context: '...was not without its perils'.", explanation: "Perils refers to serious and immediate dangers." },
+        { topic: "Social Science", text: "According to paragraph 4, what was the Natufian response to the Younger Dryas?", options: ["They all died out immediately.", "They all moved to Egypt.", "Some became nomadic again while others began plant management.", "They ignored the climate change and continued as before."], answer: 2, hint: "Paragraph 4: 'Some... return to a more mobile lifestyle, while others doubled down...'", explanation: "The passage notes two distinct adaptive responses to the climate crisis." },
+        { topic: "Social Science", text: "Which sentence best expresses the essential information in the highlighted sentence in paragraph 4? (Sentence: 'Thus, sedentism acted as both a luxury of abundance and a trap of necessity...')", options: ["Sedentism was a temporary phase that people eventually rejected.", "Permanent settlement was caused by wealth but became hard to leave during crises.", "People only lived in one place when they were forced to by nature.", "Sedentism was necessary for agriculture but luxury for hunting."], answer: 1, hint: "Focus on 'luxury' vs 'trap'.", explanation: "The sentence suggests that while abundance allowed sedentism, the investment made it a 'trap' people couldn't easily leave when resources dwindled." },
+
+        // Passage 3: 21-30
+        { topic: "Physical Science", text: "According to paragraph 1, what elements were present immediately after the Big Bang?", options: ["All 118 elements of the periodic table.", "Primarily hydrogen and helium.", "Carbon, oxygen, and iron.", "Gold and platinum exclusively."], answer: 1, hint: "Paragraph 1: 'consisting almost entirely of hydrogen and helium'.", explanation: "The text states the early universe was simple, with trace amounts of lithium." },
+        { topic: "Physical Science", text: "The word 'forged' in paragraph 1 is closest in meaning to:", options: ["Discovered", "Created", "Fake", "Hidden"], answer: 1, hint: "Context: '...were forged through the process of stellar nucleosynthesis'.", explanation: "Forged in this scientific context means created or formed through intense processes." },
+        { topic: "Physical Science", text: "Why is 'hydrostatic equilibrium' important for a star's stability?", options: ["It ensures the star rotates at a constant speed.", "It balances the inward pull of gravity with outward radiation pressure.", "It allows the star to create iron immediately.", "It prevents the star from becoming too hot."], answer: 1, hint: "Paragraph 2: 'where outward radiation pressure... balances the inward pull of gravity'.", explanation: "Equilibrium is defined by the balance of these two opposing forces." },
+        { topic: "Physical Science", text: "According to paragraph 2, why does iron fusion lead to a core collapse?", options: ["Iron is too heavy for gravity to pull.", "Fusing iron consumes energy instead of releasing it.", "Iron causes the star to spin too fast.", "Iron acts as a lubricant that makes the core slippery."], answer: 1, hint: "Paragraph 2: 'fusing nuclei heavier than iron is endothermic... consumes more energy'.", explanation: "Because iron fusion is endothermic, it stops the outward pressure that keeps the star from collapsing." },
+        { topic: "Physical Science", text: "The word 'catastrophic' in paragraph 2 is closest in meaning to:", options: ["Unexpected", "Disastrous", "Colorful", "Scientific"], answer: 1, hint: "Context: 'triggering a catastrophic Type II supernova'.", explanation: "Catastrophic means involving or causing sudden great damage or suffering." },
+        { topic: "Physical Science", text: "What is the primary characteristic of the 'r-process' mentioned in paragraph 3?", options: ["It happens very slowly over billions of years.", "It involves capturing neutrons more quickly than the atom can decay.", "It only creates hydrogen atoms.", "It occurs only in the Sun."], answer: 1, hint: "Paragraph 3: 'bombarded with neutrons so quickly...'", explanation: "The 'r' stands for rapid, where neutron capture happens faster than radioactive decay." },
+        { topic: "Physical Science", text: "How does the 's-process' differ from the 'r-process'?", options: ["The s-process creates iron, while the r-process creates hydrogen.", "The s-process is faster than the r-process.", "The s-process occurs in aging red giants and is much slower.", "There is no difference between them."], answer: 2, hint: "Paragraph 3: 'contrasts with the s-process... occurring in aging red giants'.", explanation: "The s-process is 'slow neutron capture' and occurs over thousands of years in red giants." },
+        { topic: "Physical Science", text: "What is a 'kilonova'?", options: ["A type of small planet.", "The merger of two neutron stars.", "The first stage of the Big Bang.", "A star that never fuses helium."], answer: 1, hint: "Paragraph 4: 'the merger of two neutron stars, known as a kilonova'.", explanation: "The text explicitly defines a kilonova as a neutron star merger." },
+        { topic: "Physical Science", text: "What is the author's purpose in mentioning Carl Sagan's quote?", options: ["To argue that astronomers are better than biologists.", "To emphasize the cosmic origin of the elements in the human body.", "To show that humans will eventually live on stars.", "To promote a book written by Sagan."], answer: 1, hint: "Last sentence of the passage.", explanation: "The quote serves to summarize the fact that heavy elements in our bodies originated in stars." },
+        { topic: "Physical Science", text: "Sentence Insertion: 'This rapid bombardment is only possible in environments with extremely high neutron density.' Where would this fit best?", options: ["After the mention of 'r-process' in Para 3.", "Before the mention of 's-process' in Para 3.", "After the definition of 'hydrostatic equilibrium' in Para 2.", "At the start of Para 1."], answer: 0, hint: "Focus on 'rapid bombardment'.", explanation: "It explains the conditions required for the r-process just described in the previous sentence." }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let isReviewMode = false;
+    let timerInterval;
+    let secondsElapsed = 0;
+
+    // DOM Elements
+    const passageContent = document.getElementById('passage-content');
+    const questionText = document.getElementById('question-text');
+    const optionsList = document.getElementById('options-list');
+    const feedbackArea = document.getElementById('feedback-area');
+    const explanationText = document.getElementById('explanation-text');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const hintBtn = document.getElementById('hint-btn');
+    const hintBox = document.getElementById('hint-box');
+    const progressText = document.getElementById('progress-text');
+    const progressBar = document.getElementById('progress-bar');
+    const topicBadge = document.getElementById('topic-badge');
+    const resultsScreen = document.getElementById('results-screen');
+    const timerDisplay = document.getElementById('timer-display');
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            const hrs = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            timerDisplay.innerText = `${hrs}:${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function initQuiz() {
+        startTimer();
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        
+        // Update Metadata
+        progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        topicBadge.innerText = q.topic;
+        
+        // Update Passage Side
+        passageContent.innerHTML = passages[q.topic];
+        
+        // Scroll to top of passage when topic changes
+        if (currentQuestionIndex === 0 || questions[currentQuestionIndex].topic !== questions[currentQuestionIndex-1]?.topic) {
+            document.getElementById('passage-container').scrollTop = 0;
+        }
+
+        // Reset Hint
+        hintBox.classList.add('hidden');
+        
+        // Update Question
+        questionText.innerText = q.text;
+        optionsList.innerHTML = '';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 transition-all flex items-start group`;
+            
+            const label = String.fromCharCode(65 + index); // A, B, C, D
+            btn.innerHTML = `
+                <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 mr-4 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">${label}</span> 
+                <span class="flex-grow pt-1">${opt}</span>
+            `;
+            
+            // Handle Selection
+            if (userAnswers[currentQuestionIndex] === index) {
+                btn.classList.add('selected');
+                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-blue-600');
+                btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+            }
+
+            if (isReviewMode) {
+                if (index === q.answer) {
+                    btn.classList.add('correct');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-emerald-600');
+                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                } else if (userAnswers[currentQuestionIndex] === index) {
+                    btn.classList.add('incorrect');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-rose-600');
+                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                }
+                btn.disabled = true;
+            } else {
+                btn.onclick = () => selectOption(index);
+            }
+            
+            optionsList.appendChild(btn);
+        });
+
+        // Show Feedback in Review Mode
+        if (isReviewMode) {
+            feedbackArea.classList.remove('hidden');
+            explanationText.innerHTML = q.explanation;
+            explanationText.className = "text-sm leading-relaxed " + (userAnswers[currentQuestionIndex] === q.answer ? "text-emerald-800" : "text-slate-700");
+        } else {
+            feedbackArea.classList.add('hidden');
+        }
+
+        // Nav Buttons
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "Finish Review" : "Finish Test") : "Next";
+    }
+
+    function selectOption(index) {
+        userAnswers[currentQuestionIndex] = index;
+        renderQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            renderQuestion();
+            document.getElementById('question-area').scrollTop = 0;
+        } else {
+            if (isReviewMode) {
+                location.reload();
+            } else {
+                clearInterval(timerInterval);
+                showResults();
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+            document.getElementById('question-area').scrollTop = 0;
+        }
+    }
+
+    function showHint() {
+        hintBox.innerText = questions[currentQuestionIndex].hint;
+        hintBox.classList.remove('hidden');
+    }
+
+    function showResults() {
+        resultsScreen.classList.remove('hidden');
+        
+        let score = 0;
+        userAnswers.forEach((ans, i) => {
+            if (ans === questions[i].answer) score++;
+        });
+        
+        document.getElementById('final-score').innerText = score;
+        
+        // Breakdown
+        const breakdown = document.getElementById('section-breakdown');
+        breakdown.innerHTML = `
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Breakdown by Topic</p>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600">Life Science</span>
+                    <span class="font-bold">${calculateSection(0, 9)}/10</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600">Social Science</span>
+                    <span class="font-bold">${calculateSection(10, 19)}/10</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600">Physical Science</span>
+                    <span class="font-bold">${calculateSection(20, 29)}/10</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function calculateSection(start, end) {
+        let s = 0;
+        for(let i=start; i<=end; i++) {
+            if(userAnswers[i] === questions[i].answer) s++;
+        }
+        return s;
+    }
+
+    function reviewMistakes() {
+        isReviewMode = true;
+        currentQuestionIndex = 0;
+        resultsScreen.classList.add('hidden');
+        renderQuestion();
+    }
+
+    // Event Listeners
+    nextBtn.onclick = nextQuestion;
+    prevBtn.onclick = prevQuestion;
+    hintBtn.onclick = showHint;
+    document.getElementById('review-btn').onclick = reviewMistakes;
+
+    initQuiz();
+</script>
+</body>
+</html>
