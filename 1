@@ -1,0 +1,659 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, CheckCircle, XCircle, Lightbulb, RefreshCw } from 'lucide-react';
+
+const questions = [
+  // --- Passage 1: Life Science (Q1-10) ---
+  {
+    id: 1,
+    type: "Factual",
+    passage: "Life Science",
+    question: "According to Paragraph 1, what distinguishes the P-Tr extinction from the Cretaceous-Paleogene extinction?",
+    options: [
+      "The P-Tr extinction was caused by a bolide impact, whereas the other was volcanic.",
+      "The P-Tr extinction resulted in a significantly higher percentage of species loss.",
+      "The Cretaceous-Paleogene extinction primarily affected marine life.",
+      "The P-Tr extinction occurred much more recently in Earth's history."
+    ],
+    answer: 1,
+    hint: "Refer to the middle of Paragraph 1 for percentage comparisons.",
+    explanation: "Correct. The text states the P-Tr event decimated 96% of marine and 70% of terrestrial species, calling it 'more profound' than the dinosaur-ending event."
+  },
+  {
+    id: 2,
+    type: "Negative Factual",
+    passage: "Life Science",
+    question: "Paragraph 1 mentions all of the following as consequences of Siberian Traps volcanism EXCEPT:",
+    options: [
+      "The release of methane and carbon dioxide.",
+      "A significant drop in global temperatures.",
+      "The acidification of the oceans.",
+      "A depletion of oxygen in marine environments."
+    ],
+    answer: 1,
+    hint: "Look at the 'greenhouse effect' mentioned in Paragraph 1.",
+    explanation: "Correct. The text says it triggered a 'runway greenhouse effect' and 'lethally hot environment,' which means temperatures rose, not dropped."
+  },
+  {
+    id: 3,
+    type: "Vocabulary",
+    passage: "Life Science",
+    question: "The word 'decimated' in Paragraph 1 is closest in meaning to:",
+    options: [
+      "Categorized",
+      "Diversified",
+      "Destroyed",
+      "Relocated"
+    ],
+    answer: 2,
+    hint: "Consider the context of an extinction event.",
+    explanation: "Correct. In biological contexts, decimation refers to the drastic reduction or destruction of a population."
+  },
+  {
+    id: 4,
+    type: "Rhetorical Purpose",
+    passage: "Life Science",
+    question: "Why does the author mention 'calcifying organisms' in Paragraph 1?",
+    options: [
+      "To provide an example of species that thrived during the extinction.",
+      "To explain how volcanic ash directly poisoned the water.",
+      "To illustrate the specific impact of ocean acidification on the food web.",
+      "To suggest that these organisms caused the oxygen depletion."
+    ],
+    answer: 2,
+    hint: "Check the sentence starting with 'Furthermore...' in Paragraph 1.",
+    explanation: "Correct. The author links the disruption of calcium carbonate synthesis in these organisms to the collapse of the food web."
+  },
+  {
+    id: 5,
+    type: "Factual",
+    passage: "Life Science",
+    question: "According to Paragraph 2, what is the 'smoking gun' that is missing for the bolide impact hypothesis?",
+    options: [
+      "Evidence of sudden volcanic eruptions.",
+      "A large, identifiable impact crater.",
+      "Fossilized remains of disaster taxa.",
+      "Strategic layers of methane clathrates."
+    ],
+    answer: 1,
+    hint: "Look for the phrase 'smoking gun' in Paragraph 2.",
+    explanation: "Correct. The text explicitly mentions the lack of a definitive crater similar to Chicxulub."
+  },
+  {
+    id: 6,
+    type: "Vocabulary",
+    passage: "Life Science",
+    question: "The word 'protracted' in Paragraph 2 is closest in meaning to:",
+    options: [
+      "Violent",
+      "Extended",
+      "Predictable",
+      "Localized"
+    ],
+    answer: 1,
+    hint: "The text discusses an interval of stress.",
+    explanation: "Correct. 'Protracted' means lasting for a long time or longer than expected."
+  },
+  {
+    id: 7,
+    type: "Factual",
+    passage: "Life Science",
+    question: "According to Paragraph 2, how did the Siberian Traps contribute to the temperature rise beyond direct CO2 release?",
+    options: [
+      "By blocking sunlight with volcanic ash for centuries.",
+      "By causing the moon to drift further from Earth.",
+      "By destabilizing methane clathrates on the seafloor.",
+      "By causing the earth's crust to thin significantly."
+    ],
+    answer: 2,
+    hint: "Look for the mention of a 'feedback loop' in Paragraph 2.",
+    explanation: "Correct. The thermal stress destabilized seafloor methane, which is a potent greenhouse gas, creating a feedback loop."
+  },
+  {
+    id: 8,
+    type: "Negative Factual",
+    passage: "Life Science",
+    question: "Which of the following is NOT true about the recovery period following the P-Tr extinction?",
+    options: [
+      "It was relatively fast, taking only 1 million years.",
+      "It featured opportunistic species like Lystrosaurus.",
+      "Ecosystem complexity was slow to return.",
+      "It lasted approximately 10 million years."
+    ],
+    answer: 0,
+    hint: "Check the final sentences of Paragraph 2.",
+    explanation: "Correct. The text states recovery was 'notably sluggish' and took 'nearly 10 million years,' making 1 million years incorrect."
+  },
+  {
+    id: 9,
+    type: "Inference",
+    passage: "Life Science",
+    question: "What can be inferred from Paragraph 2 about 'disaster taxa'?",
+    options: [
+      "They were the primary cause of the extinction of other species.",
+      "They are highly specialized and require very specific conditions.",
+      "They are able to survive in environments that more complex species cannot.",
+      "They eventually evolved into the Siberian Traps."
+    ],
+    answer: 2,
+    hint: "Consider the definition of 'opportunistic' in the final sentence.",
+    explanation: "Correct. Since they 'thrived in the absence of competition' and are called 'disaster taxa,' it implies they persist when ecosystems collapse."
+  },
+  {
+    id: 10,
+    type: "Sentence Insertion",
+    passage: "Life Science",
+    question: "Where would the following sentence best fit in Paragraph 1?\n'These gases acted as a blanket, trapping heat within the atmosphere.'",
+    options: [
+      "After '...Siberian Traps.'",
+      "After '...greenhouse effect.'",
+      "After '...marine environment uninhabitable.'",
+      "Before 'The causal mechanisms...'"
+    ],
+    answer: 1,
+    hint: "The sentence explains the mechanism of the greenhouse effect mentioned.",
+    explanation: "Correct. Inserting it after 'greenhouse effect' provides the immediate explanation of how the gases triggered that effect."
+  },
+
+  // --- Passage 2: Social Science (Q11-20) ---
+  {
+    id: 11,
+    type: "Factual",
+    passage: "Social Science",
+    question: "According to Paragraph 1, what is the 'Rent Gap'?",
+    options: [
+      "The difference between what tenants pay and what landlords want.",
+      "The distance between low-income and high-income housing.",
+      "The disparity between current rent and potential value under different use.",
+      "A tax break given to developers for urban renewal."
+    ],
+    answer: 2,
+    hint: "Look for the definition of 'Rent Gap' in Paragraph 1.",
+    explanation: "Correct. The text defines it as the disparity between current ground rent and potential value under 'highest and best use'."
+  },
+  {
+    id: 12,
+    type: "Vocabulary",
+    passage: "Social Science",
+    question: "The word 'disinvested' in Paragraph 1 is closest in meaning to:",
+    options: [
+      "Neglected",
+      "Wealthy",
+      "Populated",
+      "Regulated"
+    ],
+    answer: 0,
+    hint: "Consider the context of neighborhoods before gentrification.",
+    explanation: "Correct. Disinvested refers to areas where money and resources have been withdrawn or withheld, making them neglected."
+  },
+  {
+    id: 13,
+    type: "Rhetorical Purpose",
+    passage: "Social Science",
+    question: "Why does the author mention 'artists or young professionals' in Paragraph 1?",
+    options: [
+      "To argue that they are the primary victims of displacement.",
+      "To identify the groups that often initiate the gentrification process.",
+      "To explain why crime rates drop in urban areas.",
+      "To show who benefits most from zoning laws."
+    ],
+    answer: 1,
+    hint: "Look for the word 'pioneer' in Paragraph 1.",
+    explanation: "Correct. The text refers to them as 'pioneer' residents whose presence increases the neighborhood's perceived 'coolness'."
+  },
+  {
+    id: 14,
+    type: "Factual",
+    passage: "Social Science",
+    question: "According to Paragraph 2, what is a 'pro-gentrification' argument?",
+    options: [
+      "It preserves the symbolic landmarks of a neighborhood.",
+      "It provides affordable housing through zoning laws.",
+      "It increases tax revenue and improves public services.",
+      "It encourages the growth of local bodegas."
+    ],
+    answer: 2,
+    hint: "Check the beginning of Paragraph 2 for arguments from 'proponents'.",
+    explanation: "Correct. Proponents argue it brings tax revenue, reduced crime, and improved services."
+  },
+  {
+    id: 15,
+    type: "Negative Factual",
+    passage: "Social Science",
+    question: "Paragraph 2 mentions all of the following as negative effects of gentrification EXCEPT:",
+    options: [
+      "Physical displacement of low-income residents.",
+      "Increased accessibility to the city for all social classes.",
+      "Symbolic erasure of local landmarks.",
+      "Alienation of the original population."
+    ],
+    answer: 1,
+    hint: "Check the discussion about the 'right to the city'.",
+    explanation: "Correct. The text says the 'right to the city' becomes a commodity for those with *social capital*, implying it is LESS accessible to all."
+  },
+  {
+    id: 16,
+    type: "Vocabulary",
+    passage: "Social Science",
+    question: "The word 'exacerbate' in Paragraph 2 is closest in meaning to:",
+    options: [
+      "Worsen",
+      "Simplify",
+      "Justify",
+      "Ignore"
+    ],
+    answer: 0,
+    hint: "The text discusses how policies affect existing trends.",
+    explanation: "Correct. To exacerbate a problem means to make it worse or more intense."
+  },
+  {
+    id: 17,
+    type: "Inference",
+    passage: "Social Science",
+    question: "What can be inferred about 'urban renewal' policies mentioned in Paragraph 2?",
+    options: [
+      "They are always successful in helping low-income families.",
+      "They may actually be used to benefit wealthy newcomers over locals.",
+      "They are strictly regulated by the federal government.",
+      "They primary focus on environmental sustainability."
+    ],
+    answer: 1,
+    hint: "Look at the final sentence of the passage.",
+    explanation: "Correct. The text suggests these policies 'subsidize the influx of the wealthy under the guise of urban renewal'."
+  },
+  {
+    id: 18,
+    type: "Rhetorical Purpose",
+    passage: "Social Science",
+    question: "What is the author's purpose in discussing 'symbolic displacement'?",
+    options: [
+      "To show that physical moving is the only harm of gentrification.",
+      "To explain how changes in retail and landmarks affect residents' sense of belonging.",
+      "To provide a solution to the Rent Gap problem.",
+      "To compare urban neighborhoods to art galleries."
+    ],
+    answer: 1,
+    hint: "Look for the mention of 'bodegas' and 'landmarks' in Paragraph 2.",
+    explanation: "Correct. The text explains that the erasure of landmarks and shops 'alienates' the original populace emotionally and culturally."
+  },
+  {
+    id: 19,
+    type: "Vocabulary",
+    passage: "Social Science",
+    question: "The word 'fraught' in Paragraph 2 is closest in meaning to:",
+    options: [
+      "Identical",
+      "Filled",
+      "Separated",
+      "Resolved"
+    ],
+    answer: 1,
+    hint: "The sentence describes sociological implications and contention.",
+    explanation: "Correct. 'Fraught with' means filled with something (usually something undesirable like tension or contention)."
+  },
+  {
+    id: 20,
+    type: "Sentence Insertion",
+    passage: "Social Science",
+    question: "Where would the following sentence best fit in Paragraph 1?\n'This cultural cachet then serves as a signal for larger developers to enter the market.'",
+    options: [
+      "After '...Ruth Glass in 1964.'",
+      "After '...young professionals—move in.'",
+      "After '...perceived coolness of the neighborhood increases.'",
+      "Before 'Economists often cite...'"
+    ],
+    answer: 2,
+    hint: "Connect 'cultural cachet' to the 'coolness' described in the text.",
+    explanation: "Correct. The sentence follows the idea of pioneers making a place 'cool' (cultural cachet), which then triggers corporate investment."
+  },
+
+  // --- Passage 3: Physical Science (Q21-30) ---
+  {
+    id: 21,
+    type: "Factual",
+    passage: "Physical Science",
+    question: "According to Paragraph 1, why is dark matter called 'dark'?",
+    options: [
+      "It is located in the darkest parts of the universe.",
+      "It does not interact with electromagnetic radiation.",
+      "It absorbs all light that passes through it.",
+      "It was discovered during a solar eclipse."
+    ],
+    answer: 1,
+    hint: "Check the definition in Paragraph 1.",
+    explanation: "Correct. The text defines it as a substance that 'does not interact with electromagnetic radiation', meaning it cannot be seen."
+  },
+  {
+    id: 22,
+    type: "Vocabulary",
+    passage: "Physical Science",
+    question: "The word 'constitutes' in Paragraph 1 is closest in meaning to:",
+    options: [
+      "Opposes",
+      "Makes up",
+      "Predicts",
+      "Analyzes"
+    ],
+    answer: 1,
+    hint: "Think about the composition of the universe.",
+    explanation: "Correct. In this context, constitutes means to form or be the components of a whole."
+  },
+  {
+    id: 23,
+    type: "Factual",
+    passage: "Physical Science",
+    question: "According to Paragraph 1, what evidence suggests the existence of dark matter halos?",
+    options: [
+      "The tendency of galaxies to collide frequently.",
+      "The flat rotation curves of spiral galaxies at large radii.",
+      "The color shift of stars at the center of the Milky Way.",
+      "The absence of black holes in small galaxies."
+    ],
+    answer: 1,
+    hint: "Look for 'rotation curves' in Paragraph 1.",
+    explanation: "Correct. The flat rotation curves suggest mass exists where no light is visible, implying a halo."
+  },
+  {
+    id: 24,
+    type: "Inference",
+    passage: "Physical Science",
+    question: "What would happen to galaxies if dark matter did not exist, according to the passage?",
+    options: [
+      "They would rotate much more slowly at the center.",
+      "They would expand until they filled the entire universe.",
+      "Stars at the edges would likely escape into intergalactic space.",
+      "They would emit much more electromagnetic radiation."
+    ],
+    answer: 2,
+    hint: "Look at the sentence describing dark matter as 'gravitational glue'.",
+    explanation: "Correct. The text states stars would 'fly off into intergalactic space' without the extra gravitational pull of dark matter."
+  },
+  {
+    id: 25,
+    type: "Negative Factual",
+    passage: "Physical Science",
+    question: "Which of the following is NOT a problem associated with the CDM model mentioned in Paragraph 2?",
+    options: [
+      "The Missing Satellites Problem.",
+      "The Cusp-Core Problem.",
+      "The speed of light discrepancy.",
+      "The prediction of too many small sub-halos."
+    ],
+    answer: 2,
+    hint: "Review the 'Small-Scale Crisis' section in Paragraph 2.",
+    explanation: "Correct. The 'Missing Satellites' and 'Cusp-Core' problems are explicitly mentioned; light speed is not."
+  },
+  {
+    id: 26,
+    type: "Vocabulary",
+    passage: "Physical Science",
+    question: "The word 'discrepancies' in Paragraph 2 is closest in meaning to:",
+    options: [
+      "Inconsistencies",
+      "Calculations",
+      "Similarities",
+      "Advancements"
+    ],
+    answer: 0,
+    hint: "The text discusses differences between predictions and observations.",
+    explanation: "Correct. A discrepancy is a lack of compatibility or similarity between two or more facts."
+  },
+  {
+    id: 27,
+    type: "Rhetorical Purpose",
+    passage: "Physical Science",
+    question: "Why does the author mention 'supernova explosions' in Paragraph 2?",
+    options: [
+      "To explain how dark matter is created.",
+      "To provide an example of 'baryonic feedback'.",
+      "To argue that dark matter does not actually exist.",
+      "To describe the end of a galaxy's life cycle."
+    ],
+    answer: 1,
+    hint: "Look for the term 'baryonic feedback' in Paragraph 2.",
+    explanation: "Correct. Supernovas are cited as a form of feedback that might redistribute dark matter."
+  },
+  {
+    id: 28,
+    type: "Factual",
+    passage: "Physical Science",
+    question: "What is a proposed alternative to Cold Dark Matter mentioned in the text?",
+    options: [
+      "Static Dark Matter",
+      "Self-Interacting Dark Matter",
+      "Electromagnetic Dark Matter",
+      "Baryonic-Only Matter"
+    ],
+    answer: 1,
+    hint: "Look for 'Warm' or 'Self-Interacting' in Paragraph 2.",
+    explanation: "Correct. The text mentions 'Warm Dark Matter' and 'Self-Interacting Dark Matter' as potential alternatives."
+  },
+  {
+    id: 29,
+    type: "Inference",
+    passage: "Physical Science",
+    question: "What can be inferred about 'baryonic feedback' processes?",
+    options: [
+      "They are easily predicted by current computer models.",
+      "They only occur in the smallest satellite galaxies.",
+      "They are complex and difficult for scientists to simulate accurately.",
+      "They have been proven to solve the Cusp-Core problem."
+    ],
+    answer: 2,
+    hint: "Check the very last sentence of the passage.",
+    explanation: "Correct. The text says these processes are 'notoriously difficult to model with precision'."
+  },
+  {
+    id: 30,
+    type: "Sentence Insertion",
+    passage: "Physical Science",
+    question: "Where would the following sentence best fit in Paragraph 1?\n'This unseen mass exerts a pull that keeps the galactic structure intact.'",
+    options: [
+      "After '...invisible substance.'",
+      "After '...baryonic matter.'",
+      "After '...constituent stars.'",
+      "Before 'The Lambda Cold Dark Matter...'"
+    ],
+    answer: 2,
+    hint: "The sentence explains the 'gravitational glue' function mentioned at the end of the paragraph.",
+    explanation: "Correct. It fits perfectly near the discussion of 'constituent stars' and how the structure is held together."
+  }
+];
+
+export default function App() {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [userAnswers, setUserAnswers] = useState(new Array(questions.length).fill(null));
+
+  const handleSelect = (idx) => {
+    if (showResult) return;
+    setSelected(idx);
+  };
+
+  const handleNext = () => {
+    const isCorrect = selected === questions[currentIdx].answer;
+    
+    // Save answer
+    const newAnswers = [...userAnswers];
+    newAnswers[currentIdx] = { selected, isCorrect };
+    setUserAnswers(newAnswers);
+
+    if (isCorrect) setScore(score + 1);
+
+    setShowResult(true);
+  };
+
+  const goToNextQuestion = () => {
+    if (currentIdx < questions.length - 1) {
+      setCurrentIdx(currentIdx + 1);
+      setSelected(null);
+      setShowResult(false);
+      setShowHint(false);
+    } else {
+      setQuizFinished(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentIdx(0);
+    setSelected(null);
+    setShowResult(false);
+    setScore(0);
+    setQuizFinished(false);
+    setShowHint(false);
+    setUserAnswers(new Array(questions.length).fill(null));
+  };
+
+  const currentQ = questions[currentIdx];
+
+  if (quizFinished) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full text-center">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Quiz Complete!</h1>
+          <p className="text-xl text-slate-600 mb-6">
+            You scored <span className="font-bold text-indigo-600">{score}</span> out of {questions.length}
+          </p>
+          
+          <div className="grid grid-cols-5 gap-2 mb-8 max-h-64 overflow-y-auto p-2">
+            {userAnswers.map((ans, i) => (
+              <div 
+                key={i} 
+                className={`p-2 rounded border text-xs font-bold ${ans.isCorrect ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700'}`}
+              >
+                Q{i+1}
+              </div>
+            ))}
+          </div>
+
+          <button 
+            onClick={resetQuiz}
+            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold w-full transition-all"
+          >
+            <RefreshCw className="w-5 h-5" /> Retake Practice
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+      <div className="max-w-4xl mx-auto">
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <div className="flex justify-between items-end mb-2">
+            <div>
+              <span className="text-sm font-bold text-indigo-600 uppercase tracking-wider">{currentQ.passage}</span>
+              <h2 className="text-2xl font-bold text-slate-800">Question {currentIdx + 1} of {questions.length}</h2>
+            </div>
+            <span className="text-slate-500 font-medium">{Math.round(((currentIdx) / questions.length) * 100)}% Complete</span>
+          </div>
+          <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+            <div 
+              className="bg-indigo-600 h-full transition-all duration-500 ease-out" 
+              style={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+          {/* Question Header */}
+          <div className="p-6 md:p-8 bg-slate-900 text-white">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="px-2 py-1 bg-indigo-500 rounded text-xs font-bold uppercase">{currentQ.type}</span>
+            </div>
+            <p className="text-lg md:text-xl leading-relaxed font-medium">
+              {currentQ.question}
+            </p>
+          </div>
+
+          {/* Options */}
+          <div className="p-6 md:p-8 space-y-3">
+            {currentQ.options.map((option, i) => {
+              let btnClass = "w-full p-4 text-left border-2 rounded-xl transition-all flex items-start gap-4 ";
+              if (showResult) {
+                if (i === currentQ.answer) btnClass += "border-green-500 bg-green-50 text-green-900";
+                else if (selected === i) btnClass += "border-red-500 bg-red-50 text-red-900";
+                else btnClass += "border-slate-100 opacity-50";
+              } else {
+                if (selected === i) btnClass += "border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200";
+                else btnClass += "border-slate-100 hover:border-slate-300 hover:bg-slate-50";
+              }
+
+              return (
+                <button 
+                  key={i} 
+                  onClick={() => handleSelect(i)}
+                  disabled={showResult}
+                  className={btnClass}
+                >
+                  <span className={`w-6 h-6 shrink-0 rounded-full flex items-center justify-center text-sm font-bold border ${selected === i ? 'bg-indigo-500 text-white border-indigo-500' : 'border-slate-300 text-slate-500'}`}>
+                    {String.fromCharCode(65 + i)}
+                  </span>
+                  <span>{option}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Feedback Area */}
+          {showResult && (
+            <div className={`mx-6 md:mx-8 mb-6 p-4 rounded-xl border ${selected === currentQ.answer ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                {selected === currentQ.answer ? <CheckCircle className="text-green-600 w-5 h-5" /> : <XCircle className="text-red-600 w-5 h-5" />}
+                <span className={`font-bold ${selected === currentQ.answer ? 'text-green-700' : 'text-red-700'}`}>
+                  {selected === currentQ.answer ? 'Correct' : 'Incorrect'}
+                </span>
+              </div>
+              <p className="text-slate-700 text-sm leading-relaxed italic">
+                {currentQ.explanation}
+              </p>
+            </div>
+          )}
+
+          {/* Controls */}
+          <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+            <button 
+              onClick={() => setShowHint(!showHint)}
+              className="flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-800 transition-colors"
+            >
+              <Lightbulb className="w-5 h-5" /> {showHint ? "Hide Hint" : "Show Hint"}
+            </button>
+
+            {showHint && !showResult && (
+              <div className="flex-1 bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-800 text-sm italic">
+                {currentQ.hint}
+              </div>
+            )}
+
+            {!showResult ? (
+              <button 
+                onClick={handleNext}
+                disabled={selected === null}
+                className="w-full md:w-auto bg-slate-800 hover:bg-slate-900 disabled:bg-slate-300 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all"
+              >
+                Submit Answer
+              </button>
+            ) : (
+              <button 
+                onClick={goToNextQuestion}
+                className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all"
+              >
+                {currentIdx < questions.length - 1 ? 'Next Question' : 'View Results'} <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <p className="mt-6 text-center text-slate-400 text-xs">
+          TOEFL iBT® is a registered trademark of Educational Testing Service (ETS). This is a simulation tool.
+        </p>
+      </div>
+    </div>
+  );
+}
