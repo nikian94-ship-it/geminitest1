@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 English Practice Test - Set 1 (Oxford Style)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .question-text {
+            font-family: 'Lora', serif;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .reading-passage {
+            font-family: 'Lora', serif;
+            line-height: 1.8;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #3b82f6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .option-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .option-card:hover {
+            border-color: #94a3b8;
+            background-color: #f1f5f9;
+        }
+        .option-card.selected {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .progress-bar {
+            transition: width 0.4s ease-in-out;
+        }
+        .explanation-box {
+            border-left: 4px solid #3b82f6;
+        }
+        /* Custom scrollbar for passage */
+        .reading-passage::-webkit-scrollbar {
+            width: 8px;
+        }
+        .reading-passage::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .reading-passage::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-10">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800">B1 English <span class="text-blue-600">Placement Set 1</span></h1>
+            <div id="test-timer" class="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full hidden">
+                Time: 00:00
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 md:p-8">
+        <div id="app-container" class="w-full max-w-3xl bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+            
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="p-8 text-center">
+                <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Oxford B1 Practice (Set 1)</h2>
+                <div class="text-left bg-slate-50 p-6 rounded-xl mb-8">
+                    <h3 class="font-bold text-slate-700 mb-2">Test Structure:</h3>
+                    <ul class="space-y-2 text-slate-600">
+                        <li class="flex items-center gap-2">
+                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                            Grammar & Vocabulary (Questions 1–10)
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                            Reading Comprehension (Questions 11–40)
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="startTest()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-blue-200">
+                    Begin Assessment
+                </button>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quiz-screen" class="hidden">
+                <div class="bg-slate-50 border-b border-slate-100 px-8 py-4 flex items-center gap-4">
+                    <div class="flex-grow bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div>
+                    </div>
+                    <span id="question-counter" class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Q 1/40</span>
+                </div>
+
+                <div class="p-8">
+                    <!-- Passage Section (Conditional) -->
+                    <div id="passage-container" class="hidden">
+                        <h3 class="text-xs font-bold text-blue-600 uppercase mb-2">Reading Text</h3>
+                        <div id="passage-text" class="reading-passage text-slate-700"></div>
+                    </div>
+
+                    <div id="question-text" class="question-text text-slate-800 mb-8 font-medium">
+                        Loading...
+                    </div>
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="p-8 pt-0 flex justify-between">
+                    <button id="prev-btn" onclick="prevQuestion()" class="text-slate-500 font-semibold px-4 py-2 opacity-0 pointer-events-none transition-opacity">
+                        &larr; Previous
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-50" disabled>
+                        Next Question
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results-screen" class="hidden p-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-4xl font-black mb-2">Set 1 Complete!</h2>
+                    <p class="text-slate-500">You've reached the end of the first assessment.</p>
+                    <div class="mt-8 inline-block p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
+                        <span id="score-display" class="text-6xl font-black text-blue-600">0/40</span>
+                        <p id="level-desc" class="mt-2 font-bold text-slate-400 uppercase tracking-widest text-sm">Oxford Scorecard</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <button onclick="showReview()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all">
+                        Review Answers & Explanations
+                    </button>
+                    <button onclick="location.reload()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-4 rounded-xl transition-all">
+                        Try Set 1 Again
+                    </button>
+                </div>
+            </div>
+
+            <!-- Review Screen -->
+            <div id="review-screen" class="hidden p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold">Review Mode</h2>
+                    <button onclick="backToSummary()" class="text-blue-600 font-semibold">Back to Summary</button>
+                </div>
+                <div id="review-container" class="space-y-12">
+                    <!-- Review items injected here -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="py-6 text-center text-slate-400 text-sm">
+        B1 English Assessment • Oxford Placement Style • Standalone Version
+    </footer>
+
+    <script>
+        // READING PASSAGES
+        const P_CITIES = "Living in a big city has both advantages and disadvantages. On the one hand, cities offer more job opportunities, better public transport, and a wide variety of entertainment. You can go to the cinema, the theatre, or a restaurant any night of the week. On the other hand, cities are often crowded, noisy, and expensive. Renting an apartment in the centre is much more costly than in a small town. Furthermore, pollution can be a serious problem due to the high volume of traffic. Despite these drawbacks, many young people prefer city life because they feel there is always something exciting happening around them.";
+
+        const P_INTERNET = "The internet has changed the way we live and work more than any other invention in history. It began in the 1960s as a way for government researchers to share information, but it wasn't until the 1990s that it became available to the general public. Since then, it has grown at an incredible speed. Today, we use it for everything: from banking and shopping to education and socialising. However, the internet also brings risks. Cybercrime and online safety are major concerns for parents and governments. Experts suggest that while the internet is a powerful tool, users must be taught how to use it responsibly and protect their personal data.";
+
+        const P_WEDDING = "Dear Sarah, I hope you are well! I am writing to invite you to my sister's wedding next month. The ceremony will take place on Saturday, July 15th, at St. Mary's Church at 2:00 PM. Afterwards, there will be a reception at the Grand Hotel, which is just a ten-minute walk from the church. We are planning a formal dinner followed by live music and dancing. Please let me know if you can come by the end of this week. Also, could you tell me if you have any special dietary requirements? We want to make sure the menu has something for everyone. I really hope to see you there! Best wishes, Maria.";
+
+        const P_ARCTIC = "Climate change is having a significant impact on the Arctic region. Scientists have observed that the ice is melting much faster than previously predicted. This is a major problem for local wildlife, such as polar bears and seals, which rely on the ice for hunting and resting. If the ice continues to disappear, these animals may face extinction. Furthermore, the melting ice causes sea levels to rise globally, which threatens coastal cities around the world. International organisations are calling for urgent action to reduce carbon emissions and slow down global warming before the damage becomes irreversible.";
+
+        const P_VOLUNTEER = "Do you have some free time? Do you want to make a difference in your community? 'Green Earth' is looking for volunteers to help with our new park project. We meet every Saturday morning at 9:00 AM to plant trees, clean up litter, and build benches. You don't need any special skills—just a pair of gloves and a positive attitude! It's a great way to meet new people, spend time outdoors, and help the environment. If you are interested, please visit our website or come to our office on High Street for an application form. Join us and help make our city greener!";
+
+        // QUIZ DATA
+        const quizData = [
+            // GRAMMAR (1-10)
+            {
+                q: "1. I ________ to the cinema three times this month.",
+                options: ["went", "have been", "was going", "had been"],
+                correct: 1,
+                explanation: "The Present Perfect ('have been') is used for life experiences or actions in a time period that isn't finished (this month)."
+            },
+            {
+                q: "2. If I ________ you, I would take the job offer.",
+                options: ["am", "was", "were", "be"],
+                correct: 2,
+                explanation: "In the Second Conditional (giving advice), 'were' is used with 'if' for all persons."
+            },
+            {
+                q: "3. English ________ in many countries around the world.",
+                options: ["is speaking", "speaks", "is spoken", "spoken"],
+                correct: 2,
+                explanation: "This is a Present Simple Passive construction (is + past participle)."
+            },
+            {
+                q: "4. That's the boy ________ father is a famous actor.",
+                options: ["who", "which", "whom", "whose"],
+                correct: 3,
+                explanation: "'Whose' is the possessive relative pronoun."
+            },
+            {
+                q: "5. You ________ park here. It's for residents only.",
+                options: ["mustn't", "don't have to", "can't", "shouldn't"],
+                correct: 0,
+                explanation: "'Mustn't' is used for prohibition (it's against the rules)."
+            },
+            {
+                q: "6. I ________ play the piano when I was younger, but I stopped.",
+                options: ["usually", "used to", "was used to", "use to"],
+                correct: 1,
+                explanation: "'Used to' describes past habits that are no longer true."
+            },
+            {
+                q: "7. He said that he ________ the film before.",
+                options: ["sees", "saw", "has seen", "had seen"],
+                correct: 3,
+                explanation: "In reported speech, the Past Simple shifts back to the Past Perfect ('had seen')."
+            },
+            {
+                q: "8. I really enjoy ________ to the beach in the summer.",
+                options: ["to go", "going", "go", "to going"],
+                correct: 1,
+                explanation: "The verb 'enjoy' is always followed by the gerund (-ing)."
+            },
+            {
+                q: "9. This is the ________ book I have ever read.",
+                options: ["most interesting", "more interesting", "interestinger", "interestingest"],
+                correct: 0,
+                explanation: "Superlative for long adjectives uses 'the most'."
+            },
+            {
+                q: "10. The class starts ________ 9:00 on Monday.",
+                options: ["in", "on", "at", "by"],
+                correct: 2,
+                explanation: "We use 'at' for specific clock times."
+            },
+
+            // READING PASSAGE 1 (11-16)
+            {
+                q: "11. What is one advantage of big cities mentioned in the text?",
+                passage: P_CITIES,
+                options: ["Cheap rent", "No traffic", "Job opportunities", "Quiet nights"],
+                correct: 2,
+                explanation: "The text states: 'cities offer more job opportunities'."
+            },
+            {
+                q: "12. Why is renting an apartment difficult in the city centre?",
+                passage: P_CITIES,
+                options: ["It is too small.", "It is very expensive.", "There are no apartments.", "It is too quiet."],
+                correct: 1,
+                explanation: "The text says: 'Renting an apartment in the centre is much more costly'."
+            },
+            {
+                q: "13. What causes pollution problems in cities?",
+                passage: P_CITIES,
+                options: ["Too many theatres", "High volume of traffic", "Old buildings", "The weather"],
+                correct: 1,
+                explanation: "The text mentions 'pollution can be a serious problem due to the high volume of traffic'."
+            },
+            {
+                q: "14. How do many young people feel about city life?",
+                passage: P_CITIES,
+                options: ["They find it boring.", "They think it's too expensive.", "They find it exciting.", "They want to move to a small town."],
+                correct: 2,
+                explanation: "The text says young people prefer it because 'there is always something exciting happening'."
+            },
+            {
+                q: "15. Which of the following is NOT mentioned as entertainment?",
+                passage: P_CITIES,
+                options: ["Cinema", "Theatre", "Restaurant", "Museum"],
+                correct: 3,
+                explanation: "The text lists cinema, theatre, and restaurants, but not museums."
+            },
+            {
+                q: "16. What is the 'other hand' of city life referred to in the text?",
+                passage: P_CITIES,
+                options: ["The positive side", "The negative side", "The transport system", "The job market"],
+                correct: 1,
+                explanation: "'On the other hand' is used here to introduce disadvantages (crowded, noisy, etc.)."
+            },
+
+            // READING PASSAGE 2 (17-22)
+            {
+                q: "17. When was the internet first available to the general public?",
+                passage: P_INTERNET,
+                options: ["In the 1960s", "In the 1970s", "In the 1980s", "In the 1990s"],
+                correct: 3,
+                explanation: "The text says: 'it wasn't until the 1990s that it became available to the general public'."
+            },
+            {
+                q: "18. What was the original purpose of the internet?",
+                passage: P_INTERNET,
+                options: ["Online shopping", "Sharing government research", "Social media", "Banking"],
+                correct: 1,
+                explanation: "It began as a way for 'government researchers to share information'."
+            },
+            {
+                q: "19. According to the text, how fast has the internet grown?",
+                passage: P_INTERNET,
+                options: ["Very slowly", "At an incredible speed", "It hasn't grown much", "At a steady pace"],
+                correct: 1,
+                explanation: "The text states: 'it has grown at an incredible speed'."
+            },
+            {
+                q: "20. What is a major concern mentioned in the text?",
+                passage: P_INTERNET,
+                options: ["The cost of computers", "Online safety", "The speed of the connection", "The number of websites"],
+                correct: 1,
+                explanation: "The text says 'online safety are major concerns'."
+            },
+            {
+                q: "21. What do experts suggest users should be taught?",
+                passage: P_INTERNET,
+                options: ["How to build a website", "How to use it responsibly", "How to shop online", "How to use it for banking"],
+                correct: 1,
+                explanation: "The text suggests users 'must be taught how to use it responsibly'."
+            },
+            {
+                q: "22. What is the overall tone of the text regarding the internet?",
+                passage: P_INTERNET,
+                options: ["Purely negative", "Very old-fashioned", "Powerful but risky", "Completely safe"],
+                correct: 2,
+                explanation: "The text calls it a 'powerful tool' but highlights 'risks' and 'concerns'."
+            },
+
+            // READING PASSAGE 3 (23-28)
+            {
+                q: "23. Why is Maria writing to Sarah?",
+                passage: P_WEDDING,
+                options: ["To ask for a job", "To invite her to a wedding", "To borrow some money", "To cancel a dinner"],
+                correct: 1,
+                explanation: "Maria writes: 'I am writing to invite you to my sister's wedding'."
+            },
+            {
+                q: "24. Where is the wedding ceremony taking place?",
+                passage: P_WEDDING,
+                options: ["At the Grand Hotel", "At Maria's house", "At St. Mary's Church", "At the park"],
+                correct: 2,
+                explanation: "The ceremony is 'at St. Mary's Church'."
+            },
+            {
+                q: "25. How long does it take to get to the reception from the church?",
+                passage: P_WEDDING,
+                options: ["Five minutes", "Ten minutes", "Twenty minutes", "One hour"],
+                correct: 1,
+                explanation: "The text says the hotel is 'just a ten-minute walk from the church'."
+            },
+            {
+                q: "26. What will happen after the formal dinner?",
+                passage: P_WEDDING,
+                options: ["The ceremony", "A church service", "Live music and dancing", "A shopping trip"],
+                correct: 2,
+                explanation: "The dinner is 'followed by live music and dancing'."
+            },
+            {
+                q: "27. When does Sarah need to reply by?",
+                passage: P_WEDDING,
+                options: ["By July 15th", "By tomorrow", "By the end of this week", "By next month"],
+                correct: 2,
+                explanation: "Maria asks: 'Please let me know if you can come by the end of this week'."
+            },
+            {
+                q: "28. What extra information does Maria want from Sarah?",
+                passage: P_WEDDING,
+                options: ["Her phone number", "Her home address", "Her dietary requirements", "What she is wearing"],
+                correct: 2,
+                explanation: "Maria asks about 'special dietary requirements'."
+            },
+
+            // READING PASSAGE 4 (29-34)
+            {
+                q: "29. What is happening to the ice in the Arctic?",
+                passage: P_ARCTIC,
+                options: ["It is growing thicker.", "It is melting fast.", "It is turning blue.", "Nothing is happening."],
+                correct: 1,
+                explanation: "The text states 'the ice is melting much faster'."
+            },
+            {
+                q: "30. Which animals are mentioned as being at risk?",
+                passage: P_ARCTIC,
+                options: ["Whales and fish", "Polar bears and seals", "Penguins and birds", "Lions and tigers"],
+                correct: 1,
+                explanation: "The text lists 'polar bears and seals'."
+            },
+            {
+                q: "31. Why is the ice important for these animals?",
+                passage: P_ARCTIC,
+                options: ["For swimming", "For hunting and resting", "For drinking water", "For staying warm"],
+                correct: 1,
+                explanation: "They 'rely on the ice for hunting and resting'."
+            },
+            {
+                q: "32. What global threat is caused by melting Arctic ice?",
+                passage: P_ARCTIC,
+                options: ["Colder winters", "Rising sea levels", "More snow in cities", "Stronger winds"],
+                correct: 1,
+                explanation: "The melting ice 'causes sea levels to rise globally'."
+            },
+            {
+                q: "33. What are international organisations calling for?",
+                passage: P_ARCTIC,
+                options: ["More hunting", "Moving coastal cities", "Urgent action to reduce emissions", "Building more ice"],
+                correct: 2,
+                explanation: "They call for 'urgent action to reduce carbon emissions'."
+            },
+            {
+                q: "34. What might happen if no action is taken?",
+                passage: P_ARCTIC,
+                options: ["The damage may become irreversible.", "The ice will freeze again.", "Carbon emissions will stop.", "Animals will move to the city."],
+                correct: 0,
+                explanation: "The text warns of action 'before the damage becomes irreversible'."
+            },
+
+            // READING PASSAGE 5 (35-40)
+            {
+                q: "35. What is 'Green Earth' looking for?",
+                passage: P_VOLUNTEER,
+                options: ["New employees", "Volunteers", "A park to buy", "Benches to sell"],
+                correct: 1,
+                explanation: "'Green Earth' is looking for volunteers."
+            },
+            {
+                q: "36. What time do the volunteers meet?",
+                passage: P_VOLUNTEER,
+                options: ["9:00 AM on Sundays", "5:00 PM on Saturdays", "9:00 AM on Saturdays", "Every afternoon"],
+                correct: 2,
+                explanation: "They meet 'every Saturday morning at 9:00 AM'."
+            },
+            {
+                q: "37. Do you need experience to help?",
+                passage: P_VOLUNTEER,
+                options: ["Yes, you need a degree.", "No, you don't need special skills.", "Yes, you must be a gardener.", "Only if you want to build benches."],
+                correct: 1,
+                explanation: "The text says: 'You don't need any special skills'."
+            },
+            {
+                q: "38. What should you bring with you?",
+                passage: P_VOLUNTEER,
+                options: ["A tree", "A hammer", "A pair of gloves", "An application form"],
+                correct: 2,
+                explanation: "The text suggests 'just a pair of gloves and a positive attitude'."
+            },
+            {
+                q: "39. Where can you find an application form?",
+                passage: P_VOLUNTEER,
+                options: ["At the park", "On their website or office", "In the newspaper", "At the library"],
+                correct: 1,
+                explanation: "Interested people should 'visit our website or come to our office'."
+            },
+            {
+                q: "40. What is the main goal of the project?",
+                passage: P_VOLUNTEER,
+                options: ["To sell gloves", "To build a new house", "To help the environment and community", "To exercise on Saturdays"],
+                correct: 2,
+                explanation: "The project aims to 'help the environment' and 'make our city greener'."
+            }
+        ];
+
+        // LOGIC
+        let currentQuestion = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let startTime = null;
+        let timerInterval = null;
+
+        function startTest() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('test-timer').classList.remove('hidden');
+            startTime = Date.now();
+            startTimer();
+            renderQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const secs = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('test-timer').innerText = `Time: ${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const data = quizData[currentQuestion];
+            const container = document.getElementById('options-container');
+            const qText = document.getElementById('question-text');
+            const counter = document.getElementById('question-counter');
+            const progress = document.getElementById('progress-bar');
+            const passageBox = document.getElementById('passage-container');
+            const passageText = document.getElementById('passage-text');
+
+            qText.innerText = data.q;
+            counter.innerText = `Q ${currentQuestion + 1}/${quizData.length}`;
+            progress.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+
+            if (data.passage) {
+                passageBox.classList.remove('hidden');
+                passageText.innerText = data.passage;
+                passageText.scrollTop = 0;
+            } else {
+                passageBox.classList.add('hidden');
+            }
+
+            container.innerHTML = '';
+            data.options.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.className = `option-card p-4 rounded-xl bg-white border-2 border-slate-200 flex items-center gap-4 ${userAnswers[currentQuestion] === index ? 'selected' : ''}`;
+                div.innerHTML = `
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 ${userAnswers[currentQuestion] === index ? 'bg-blue-500 border-blue-500' : ''}">
+                        <div class="w-2 h-2 rounded-full bg-white"></div>
+                    </div>
+                    <span class="text-slate-700 font-medium">${opt}</span>
+                `;
+                div.onclick = () => selectOption(index);
+                container.appendChild(div);
+            });
+
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+
+            if (currentQuestion === 0) {
+                prevBtn.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                prevBtn.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            nextBtn.innerText = currentQuestion === quizData.length - 1 ? "Finish Assessment" : "Next Question";
+            nextBtn.disabled = userAnswers[currentQuestion] === null;
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+                window.scrollTo(0,0);
+            } else {
+                finishTest();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+                window.scrollTo(0,0);
+            }
+        }
+
+        function finishTest() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('test-timer').classList.add('hidden');
+
+            const score = userAnswers.reduce((acc, ans, idx) => acc + (ans === quizData[idx].correct ? 1 : 0), 0);
+            document.getElementById('score-display').innerText = `${score}/${quizData.length}`;
+            
+            const desc = document.getElementById('level-desc');
+            const percent = (score / quizData.length) * 100;
+            if (percent >= 85) desc.innerText = "Level: B2 Upper Intermediate";
+            else if (percent >= 60) desc.innerText = "Level: B1 Intermediate";
+            else if (percent >= 35) desc.innerText = "Level: A2 Elementary";
+            else desc.innerText = "Level: A1 Beginner";
+        }
+
+        function showReview() {
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.remove('hidden');
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
+
+            quizData.forEach((data, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === data.correct;
+                
+                const item = document.createElement('div');
+                item.className = "pb-8 border-b border-slate-100 last:border-0";
+                item.innerHTML = `
+                    <div class="flex items-start gap-4 mb-4">
+                        <span class="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded shrink-0">Q${idx + 1}</span>
+                        <p class="question-text text-slate-900">${data.q}</p>
+                    </div>
+                    ${data.passage ? `<div class="text-sm bg-slate-50 p-4 rounded-lg mb-4 italic text-slate-500 border-l-2 border-slate-200">${data.passage}</div>` : ''}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <div class="p-4 rounded-xl border ${isCorrect ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}">
+                            <p class="text-xs uppercase font-bold mb-1">Your Choice</p>
+                            <p class="font-semibold">${data.options[userAns] || 'No answer'}</p>
+                        </div>
+                        ${!isCorrect ? `
+                        <div class="p-4 rounded-xl border bg-green-50 border-green-200 text-green-700">
+                            <p class="text-xs uppercase font-bold mb-1">Correct Answer</p>
+                            <p class="font-semibold">${data.options[data.correct]}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="explanation-box bg-blue-50 p-4 rounded-r-xl">
+                        <p class="text-xs uppercase font-bold text-blue-500 mb-1">Linguistic Logic</p>
+                        <p class="text-slate-700 text-sm leading-relaxed">${data.explanation}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            window.scrollTo(0,0);
+        }
+
+        function backToSummary() {
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
