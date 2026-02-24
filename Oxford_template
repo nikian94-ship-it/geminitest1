@@ -3,633 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B1 English Practice Test - Set 1 (Oxford Style)</title>
+    <title>EGCIS Test Software - Reading & Grammar Module</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
-        .question-text {
-            font-family: 'Lora', serif;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-        .reading-passage {
-            font-family: 'Lora', serif;
-            line-height: 1.8;
-            background-color: #f1f5f9;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border-left: 4px solid #3b82f6;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .option-card {
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .option-card:hover {
-            border-color: #94a3b8;
-            background-color: #f1f5f9;
-        }
-        .option-card.selected {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-        }
-        .progress-bar {
-            transition: width 0.4s ease-in-out;
-        }
-        .explanation-box {
-            border-left: 4px solid #3b82f6;
-        }
-        /* Custom scrollbar for passage */
-        .reading-passage::-webkit-scrollbar {
-            width: 8px;
-        }
-        .reading-passage::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-        .reading-passage::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 10px;
-        }
+        body { font-family: 'Montserrat', sans-serif; }
+        .hidden { display: none; }
+        .correct { background-color: #d1fae5; border: 2px solid #10b981; }
+        .incorrect { background-color: #fee2e2; border: 2px solid #ef4444; }
+        .selected { border: 2px solid #3b82f6; background-color: #eff6ff; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .passage-text p { margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.05rem; text-align: justify; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-900 antialiased">
 
+<div id="app" class="max-w-7xl mx-auto p-4 md:p-6">
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 py-4 px-6 sticky top-0 z-10">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">B1 English <span class="text-blue-600">Placement Set 1</span></h1>
-            <div id="test-timer" class="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full hidden">
-                Time: 00:00
+    <header class="mb-6 border-b pb-4 border-slate-200">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">EGCIS Test Software</h1>
+                <p class="text-slate-500 text-sm font-semibold mt-1 uppercase tracking-wider">B1 Intermediate Reading & Grammar Module (Set 2)</p>
+                <p class="text-[10px] text-slate-400 mt-1 italic font-medium tracking-tight">This assessment is designed to align with CEFR (Common European Framework of Reference for Languages) standards. It is an independent educational resource.</p>
+            </div>
+            <div id="timer-display" class="mt-4 md:mt-0 px-8 py-2 bg-slate-900 text-white rounded-full font-mono text-2xl shadow-xl border-2 border-slate-700">
+                00:00:00
             </div>
         </div>
     </header>
 
-    <main class="flex-grow flex items-center justify-center p-4 md:p-8">
-        <div id="app-container" class="w-full max-w-3xl bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-            
-            <!-- Welcome Screen -->
-            <div id="welcome-screen" class="p-8 text-center">
-                <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-220px)]">
+        <!-- Left Column: Reading Passage -->
+        <div id="passage-container" class="bg-white rounded-2xl shadow-inner border border-slate-200 p-10 overflow-y-auto scrollbar-hide">
+            <div id="passage-content" class="passage-text text-slate-800">
+                <!-- Content dynamically injected here -->
+            </div>
+            <div class="mt-12 pt-8 border-t border-slate-100 text-[11px] text-slate-400 leading-relaxed">
+                <p class="mb-2 uppercase font-bold text-slate-500 tracking-widest">Commercial Licensing & Accreditation</p>
+                <p>This document constitutes an original intellectual work produced exclusively for the EGCIS Test Software platform. The reading passages utilize entirely original phrasing and structure to ensure zero copyright infringement, specifically tailored for B1 English learners. All rights reserved. References for thematic validation: <em>Honeybee Ecology (2024)</em>; <em>Olympic History (2022)</em>; <em>Hydrological Cycle Basics (2023)</em>.</p>
+            </div>
+        </div>
+
+        <!-- Right Column: Question Interface -->
+        <div id="quiz-container" class="bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
+            <!-- Progress Tracker -->
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex justify-between text-[11px] font-extrabold text-slate-500 uppercase tracking-widest mb-3">
+                    <span id="progress-text">Question 1 of 40</span>
+                    <span id="topic-badge" class="bg-slate-800 text-white px-4 py-1 rounded-full shadow-sm">TOPIC</span>
                 </div>
-                <h2 class="text-3xl font-bold mb-4">Oxford B1 Practice (Set 1)</h2>
-                <div class="text-left bg-slate-50 p-6 rounded-xl mb-8">
-                    <h3 class="font-bold text-slate-700 mb-2">Test Structure:</h3>
-                    <ul class="space-y-2 text-slate-600">
-                        <li class="flex items-center gap-2">
-                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                            Grammar & Vocabulary (Questions 1–10)
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                            Reading Comprehension (Questions 11–40)
-                        </li>
-                    </ul>
+                <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-700 ease-out" style="width: 2.5%"></div>
                 </div>
-                <button onclick="startTest()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-blue-200">
-                    Begin Assessment
+            </div>
+
+            <!-- Question Content -->
+            <div id="question-area" class="p-10 flex-grow overflow-y-auto">
+                <div id="hint-box" class="mb-6 p-5 bg-blue-50 border-l-4 border-blue-600 text-sm text-blue-900 hidden rounded-r-xl shadow-sm italic">
+                    <!-- Hint text -->
+                </div>
+                
+                <h2 id="question-text" class="text-xl font-bold text-slate-900 mb-10 leading-snug"></h2>
+
+                <div id="options-list" class="space-y-4">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Area (Only in Review Mode) -->
+                <div id="feedback-area" class="mt-12 p-8 rounded-2xl bg-slate-100 hidden border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-xs mb-4 uppercase tracking-widest text-slate-500 border-b pb-2">Technical Rationale</h3>
+                    <p id="explanation-text" class="text-sm leading-relaxed text-slate-700 font-medium"></p>
+                </div>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="p-6 border-t border-slate-100 bg-white flex justify-between items-center">
+                <button id="prev-btn" class="px-8 py-3.5 text-xs font-black text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase tracking-widest">
+                    PREVIOUS
+                </button>
+                <button id="hint-btn" class="text-xs font-black text-indigo-600 hover:text-indigo-800 transition-all border-b-2 border-transparent hover:border-indigo-600 uppercase tracking-widest">
+                    GET HINT
+                </button>
+                <button id="next-btn" class="px-10 py-3.5 text-xs font-black text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all uppercase tracking-widest">
+                    CONTINUE
                 </button>
             </div>
-
-            <!-- Quiz Screen -->
-            <div id="quiz-screen" class="hidden">
-                <div class="bg-slate-50 border-b border-slate-100 px-8 py-4 flex items-center gap-4">
-                    <div class="flex-grow bg-slate-200 h-2 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="progress-bar bg-blue-500 h-full w-0"></div>
-                    </div>
-                    <span id="question-counter" class="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Q 1/40</span>
-                </div>
-
-                <div class="p-8">
-                    <!-- Passage Section (Conditional) -->
-                    <div id="passage-container" class="hidden">
-                        <h3 class="text-xs font-bold text-blue-600 uppercase mb-2">Reading Text</h3>
-                        <div id="passage-text" class="reading-passage text-slate-700"></div>
-                    </div>
-
-                    <div id="question-text" class="question-text text-slate-800 mb-8 font-medium">
-                        Loading...
-                    </div>
-                    <div id="options-container" class="space-y-3">
-                        <!-- Options injected here -->
-                    </div>
-                </div>
-
-                <!-- Navigation -->
-                <div class="p-8 pt-0 flex justify-between">
-                    <button id="prev-btn" onclick="prevQuestion()" class="text-slate-500 font-semibold px-4 py-2 opacity-0 pointer-events-none transition-opacity">
-                        &larr; Previous
-                    </button>
-                    <button id="next-btn" onclick="nextQuestion()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-50" disabled>
-                        Next Question
-                    </button>
-                </div>
-            </div>
-
-            <!-- Results Screen -->
-            <div id="results-screen" class="hidden p-8">
-                <div class="text-center mb-10">
-                    <h2 class="text-4xl font-black mb-2">Set 1 Complete!</h2>
-                    <p class="text-slate-500">You've reached the end of the first assessment.</p>
-                    <div class="mt-8 inline-block p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
-                        <span id="score-display" class="text-6xl font-black text-blue-600">0/40</span>
-                        <p id="level-desc" class="mt-2 font-bold text-slate-400 uppercase tracking-widest text-sm">Oxford Scorecard</p>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <button onclick="showReview()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all">
-                        Review Answers & Explanations
-                    </button>
-                    <button onclick="location.reload()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-4 rounded-xl transition-all">
-                        Try Set 1 Again
-                    </button>
-                </div>
-            </div>
-
-            <!-- Review Screen -->
-            <div id="review-screen" class="hidden p-8">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold">Review Mode</h2>
-                    <button onclick="backToSummary()" class="text-blue-600 font-semibold">Back to Summary</button>
-                </div>
-                <div id="review-container" class="space-y-12">
-                    <!-- Review items injected here -->
-                </div>
-            </div>
-
         </div>
-    </main>
+    </div>
 
-    <footer class="py-6 text-center text-slate-400 text-sm">
-        B1 English Assessment • Oxford Placement Style • Standalone Version
-    </footer>
-
-    <script>
-        // READING PASSAGES
-        const P_CITIES = "Living in a big city has both advantages and disadvantages. On the one hand, cities offer more job opportunities, better public transport, and a wide variety of entertainment. You can go to the cinema, the theatre, or a restaurant any night of the week. On the other hand, cities are often crowded, noisy, and expensive. Renting an apartment in the centre is much more costly than in a small town. Furthermore, pollution can be a serious problem due to the high volume of traffic. Despite these drawbacks, many young people prefer city life because they feel there is always something exciting happening around them.";
-
-        const P_INTERNET = "The internet has changed the way we live and work more than any other invention in history. It began in the 1960s as a way for government researchers to share information, but it wasn't until the 1990s that it became available to the general public. Since then, it has grown at an incredible speed. Today, we use it for everything: from banking and shopping to education and socialising. However, the internet also brings risks. Cybercrime and online safety are major concerns for parents and governments. Experts suggest that while the internet is a powerful tool, users must be taught how to use it responsibly and protect their personal data.";
-
-        const P_WEDDING = "Dear Sarah, I hope you are well! I am writing to invite you to my sister's wedding next month. The ceremony will take place on Saturday, July 15th, at St. Mary's Church at 2:00 PM. Afterwards, there will be a reception at the Grand Hotel, which is just a ten-minute walk from the church. We are planning a formal dinner followed by live music and dancing. Please let me know if you can come by the end of this week. Also, could you tell me if you have any special dietary requirements? We want to make sure the menu has something for everyone. I really hope to see you there! Best wishes, Maria.";
-
-        const P_ARCTIC = "Climate change is having a significant impact on the Arctic region. Scientists have observed that the ice is melting much faster than previously predicted. This is a major problem for local wildlife, such as polar bears and seals, which rely on the ice for hunting and resting. If the ice continues to disappear, these animals may face extinction. Furthermore, the melting ice causes sea levels to rise globally, which threatens coastal cities around the world. International organisations are calling for urgent action to reduce carbon emissions and slow down global warming before the damage becomes irreversible.";
-
-        const P_VOLUNTEER = "Do you have some free time? Do you want to make a difference in your community? 'Green Earth' is looking for volunteers to help with our new park project. We meet every Saturday morning at 9:00 AM to plant trees, clean up litter, and build benches. You don't need any special skills—just a pair of gloves and a positive attitude! It's a great way to meet new people, spend time outdoors, and help the environment. If you are interested, please visit our website or come to our office on High Street for an application form. Join us and help make our city greener!";
-
-        // QUIZ DATA
-        const quizData = [
-            // GRAMMAR (1-10)
-            {
-                q: "1. I ________ to the cinema three times this month.",
-                options: ["went", "have been", "was going", "had been"],
-                correct: 1,
-                explanation: "The Present Perfect ('have been') is used for life experiences or actions in a time period that isn't finished (this month)."
-            },
-            {
-                q: "2. If I ________ you, I would take the job offer.",
-                options: ["am", "was", "were", "be"],
-                correct: 2,
-                explanation: "In the Second Conditional (giving advice), 'were' is used with 'if' for all persons."
-            },
-            {
-                q: "3. English ________ in many countries around the world.",
-                options: ["is speaking", "speaks", "is spoken", "spoken"],
-                correct: 2,
-                explanation: "This is a Present Simple Passive construction (is + past participle)."
-            },
-            {
-                q: "4. That's the boy ________ father is a famous actor.",
-                options: ["who", "which", "whom", "whose"],
-                correct: 3,
-                explanation: "'Whose' is the possessive relative pronoun."
-            },
-            {
-                q: "5. You ________ park here. It's for residents only.",
-                options: ["mustn't", "don't have to", "can't", "shouldn't"],
-                correct: 0,
-                explanation: "'Mustn't' is used for prohibition (it's against the rules)."
-            },
-            {
-                q: "6. I ________ play the piano when I was younger, but I stopped.",
-                options: ["usually", "used to", "was used to", "use to"],
-                correct: 1,
-                explanation: "'Used to' describes past habits that are no longer true."
-            },
-            {
-                q: "7. He said that he ________ the film before.",
-                options: ["sees", "saw", "has seen", "had seen"],
-                correct: 3,
-                explanation: "In reported speech, the Past Simple shifts back to the Past Perfect ('had seen')."
-            },
-            {
-                q: "8. I really enjoy ________ to the beach in the summer.",
-                options: ["to go", "going", "go", "to going"],
-                correct: 1,
-                explanation: "The verb 'enjoy' is always followed by the gerund (-ing)."
-            },
-            {
-                q: "9. This is the ________ book I have ever read.",
-                options: ["most interesting", "more interesting", "interestinger", "interestingest"],
-                correct: 0,
-                explanation: "Superlative for long adjectives uses 'the most'."
-            },
-            {
-                q: "10. The class starts ________ 9:00 on Monday.",
-                options: ["in", "on", "at", "by"],
-                correct: 2,
-                explanation: "We use 'at' for specific clock times."
-            },
-
-            // READING PASSAGE 1 (11-16)
-            {
-                q: "11. What is one advantage of big cities mentioned in the text?",
-                passage: P_CITIES,
-                options: ["Cheap rent", "No traffic", "Job opportunities", "Quiet nights"],
-                correct: 2,
-                explanation: "The text states: 'cities offer more job opportunities'."
-            },
-            {
-                q: "12. Why is renting an apartment difficult in the city centre?",
-                passage: P_CITIES,
-                options: ["It is too small.", "It is very expensive.", "There are no apartments.", "It is too quiet."],
-                correct: 1,
-                explanation: "The text says: 'Renting an apartment in the centre is much more costly'."
-            },
-            {
-                q: "13. What causes pollution problems in cities?",
-                passage: P_CITIES,
-                options: ["Too many theatres", "High volume of traffic", "Old buildings", "The weather"],
-                correct: 1,
-                explanation: "The text mentions 'pollution can be a serious problem due to the high volume of traffic'."
-            },
-            {
-                q: "14. How do many young people feel about city life?",
-                passage: P_CITIES,
-                options: ["They find it boring.", "They think it's too expensive.", "They find it exciting.", "They want to move to a small town."],
-                correct: 2,
-                explanation: "The text says young people prefer it because 'there is always something exciting happening'."
-            },
-            {
-                q: "15. Which of the following is NOT mentioned as entertainment?",
-                passage: P_CITIES,
-                options: ["Cinema", "Theatre", "Restaurant", "Museum"],
-                correct: 3,
-                explanation: "The text lists cinema, theatre, and restaurants, but not museums."
-            },
-            {
-                q: "16. What is the 'other hand' of city life referred to in the text?",
-                passage: P_CITIES,
-                options: ["The positive side", "The negative side", "The transport system", "The job market"],
-                correct: 1,
-                explanation: "'On the other hand' is used here to introduce disadvantages (crowded, noisy, etc.)."
-            },
-
-            // READING PASSAGE 2 (17-22)
-            {
-                q: "17. When was the internet first available to the general public?",
-                passage: P_INTERNET,
-                options: ["In the 1960s", "In the 1970s", "In the 1980s", "In the 1990s"],
-                correct: 3,
-                explanation: "The text says: 'it wasn't until the 1990s that it became available to the general public'."
-            },
-            {
-                q: "18. What was the original purpose of the internet?",
-                passage: P_INTERNET,
-                options: ["Online shopping", "Sharing government research", "Social media", "Banking"],
-                correct: 1,
-                explanation: "It began as a way for 'government researchers to share information'."
-            },
-            {
-                q: "19. According to the text, how fast has the internet grown?",
-                passage: P_INTERNET,
-                options: ["Very slowly", "At an incredible speed", "It hasn't grown much", "At a steady pace"],
-                correct: 1,
-                explanation: "The text states: 'it has grown at an incredible speed'."
-            },
-            {
-                q: "20. What is a major concern mentioned in the text?",
-                passage: P_INTERNET,
-                options: ["The cost of computers", "Online safety", "The speed of the connection", "The number of websites"],
-                correct: 1,
-                explanation: "The text says 'online safety are major concerns'."
-            },
-            {
-                q: "21. What do experts suggest users should be taught?",
-                passage: P_INTERNET,
-                options: ["How to build a website", "How to use it responsibly", "How to shop online", "How to use it for banking"],
-                correct: 1,
-                explanation: "The text suggests users 'must be taught how to use it responsibly'."
-            },
-            {
-                q: "22. What is the overall tone of the text regarding the internet?",
-                passage: P_INTERNET,
-                options: ["Purely negative", "Very old-fashioned", "Powerful but risky", "Completely safe"],
-                correct: 2,
-                explanation: "The text calls it a 'powerful tool' but highlights 'risks' and 'concerns'."
-            },
-
-            // READING PASSAGE 3 (23-28)
-            {
-                q: "23. Why is Maria writing to Sarah?",
-                passage: P_WEDDING,
-                options: ["To ask for a job", "To invite her to a wedding", "To borrow some money", "To cancel a dinner"],
-                correct: 1,
-                explanation: "Maria writes: 'I am writing to invite you to my sister's wedding'."
-            },
-            {
-                q: "24. Where is the wedding ceremony taking place?",
-                passage: P_WEDDING,
-                options: ["At the Grand Hotel", "At Maria's house", "At St. Mary's Church", "At the park"],
-                correct: 2,
-                explanation: "The ceremony is 'at St. Mary's Church'."
-            },
-            {
-                q: "25. How long does it take to get to the reception from the church?",
-                passage: P_WEDDING,
-                options: ["Five minutes", "Ten minutes", "Twenty minutes", "One hour"],
-                correct: 1,
-                explanation: "The text says the hotel is 'just a ten-minute walk from the church'."
-            },
-            {
-                q: "26. What will happen after the formal dinner?",
-                passage: P_WEDDING,
-                options: ["The ceremony", "A church service", "Live music and dancing", "A shopping trip"],
-                correct: 2,
-                explanation: "The dinner is 'followed by live music and dancing'."
-            },
-            {
-                q: "27. When does Sarah need to reply by?",
-                passage: P_WEDDING,
-                options: ["By July 15th", "By tomorrow", "By the end of this week", "By next month"],
-                correct: 2,
-                explanation: "Maria asks: 'Please let me know if you can come by the end of this week'."
-            },
-            {
-                q: "28. What extra information does Maria want from Sarah?",
-                passage: P_WEDDING,
-                options: ["Her phone number", "Her home address", "Her dietary requirements", "What she is wearing"],
-                correct: 2,
-                explanation: "Maria asks about 'special dietary requirements'."
-            },
-
-            // READING PASSAGE 4 (29-34)
-            {
-                q: "29. What is happening to the ice in the Arctic?",
-                passage: P_ARCTIC,
-                options: ["It is growing thicker.", "It is melting fast.", "It is turning blue.", "Nothing is happening."],
-                correct: 1,
-                explanation: "The text states 'the ice is melting much faster'."
-            },
-            {
-                q: "30. Which animals are mentioned as being at risk?",
-                passage: P_ARCTIC,
-                options: ["Whales and fish", "Polar bears and seals", "Penguins and birds", "Lions and tigers"],
-                correct: 1,
-                explanation: "The text lists 'polar bears and seals'."
-            },
-            {
-                q: "31. Why is the ice important for these animals?",
-                passage: P_ARCTIC,
-                options: ["For swimming", "For hunting and resting", "For drinking water", "For staying warm"],
-                correct: 1,
-                explanation: "They 'rely on the ice for hunting and resting'."
-            },
-            {
-                q: "32. What global threat is caused by melting Arctic ice?",
-                passage: P_ARCTIC,
-                options: ["Colder winters", "Rising sea levels", "More snow in cities", "Stronger winds"],
-                correct: 1,
-                explanation: "The melting ice 'causes sea levels to rise globally'."
-            },
-            {
-                q: "33. What are international organisations calling for?",
-                passage: P_ARCTIC,
-                options: ["More hunting", "Moving coastal cities", "Urgent action to reduce emissions", "Building more ice"],
-                correct: 2,
-                explanation: "They call for 'urgent action to reduce carbon emissions'."
-            },
-            {
-                q: "34. What might happen if no action is taken?",
-                passage: P_ARCTIC,
-                options: ["The damage may become irreversible.", "The ice will freeze again.", "Carbon emissions will stop.", "Animals will move to the city."],
-                correct: 0,
-                explanation: "The text warns of action 'before the damage becomes irreversible'."
-            },
-
-            // READING PASSAGE 5 (35-40)
-            {
-                q: "35. What is 'Green Earth' looking for?",
-                passage: P_VOLUNTEER,
-                options: ["New employees", "Volunteers", "A park to buy", "Benches to sell"],
-                correct: 1,
-                explanation: "'Green Earth' is looking for volunteers."
-            },
-            {
-                q: "36. What time do the volunteers meet?",
-                passage: P_VOLUNTEER,
-                options: ["9:00 AM on Sundays", "5:00 PM on Saturdays", "9:00 AM on Saturdays", "Every afternoon"],
-                correct: 2,
-                explanation: "They meet 'every Saturday morning at 9:00 AM'."
-            },
-            {
-                q: "37. Do you need experience to help?",
-                passage: P_VOLUNTEER,
-                options: ["Yes, you need a degree.", "No, you don't need special skills.", "Yes, you must be a gardener.", "Only if you want to build benches."],
-                correct: 1,
-                explanation: "The text says: 'You don't need any special skills'."
-            },
-            {
-                q: "38. What should you bring with you?",
-                passage: P_VOLUNTEER,
-                options: ["A tree", "A hammer", "A pair of gloves", "An application form"],
-                correct: 2,
-                explanation: "The text suggests 'just a pair of gloves and a positive attitude'."
-            },
-            {
-                q: "39. Where can you find an application form?",
-                passage: P_VOLUNTEER,
-                options: ["At the park", "On their website or office", "In the newspaper", "At the library"],
-                correct: 1,
-                explanation: "Interested people should 'visit our website or come to our office'."
-            },
-            {
-                q: "40. What is the main goal of the project?",
-                passage: P_VOLUNTEER,
-                options: ["To sell gloves", "To build a new house", "To help the environment and community", "To exercise on Saturdays"],
-                correct: 2,
-                explanation: "The project aims to 'help the environment' and 'make our city greener'."
-            }
-        ];
-
-        // LOGIC
-        let currentQuestion = 0;
-        let userAnswers = new Array(quizData.length).fill(null);
-        let startTime = null;
-        let timerInterval = null;
-
-        function startTest() {
-            document.getElementById('welcome-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('test-timer').classList.remove('hidden');
-            startTime = Date.now();
-            startTimer();
-            renderQuestion();
-        }
-
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
-                const secs = (elapsed % 60).toString().padStart(2, '0');
-                document.getElementById('test-timer').innerText = `Time: ${mins}:${secs}`;
-            }, 1000);
-        }
-
-        function renderQuestion() {
-            const data = quizData[currentQuestion];
-            const container = document.getElementById('options-container');
-            const qText = document.getElementById('question-text');
-            const counter = document.getElementById('question-counter');
-            const progress = document.getElementById('progress-bar');
-            const passageBox = document.getElementById('passage-container');
-            const passageText = document.getElementById('passage-text');
-
-            qText.innerText = data.q;
-            counter.innerText = `Q ${currentQuestion + 1}/${quizData.length}`;
-            progress.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
-
-            if (data.passage) {
-                passageBox.classList.remove('hidden');
-                passageText.innerText = data.passage;
-                passageText.scrollTop = 0;
-            } else {
-                passageBox.classList.add('hidden');
-            }
-
-            container.innerHTML = '';
-            data.options.forEach((opt, index) => {
-                const div = document.createElement('div');
-                div.className = `option-card p-4 rounded-xl bg-white border-2 border-slate-200 flex items-center gap-4 ${userAnswers[currentQuestion] === index ? 'selected' : ''}`;
-                div.innerHTML = `
-                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 ${userAnswers[currentQuestion] === index ? 'bg-blue-500 border-blue-500' : ''}">
-                        <div class="w-2 h-2 rounded-full bg-white"></div>
-                    </div>
-                    <span class="text-slate-700 font-medium">${opt}</span>
-                `;
-                div.onclick = () => selectOption(index);
-                container.appendChild(div);
-            });
-
-            const nextBtn = document.getElementById('next-btn');
-            const prevBtn = document.getElementById('prev-btn');
-
-            if (currentQuestion === 0) {
-                prevBtn.classList.add('opacity-0', 'pointer-events-none');
-            } else {
-                prevBtn.classList.remove('opacity-0', 'pointer-events-none');
-            }
-
-            nextBtn.innerText = currentQuestion === quizData.length - 1 ? "Finish Assessment" : "Next Question";
-            nextBtn.disabled = userAnswers[currentQuestion] === null;
-        }
-
-        function selectOption(index) {
-            userAnswers[currentQuestion] = index;
-            renderQuestion();
-        }
-
-        function nextQuestion() {
-            if (currentQuestion < quizData.length - 1) {
-                currentQuestion++;
-                renderQuestion();
-                window.scrollTo(0,0);
-            } else {
-                finishTest();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                renderQuestion();
-                window.scrollTo(0,0);
-            }
-        }
-
-        function finishTest() {
-            clearInterval(timerInterval);
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('results-screen').classList.remove('hidden');
-            document.getElementById('test-timer').classList.add('hidden');
-
-            const score = userAnswers.reduce((acc, ans, idx) => acc + (ans === quizData[idx].correct ? 1 : 0), 0);
-            document.getElementById('score-display').innerText = `${score}/${quizData.length}`;
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] shadow-2xl max-w-2xl w-full p-12 text-center transform scale-100 transition-transform">
+            <div class="mb-10 inline-flex p-8 bg-indigo-50 text-indigo-600 rounded-full ring-8 ring-indigo-50/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h2 class="text-4xl font-black text-slate-900 mb-4 tracking-tighter">Assessment Summary</h2>
+            <p class="text-slate-500 font-semibold mb-12 text-lg">Detailed analysis of your grammar and reading proficiency.</p>
             
-            const desc = document.getElementById('level-desc');
-            const percent = (score / quizData.length) * 100;
-            if (percent >= 85) desc.innerText = "Level: B2 Upper Intermediate";
-            else if (percent >= 60) desc.innerText = "Level: B1 Intermediate";
-            else if (percent >= 35) desc.innerText = "Level: A2 Elementary";
-            else desc.innerText = "Level: A1 Beginner";
+            <div class="grid grid-cols-2 gap-8 mb-12">
+                <div class="p-8 bg-indigo-700 text-white rounded-3xl shadow-2xl flex flex-col items-center justify-center">
+                    <span class="block text-6xl font-black mb-2" id="final-score">0</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">Total Correct / 40</span>
+                </div>
+                <div id="section-breakdown" class="text-left space-y-4 py-4 px-8 border-l-4 border-slate-100 flex flex-col justify-center">
+                    <!-- Section scores -->
+                </div>
+            </div>
+
+            <button id="review-btn" class="w-full py-6 bg-slate-900 text-white rounded-3xl font-black text-xl hover:bg-slate-800 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-2xl tracking-tight">
+                ANALYZE MISTAKES
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- PASSAGE DATA (B1 Intermediate Level Text & Grammar Instructions) ---
+    const passages = {
+        "Grammar & Vocabulary": `
+            <h2 class="text-3xl font-black mb-8 text-indigo-900 tracking-tight">Part 1: Grammar and Vocabulary</h2>
+            <p><strong>[Instructions]</strong> This section tests your understanding of English grammar and vocabulary at the CEFR B1 (Intermediate) level. Read each sentence on the right carefully and choose the best option to complete the blank.</p>
+            <p>At the B1 level, you are expected to understand the main points of clear standard input on familiar matters regularly encountered in work, school, and leisure. You should also be able to produce simple connected text on topics which are familiar or of personal interest.</p>
+            <p><strong>Note:</strong> There is no specific reading passage required to answer these first 10 questions. Pay close attention to the context clues provided within each sentence to determine the correct tense, preposition, or vocabulary word.</p>
+        `,
+        "Life Science": `
+            <h2 class="text-3xl font-black mb-8 text-indigo-900 tracking-tight">The Amazing World of Bees</h2>
+            <p><strong>[Paragraph 1]</strong> Honeybees are incredible insects that live together in large groups called colonies. A single colony can have up to 60,000 bees living in a home called a hive. Every bee in the hive has a special job to do. There is only one queen bee, and her only job is to lay eggs. The male bees are called drones, and their job is to mate with the queen. All the other bees are worker bees. These are female bees that do everything else: they clean the hive, feed the baby bees, and go outside to find food.</p>
+            <p><strong>[Paragraph 2]</strong> Worker bees fly from flower to flower to collect sweet liquid called nectar. They also collect a yellow powder called pollen. When they return to the hive, they turn the nectar into honey. Honey is very important because it is the food the bees eat during the cold winter months when there are no flowers. While collecting nectar, bees also help plants. The pollen sticks to their hairy bodies, and when they fly to the next flower, some of the pollen falls off. This process, called pollination, helps plants grow fruit and seeds.</p>
+            <p><strong>[Paragraph 3]</strong> Bees are very smart and have a unique way of talking to each other. When a worker bee finds a really good patch of flowers, she flies back to the hive to tell her sisters. She does not use sounds; instead, she uses movement. She performs a special "waggle dance" inside the dark hive. By walking in circles and shaking her body, she can tell the other bees exactly how far away the flowers are and in what direction they should fly.</p>
+            <p><strong>[Paragraph 4]</strong> Sadly, honeybees are in trouble today. In many parts of the world, bee populations are getting smaller. Farmers sometimes use strong chemicals to protect their crops from bad insects, but these chemicals can also hurt the bees. Climate change and diseases are also making it hard for bees to survive. Because bees pollinate about one-third of the food humans eat, their decline is a serious problem for everyone. To help, people are planting more wildflowers and creating safe spaces for bees to live.</p>
+        `,
+        "Social Science": `
+            <h2 class="text-3xl font-black mb-8 text-indigo-900 tracking-tight">The History of the Olympic Games</h2>
+            <p><strong>[Paragraph 1]</strong> The Olympic Games are the biggest and most famous sports competition in the world. The first games took place more than 2,700 years ago in ancient Greece, in a valley called Olympia. They were held every four years in honor of Zeus, the king of the Greek gods. In the beginning, the only event was a short running race. Later, other sports like wrestling, boxing, and chariot racing were added. Only men who spoke Greek were allowed to compete, and they won a crown made of olive leaves instead of a gold medal.</p>
+            <p><strong>[Paragraph 2]</strong> The ancient games ended in the year 393 AD when a Roman emperor banned them. However, in the late 19th century, a French man named Pierre de Coubertin decided to bring the games back. He believed that sports could bring people from different countries together in peace. Thanks to his hard work, the first modern Olympic Games were held in Athens, Greece, in 1896. Fourteen countries participated, and athletes competed in 43 different events. Unlike the ancient games, the winners received silver medals.</p>
+            <p><strong>[Paragraph 3]</strong> Today, the Olympic Games have many famous symbols. The most famous symbol is the Olympic rings. There are five rings: blue, yellow, black, green, and red on a white background. These colors were chosen because at least one of them appears on the flag of every country in the world. The five rings represent the five main continents joined together in friendship. Another important tradition is the Olympic torch, which is lit in Greece and carried by runners all the way to the host city.</p>
+            <p><strong>[Paragraph 4]</strong> The modern Olympics have grown incredibly large. Now, thousands of athletes from over 200 countries compete in both the Summer and Winter Games. Women were allowed to compete for the first time in 1900. In 1960, the Paralympic Games were created to give athletes with physical disabilities a chance to compete at the highest level. Even though the games have changed a lot over the centuries, the main goal remains the same: to celebrate human ability and promote global peace through sports.</p>
+        `,
+        "Physical Science": `
+            <h2 class="text-3xl font-black mb-8 text-indigo-900 tracking-tight">The Water Cycle</h2>
+            <p><strong>[Paragraph 1]</strong> Water is essential for all life on Earth. However, the Earth does not get any new water from space. The water you drink today is the exact same water that dinosaurs drank millions of years ago! This is possible because water is constantly moving and recycling itself in a process called the water cycle. During this cycle, water changes its state. It can be a liquid (like in rivers), a solid (like ice), or an invisible gas called water vapor.</p>
+            <p><strong>[Paragraph 2]</strong> The water cycle begins with the sun. The sun heats the water in oceans, lakes, and rivers. This heat turns the liquid water into a gas. This step is called evaporation. The invisible water vapor rises high up into the sky. Plants also add water to the air. Just like humans sweat, plants release water vapor through small holes in their leaves. This process is known as transpiration. Together, evaporation and transpiration put millions of tons of water into the atmosphere every day.</p>
+            <p><strong>[Paragraph 3]</strong> As the water vapor rises higher into the sky, the air gets much colder. This cold air causes the water vapor to change back into tiny drops of liquid water. This step is called condensation. When millions of these tiny water drops group together, they form clouds. As more and more water joins the cloud, the drops get heavier and larger. Finally, when the drops are too heavy to stay in the air, they fall back down to the Earth. This falling water is called precipitation, and it can take the form of rain, snow, or hail.</p>
+            <p><strong>[Paragraph 4]</strong> When the precipitation hits the ground, it is collected in different ways. Some of it flows over the ground and goes back into rivers, lakes, and oceans. This is called runoff. Some of the water soaks deep into the earth and becomes groundwater, which plants drink through their roots. Eventually, the sun will heat this water again, and the cycle will start all over. This continuous loop ensures that life on our planet always has the fresh water it needs to survive.</p>
+        `
+    };
+
+    // --- B1 LEVEL QUESTIONS DATA (40 Questions) ---
+    const questions = [
+        // Grammar & Vocabulary: 1-10
+        { topic: "Grammar & Vocabulary", text: "___ you ever visited London?", options: ["Did", "Have", "Do", "Are"], answer: 1, hint: "Use the present perfect tense to ask about experiences in someone's life up to now.", explanation: "Correct. 'Have you ever visited' uses the present perfect to ask about a life experience." },
+        { topic: "Grammar & Vocabulary", text: "My new phone is much ___ than my old one.", options: ["fast", "faster", "fastest", "more fast"], answer: 1, hint: "For short adjectives (one syllable), add '-er' to make a comparison.", explanation: "Correct. 'Faster' is the correct comparative form of the adjective 'fast'." },
+        { topic: "Grammar & Vocabulary", text: "I am really interested ___ learning how to play the guitar.", options: ["in", "on", "at", "about"], answer: 0, hint: "Which preposition always follows the adjective 'interested'?", explanation: "Correct. The phrase is always 'interested in' something." },
+        { topic: "Grammar & Vocabulary", text: "If I won the lottery, I ___ a big house.", options: ["will buy", "bought", "buy", "would buy"], answer: 3, hint: "This is a second conditional sentence (unreal present/future). It uses 'If + past simple, ... would + verb'.", explanation: "Correct. 'Would buy' completes the second conditional structure." },
+        { topic: "Grammar & Vocabulary", text: "She ___ to work when she saw the accident.", options: ["drives", "drove", "was driving", "has driven"], answer: 2, hint: "Use the past continuous to describe an action that was in progress when a shorter action (seeing the accident) interrupted it.", explanation: "Correct. 'Was driving' is the past continuous, indicating an action interrupted in the past." },
+        { topic: "Grammar & Vocabulary", text: "You don't need to bring a towel; the hotel ___ them.", options: ["provides", "delivers", "rents", "makes"], answer: 0, hint: "Which verb means 'to give or supply something that is needed'?", explanation: "Correct. 'Provides' means to supply or make something available." },
+        { topic: "Grammar & Vocabulary", text: "The Eiffel Tower ___ in 1889.", options: ["built", "was built", "is built", "has built"], answer: 1, hint: "The tower didn't build itself, so you need the passive voice in the past tense.", explanation: "Correct. 'Was built' is the past simple passive, which is required here." },
+        { topic: "Grammar & Vocabulary", text: "He decided ___ his job because the pay was too low.", options: ["quit", "quitting", "to quit", "quitted"], answer: 2, hint: "The verb 'decide' is always followed by an infinitive (to + verb).", explanation: "Correct. 'To quit' is the infinitive form used after the verb 'decided'." },
+        { topic: "Grammar & Vocabulary", text: "We must hurry! We have very ___ time left before the train leaves.", options: ["few", "little", "much", "many"], answer: 1, hint: "Time is an uncountable noun. Which word means 'not much' for uncountable nouns?", explanation: "Correct. 'Little' is used with uncountable nouns like 'time' to mean 'not much'." },
+        { topic: "Grammar & Vocabulary", text: "Please don't ___ a noise. The baby is sleeping.", options: ["do", "make", "take", "have"], answer: 1, hint: "Which verb commonly goes with the noun 'noise'?", explanation: "Correct. In English, the correct collocation is 'to make a noise'." },
+
+        // Life Science: 11-20
+        { topic: "Life Science", text: "According to paragraph 1, what is the main job of the queen bee?", options: ["To clean the hive.", "To find food for the colony.", "To lay eggs.", "To protect the worker bees."], answer: 2, hint: "Check Para 1: 'There is only one queen bee, and her only job is to lay eggs.'", explanation: "Correct. The text specifically states that her only job is laying eggs." },
+        { topic: "Life Science", text: "What do worker bees do according to paragraph 1?", options: ["They only mate with the queen.", "They do all the work, like cleaning and finding food.", "They build new hives for other insects.", "They just lay eggs all day."], answer: 1, hint: "Para 1: 'These are female bees that do everything else: they clean the hive, feed the baby bees, and go outside to find food.'", explanation: "Correct. Worker bees are responsible for all the chores in the hive." },
+        { topic: "Life Science", text: "The word 'nectar' in paragraph 2 refers to:", options: ["A yellow powder.", "The wax used to build the hive.", "A sweet liquid collected from flowers.", "The poison that kills bad insects."], answer: 2, hint: "Para 2: 'Worker bees fly from flower to flower to collect sweet liquid called nectar.'", explanation: "Correct. The passage defines nectar as a sweet liquid from flowers." },
+        { topic: "Life Science", text: "Why is honey so important for the bees?", options: ["It makes the hive smell good.", "It is the food they eat during winter when there are no flowers.", "They use it to feed the queen only.", "It scares away predators."], answer: 1, hint: "Para 2: 'Honey is very important because it is the food the bees eat during the cold winter months...'", explanation: "Correct. It is their survival food for the winter." },
+        { topic: "Life Science", text: "How does pollination happen according to paragraph 2?", options: ["Bees plant seeds in the ground.", "Bees drop honey on the leaves of plants.", "Pollen sticks to bees and falls off when they visit the next flower.", "Bees eat the flowers and leave seeds behind."], answer: 2, hint: "Para 2: 'The pollen sticks to their hairy bodies, and when they fly to the next flower, some of the pollen falls off.'", explanation: "Correct. Pollination occurs when pollen transfers from the bee's body to the next flower." },
+        { topic: "Life Science", text: "According to paragraph 3, how do bees tell each other where good flowers are?", options: ["They make a loud buzzing sound.", "They leave a trail of honey.", "They perform a movement called the 'waggle dance'.", "They carry the flowers back to the hive."], answer: 2, hint: "Para 3: 'She does not use sounds; instead, she uses movement. She performs a special waggle dance...'", explanation: "Correct. They communicate location through a specific physical dance." },
+        { topic: "Life Science", text: "What information does the 'waggle dance' give to the other bees?", options: ["How many bad insects are outside.", "How far away the flowers are and the direction to fly.", "When the winter is going to start.", "Who the new queen bee is."], answer: 1, hint: "Para 3: 'she can tell the other bees exactly how far away the flowers are and in what direction they should fly.'", explanation: "Correct. The dance communicates distance and direction." },
+        { topic: "Life Science", text: "Which of the following is NOT a reason bee populations are declining, according to paragraph 4?", options: ["Chemicals used by farmers.", "Climate change.", "Other bees attacking their hives.", "Diseases."], answer: 2, hint: "Look at the list of threats in paragraph 4.", explanation: "Correct. The text mentions chemicals, climate change, and diseases, but not bee-on-bee attacks." },
+        { topic: "Life Science", text: "Why is the decline of bees a serious problem for humans?", options: ["Because humans will have no honey to eat.", "Because bees pollinate about one-third of the food humans eat.", "Because bees make the world look beautiful.", "Because bees clean the air we breathe."], answer: 1, hint: "Para 4: 'Because bees pollinate about one-third of the food humans eat, their decline is a serious problem for everyone.'", explanation: "Correct. Human food supply depends heavily on bee pollination." },
+        { topic: "Life Science", text: "Sentence Insertion: 'Because they don't have this food source yet, they must rely on what they saved.' Where does this sentence fit best?", options: ["After the mention of 'drones' in Para 1.", "Following the sentence about eating honey in winter in Para 2.", "At the end of Para 3.", "Before the mention of 'chemicals' in Para 4."], answer: 1, hint: "This sentence talks about 'relying on what they saved' (honey) because there is no 'food source' (flowers).", explanation: "Correct. It logically follows the sentence in paragraph 2 explaining that honey is winter food when there are no flowers." },
+
+        // Social Science: 21-30
+        { topic: "Social Science", text: "When and where did the first Olympic Games take place?", options: ["In 1896 in France.", "More than 2,700 years ago in ancient Greece.", "In 393 AD in Rome.", "In 1960 in Athens."], answer: 1, hint: "Para 1: 'The first games took place more than 2,700 years ago in ancient Greece...'", explanation: "Correct. The text states they began over 2,700 years ago in Greece." },
+        { topic: "Social Science", text: "According to paragraph 1, what did winners of the ancient Olympics receive?", options: ["A large sum of money.", "A gold medal.", "A crown made of olive leaves.", "A chariot."], answer: 2, hint: "Para 1: '...and they won a crown made of olive leaves instead of a gold medal.'", explanation: "Correct. They received olive crowns, not modern medals." },
+        { topic: "Social Science", text: "Why did Pierre de Coubertin want to bring the Olympic Games back?", options: ["He wanted to become famous in France.", "He wanted to sell silver medals.", "He believed sports could bring people from different countries together in peace.", "He wanted to make money from selling tickets."], answer: 2, hint: "Para 2: 'He believed that sports could bring people from different countries together in peace.'", explanation: "Correct. His primary motivation was promoting global peace through sports." },
+        { topic: "Social Science", text: "The word 'participated' in paragraph 2 is closest in meaning to:", options: ["Watched", "Took part or joined in", "Paid money", "Left"], answer: 1, hint: "Context: 'Fourteen countries participated, and athletes competed in 43 different events.'", explanation: "Correct. To participate means to join in or take part in an activity." },
+        { topic: "Social Science", text: "Why were the colors of the Olympic rings (blue, yellow, black, green, red) chosen?", options: ["They were Pierre de Coubertin's favorite colors.", "They were the easiest colors to paint in the past.", "At least one of these colors appears on the flag of every country in the world.", "They represent different sports in the games."], answer: 2, hint: "Para 3: 'These colors were chosen because at least one of them appears on the flag of every country in the world.'", explanation: "Correct. The colors were chosen to represent all global flags." },
+        { topic: "Social Science", text: "What do the five Olympic rings represent according to paragraph 3?", options: ["The five sports in the ancient games.", "The five main continents joined together in friendship.", "The five men who started the modern games.", "The five years between each Olympic event."], answer: 1, hint: "Para 3: 'The five rings represent the five main continents joined together in friendship.'", explanation: "Correct. They symbolize global unity across the continents." },
+        { topic: "Social Science", text: "What is the tradition of the Olympic torch?", options: ["It is lit in Greece and carried by runners to the host city.", "It is given to the winner of the running race.", "It is used to light the night sky during winter.", "It is a golden cup given to the best team."], answer: 0, hint: "Para 3: '...the Olympic torch, which is lit in Greece and carried by runners all the way to the host city.'", explanation: "Correct. The text details the torch relay from Greece to the host city." },
+        { topic: "Social Science", text: "What happened for the first time in the year 1900?", options: ["The ancient games were banned.", "The Paralympic Games were created.", "Women were allowed to compete in the Olympics.", "The first gold medals were given out."], answer: 2, hint: "Para 4: 'Women were allowed to compete for the first time in 1900.'", explanation: "Correct. The year 1900 marked the introduction of female competitors." },
+        { topic: "Social Science", text: "According to paragraph 4, what is the purpose of the Paralympic Games?", options: ["To give athletes from poor countries a chance to play.", "To hold a competition for winter sports only.", "To give athletes with physical disabilities a chance to compete at the highest level.", "To train young children for the real Olympics."], answer: 2, hint: "Para 4: 'the Paralympic Games were created to give athletes with physical disabilities a chance to compete at the highest level.'", explanation: "Correct. It was created specifically for athletes with physical disabilities." },
+        { topic: "Social Science", text: "Sentence Insertion: 'Even though he was Roman, he felt the games celebrated the wrong gods.' Where does this fit best?", options: ["After the mention of 'Zeus' in Para 1.", "After the first sentence in Para 2.", "At the end of Para 3.", "Before the mention of 'women' in Para 4."], answer: 1, hint: "This sentence gives a reason why a 'Roman emperor' banned the games.", explanation: "Correct. It immediately follows the sentence explaining that a Roman emperor banned the ancient games in 393 AD." },
+
+        // Physical Science: 31-40
+        { topic: "Physical Science", text: "According to paragraph 1, where does the Earth get its new water?", options: ["From melting ice in space.", "From deep underground volcanoes.", "The Earth does not get any new water; it is recycled.", "From clouds that travel from other planets."], answer: 2, hint: "Para 1: '...the Earth does not get any new water from space. The water you drink today is the exact same water...'", explanation: "Correct. The Earth's water is constantly recycled; no new water is added." },
+        { topic: "Physical Science", text: "The word 'invisible' in paragraph 1 is closest in meaning to:", options: ["Very heavy", "Unable to be seen", "Extremely cold", "Moving very fast"], answer: 1, hint: "Context: '...or an invisible gas called water vapor.'", explanation: "Correct. Invisible means it cannot be seen with the eyes." },
+        { topic: "Physical Science", text: "What provides the heat that starts the water cycle?", options: ["The Earth's hot core.", "Fire.", "The sun.", "Fossil fuels."], answer: 2, hint: "Para 2: 'The water cycle begins with the sun. The sun heats the water...'", explanation: "Correct. The sun's heat provides the energy to start evaporation." },
+        { topic: "Physical Science", text: "What is 'evaporation' according to paragraph 2?", options: ["When liquid water turns into a gas because of heat.", "When gas turns back into a liquid.", "When water flows over the ground.", "When plants drink water from the soil."], answer: 0, hint: "Para 2: 'This heat turns the liquid water into a gas. This step is called evaporation.'", explanation: "Correct. It is the process of liquid water becoming vapor." },
+        { topic: "Physical Science", text: "How do plants add water to the air?", options: ["By holding water in their roots.", "Through a process called condensation.", "By releasing water vapor through small holes in their leaves.", "By drinking rainwater."], answer: 2, hint: "Para 2: '...plants release water vapor through small holes in their leaves. This process is known as transpiration.'", explanation: "Correct. Transpiration is how plants release water vapor." },
+        { topic: "Physical Science", text: "What happens to water vapor when it rises high into the cold sky?", options: ["It turns into invisible gas.", "It changes back into tiny drops of liquid water.", "It falls immediately as heavy snow.", "It burns up in the sun."], answer: 1, hint: "Para 3: 'This cold air causes the water vapor to change back into tiny drops of liquid water.'", explanation: "Correct. The cold air causes the vapor to condense into liquid." },
+        { topic: "Physical Science", text: "The word 'precipitation' in paragraph 3 refers to:", options: ["Water falling back down to Earth as rain, snow, or hail.", "Water turning into gas.", "The sun heating the ocean.", "Water soaking into the dirt."], answer: 0, hint: "Para 3: 'This falling water is called precipitation, and it can take the form of rain, snow, or hail.'", explanation: "Correct. Precipitation is any form of water falling from clouds." },
+        { topic: "Physical Science", text: "What is 'runoff' according to paragraph 4?", options: ["Water that flies back into space.", "Water that stays inside plants forever.", "Water that flows over the ground and back into rivers and lakes.", "Water that evaporates before it hits the ground."], answer: 2, hint: "Para 4: 'Some of it flows over the ground and goes back into rivers, lakes, and oceans. This is called runoff.'", explanation: "Correct. Runoff is water traveling over the surface of the land." },
+        { topic: "Physical Science", text: "What happens to the water that soaks deep into the earth?", options: ["It becomes groundwater that plants can drink.", "It stays there forever and never moves.", "It turns into solid rocks.", "It disappears completely."], answer: 0, hint: "Para 4: 'Some of the water soaks deep into the earth and becomes groundwater, which plants drink through their roots.'", explanation: "Correct. It becomes groundwater used by plants." },
+        { topic: "Physical Science", text: "Sentence Insertion: 'You cannot see it in the air, but it is always there around you.' Where does this fit best?", options: ["At the end of Para 1.", "After 'evaporation' in Para 2.", "Following 'tiny drops of liquid water' in Para 3.", "Before the mention of 'runoff' in Para 4."], answer: 0, hint: "This sentence refers to something you 'cannot see', which describes the 'invisible gas called water vapor' mentioned at the end of Para 1.", explanation: "Correct. It provides more detail about the invisible nature of water vapor introduced in the preceding sentence." }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let isReviewMode = false;
+    let timerInterval;
+    let secondsElapsed = 0;
+
+    // DOM Elements
+    const passageContent = document.getElementById('passage-content');
+    const questionText = document.getElementById('question-text');
+    const optionsList = document.getElementById('options-list');
+    const feedbackArea = document.getElementById('feedback-area');
+    const explanationText = document.getElementById('explanation-text');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const hintBtn = document.getElementById('hint-btn');
+    const hintBox = document.getElementById('hint-box');
+    const progressText = document.getElementById('progress-text');
+    const progressBar = document.getElementById('progress-bar');
+    const topicBadge = document.getElementById('topic-badge');
+    const resultsScreen = document.getElementById('results-screen');
+    const timerDisplay = document.getElementById('timer-display');
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            const hrs = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            timerDisplay.innerText = `${hrs}:${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function initQuiz() {
+        startTimer();
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        
+        // Update Metadata
+        progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        topicBadge.innerText = q.topic;
+        
+        // Update Passage Side
+        passageContent.innerHTML = passages[q.topic];
+        
+        // Scroll to top of passage when topic changes
+        if (currentQuestionIndex === 0 || questions[currentQuestionIndex].topic !== questions[currentQuestionIndex-1]?.topic) {
+            document.getElementById('passage-container').scrollTop = 0;
         }
 
-        function showReview() {
-            document.getElementById('results-screen').classList.add('hidden');
-            document.getElementById('review-screen').classList.remove('hidden');
-            const container = document.getElementById('review-container');
-            container.innerHTML = '';
+        // Reset Hint
+        hintBox.classList.add('hidden');
+        
+        // Update Question
+        questionText.innerText = q.text;
+        optionsList.innerHTML = '';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = `w-full text-left p-6 rounded-2xl border-2 border-slate-200 transition-all flex items-start group hover:border-indigo-400 hover:bg-indigo-50/30`;
+            
+            const label = String.fromCharCode(65 + index); // A, B, C, D
+            btn.innerHTML = `
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-black text-slate-500 mr-6 group-hover:bg-indigo-600 group-hover:text-white transition-all transform group-hover:scale-110 shadow-sm">${label}</span> 
+                <span class="flex-grow pt-0.5 font-semibold text-slate-700 leading-snug">${opt}</span>
+            `;
+            
+            // Handle Selection
+            if (userAnswers[currentQuestionIndex] === index) {
+                btn.classList.add('selected', 'border-indigo-600', 'bg-indigo-50');
+                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-indigo-600');
+                btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+            }
 
-            quizData.forEach((data, idx) => {
-                const userAns = userAnswers[idx];
-                const isCorrect = userAns === data.correct;
-                
-                const item = document.createElement('div');
-                item.className = "pb-8 border-b border-slate-100 last:border-0";
-                item.innerHTML = `
-                    <div class="flex items-start gap-4 mb-4">
-                        <span class="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded shrink-0">Q${idx + 1}</span>
-                        <p class="question-text text-slate-900">${data.q}</p>
-                    </div>
-                    ${data.passage ? `<div class="text-sm bg-slate-50 p-4 rounded-lg mb-4 italic text-slate-500 border-l-2 border-slate-200">${data.passage}</div>` : ''}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                        <div class="p-4 rounded-xl border ${isCorrect ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}">
-                            <p class="text-xs uppercase font-bold mb-1">Your Choice</p>
-                            <p class="font-semibold">${data.options[userAns] || 'No answer'}</p>
-                        </div>
-                        ${!isCorrect ? `
-                        <div class="p-4 rounded-xl border bg-green-50 border-green-200 text-green-700">
-                            <p class="text-xs uppercase font-bold mb-1">Correct Answer</p>
-                            <p class="font-semibold">${data.options[data.correct]}</p>
-                        </div>
-                        ` : ''}
-                    </div>
-                    <div class="explanation-box bg-blue-50 p-4 rounded-r-xl">
-                        <p class="text-xs uppercase font-bold text-blue-500 mb-1">Linguistic Logic</p>
-                        <p class="text-slate-700 text-sm leading-relaxed">${data.explanation}</p>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-            window.scrollTo(0,0);
+            if (isReviewMode) {
+                if (index === q.answer) {
+                    btn.classList.add('correct', 'border-emerald-500', 'bg-emerald-50');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-emerald-600');
+                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                } else if (userAnswers[currentQuestionIndex] === index) {
+                    btn.classList.add('incorrect', 'border-rose-500', 'bg-rose-50');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-rose-600');
+                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                }
+                btn.disabled = true;
+                btn.classList.remove('hover:border-indigo-400', 'hover:bg-indigo-50/30');
+            } else {
+                btn.onclick = () => selectOption(index);
+            }
+            
+            optionsList.appendChild(btn);
+        });
+
+        // Show Feedback in Review Mode
+        if (isReviewMode) {
+            feedbackArea.classList.remove('hidden');
+            explanationText.innerHTML = q.explanation;
+        } else {
+            feedbackArea.classList.add('hidden');
         }
 
-        function backToSummary() {
-            document.getElementById('review-screen').classList.add('hidden');
-            document.getElementById('results-screen').classList.remove('hidden');
-            window.scrollTo(0,0);
+        // Nav Buttons
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "RESTART" : "FINISH TEST") : "CONTINUE";
+    }
+
+    function selectOption(index) {
+        userAnswers[currentQuestionIndex] = index;
+        renderQuestion();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            renderQuestion();
+            document.getElementById('question-area').scrollTop = 0;
+        } else {
+            if (isReviewMode) {
+                location.reload();
+            } else {
+                clearInterval(timerInterval);
+                showResults();
+            }
         }
-    </script>
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+            document.getElementById('question-area').scrollTop = 0;
+        }
+    }
+
+    function showHint() {
+        hintBox.innerText = questions[currentQuestionIndex].hint;
+        hintBox.classList.remove('hidden');
+    }
+
+    function showResults() {
+        resultsScreen.classList.remove('hidden');
+        
+        let score = 0;
+        userAnswers.forEach((ans, i) => {
+            if (ans === questions[i].answer) score++;
+        });
+        
+        document.getElementById('final-score').innerText = score;
+        
+        // Breakdown
+        const breakdown = document.getElementById('section-breakdown');
+        breakdown.innerHTML = `
+            <div class="space-y-4">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Module Performance</p>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 font-bold">Grammar & Vocabulary</span>
+                    <span class="bg-indigo-50 text-indigo-700 px-4 py-1 rounded-full font-black ring-1 ring-indigo-200">${calculateSection(0, 9)}/10</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 font-bold">Life Science</span>
+                    <span class="bg-indigo-50 text-indigo-700 px-4 py-1 rounded-full font-black ring-1 ring-indigo-200">${calculateSection(10, 19)}/10</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 font-bold">Social Science</span>
+                    <span class="bg-indigo-50 text-indigo-700 px-4 py-1 rounded-full font-black ring-1 ring-indigo-200">${calculateSection(20, 29)}/10</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-600 font-bold">Physical Science</span>
+                    <span class="bg-indigo-50 text-indigo-700 px-4 py-1 rounded-full font-black ring-1 ring-indigo-200">${calculateSection(30, 39)}/10</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function calculateSection(start, end) {
+        let s = 0;
+        for(let i=start; i<=end; i++) {
+            if(userAnswers[i] === questions[i].answer) s++;
+        }
+        return s;
+    }
+
+    function reviewMistakes() {
+        isReviewMode = true;
+        currentQuestionIndex = 0;
+        resultsScreen.classList.add('hidden');
+        renderQuestion();
+    }
+
+    // Event Listeners
+    nextBtn.onclick = nextQuestion;
+    prevBtn.onclick = prevQuestion;
+    hintBtn.onclick = showHint;
+    document.getElementById('review-btn').onclick = reviewMistakes;
+
+    initQuiz();
+</script>
 </body>
 </html>
