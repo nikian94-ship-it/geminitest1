@@ -3,176 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEFL iBT Mastery: 3-Passage Reading Challenge</title>
+    <title>EGCIS Test Software - TOEFL iBT Reading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body { font-family: 'Montserrat', sans-serif; }
         .hidden { display: none; }
         .correct { background-color: #d1fae5; border: 2px solid #10b981; }
         .incorrect { background-color: #fee2e2; border: 2px solid #ef4444; }
         .selected { border: 2px solid #3b82f6; background-color: #eff6ff; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .prose p { margin-bottom: 1.25rem; line-height: 1.75; font-size: 1.05rem; text-align: justify; }
+        .highlight { background-color: #fef08a; padding: 2px 4px; border-radius: 2px; font-weight: 500; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+<body class="bg-slate-50 text-slate-900 antialiased">
 
-<div id="app" class="max-w-6xl mx-auto p-4 md:p-6 lg:p-10">
+<div id="app" class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
     <!-- Header -->
-    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b pb-6 border-slate-200">
+    <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 border-slate-200">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-800">TOEFL iBT Reading Simulator</h1>
-            <p class="text-slate-500 font-medium">Academic Level 12-14 | High-Density Text Analysis</p>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">EGCIS Test Software</h1>
+            <p class="text-slate-500 font-semibold text-sm">TOEFL® is a registered trademark of ETS. This product is not endorsed or approved by ETS.</p>
         </div>
-        <div id="timer-display" class="mt-4 md:mt-0 px-4 py-2 bg-slate-800 text-white rounded-lg font-mono text-xl">
+        <div id="timer-display" class="mt-4 md:mt-0 px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-xl tracking-widest">
             00:00:00
         </div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-250px)]">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-220px)]">
         <!-- Left Column: Reading Passage -->
-        <div id="passage-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 overflow-y-auto scrollbar-hide">
+        <div id="passage-container" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 overflow-y-auto scrollbar-hide">
             <div id="passage-content" class="prose prose-slate max-w-none">
-                <!-- Content dynamically injected here -->
+                <!-- Content dynamically injected -->
             </div>
         </div>
 
         <!-- Right Column: Question Interface -->
-        <div id="quiz-container" class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col overflow-hidden">
+        <div id="quiz-container" class="bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden">
             <!-- Progress Tracker -->
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50">
-                <div class="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex justify-between text-xs font-black text-slate-400 uppercase tracking-widest mb-3">
                     <span id="progress-text">Question 1 of 30</span>
-                    <span id="topic-badge" class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">LIFE SCIENCE</span>
+                    <span id="topic-badge" class="bg-indigo-600 text-white px-3 py-1 rounded-full">LIFE SCIENCE</span>
                 </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-500" style="width: 3.33%"></div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-700 ease-in-out" style="width: 3.33%"></div>
                 </div>
             </div>
 
             <!-- Question Content -->
-            <div id="question-area" class="p-6 flex-grow overflow-y-auto">
-                <div id="hint-box" class="mb-4 p-3 bg-amber-50 border-l-4 border-amber-400 text-sm text-amber-800 hidden">
+            <div id="question-area" class="p-8 flex-grow overflow-y-auto">
+                <div id="hint-box" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-sm text-blue-900 hidden italic">
                     <!-- Hint text -->
                 </div>
                 
-                <h2 id="question-text" class="text-lg font-bold text-slate-800 mb-6 leading-snug"></h2>
+                <h2 id="question-text" class="text-xl font-extrabold text-slate-800 mb-8 leading-tight"></h2>
 
-                <div id="options-list" class="space-y-3">
+                <div id="options-list" class="space-y-4">
                     <!-- Options injected here -->
                 </div>
 
                 <!-- Feedback Area (Only in Review Mode) -->
-                <div id="feedback-area" class="mt-8 p-4 rounded-lg bg-slate-100 hidden">
-                    <h3 class="font-bold text-sm mb-2 uppercase text-slate-500">Explanation</h3>
-                    <p id="explanation-text" class="text-sm leading-relaxed"></p>
+                <div id="feedback-area" class="mt-10 p-6 rounded-2xl border-2 hidden transition-all duration-300">
+                    <h3 class="font-black text-xs mb-3 uppercase tracking-widest text-slate-400">Rational Explanation</h3>
+                    <p id="explanation-text" class="text-sm font-medium leading-relaxed"></p>
                 </div>
             </div>
 
             <!-- Footer Controls -->
-            <div class="p-4 border-t border-slate-100 bg-white flex justify-between items-center">
-                <button id="prev-btn" class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition">
-                    Back
+            <div class="p-6 border-t border-slate-100 bg-white flex justify-between items-center">
+                <button id="prev-btn" class="px-6 py-3 text-sm font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-30 transition-all">
+                    PREVIOUS
                 </button>
-                <button id="hint-btn" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition">
-                    Show Paragraph Reference
+                <button id="hint-btn" class="text-xs font-black text-indigo-600 hover:text-indigo-800 uppercase tracking-widest underline decoration-2 underline-offset-4">
+                    Reference
                 </button>
-                <button id="next-btn" class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm shadow-blue-200 transition">
-                    Next
+                <button id="next-btn" class="px-8 py-3 text-sm font-black text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all">
+                    NEXT
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Results Screen -->
-    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 text-center">
-            <div class="mb-6 inline-flex p-4 bg-blue-50 text-blue-600 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center transform scale-95 animate-in fade-in zoom-in duration-300">
+            <div class="mb-8 inline-flex p-6 bg-indigo-50 text-indigo-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
             </div>
-            <h2 class="text-3xl font-black text-slate-800 mb-2">Practice Complete</h2>
-            <p class="text-slate-500 mb-8">You have successfully navigated through 3 academic passages.</p>
+            <h2 class="text-4xl font-black text-slate-800 mb-3">Diagnostic Complete</h2>
+            <p class="text-slate-500 mb-10 font-medium">You have navigated through the EGCIS high-density reading assessment.</p>
             
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="p-4 bg-slate-50 rounded-xl">
-                    <span class="block text-4xl font-black text-blue-600" id="final-score">0</span>
-                    <span class="text-xs font-bold text-slate-400 uppercase">Total Score / 30</span>
+            <div class="grid grid-cols-2 gap-6 mb-10">
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                    <span class="block text-5xl font-black text-indigo-600 mb-1" id="final-score">0</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Total Accuracy</span>
                 </div>
-                <div id="section-breakdown" class="text-left space-y-2 py-2 px-4 border-l border-slate-200">
+                <div id="section-breakdown" class="text-left space-y-3 py-2 px-6 border-l-2 border-slate-100">
                     <!-- Section scores -->
                 </div>
             </div>
 
-            <button id="review-btn" class="w-full py-4 bg-slate-800 text-white rounded-xl font-bold text-lg hover:bg-slate-900 transition">
-                Review Mistakes & Explanations
+            <button id="review-btn" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
+                REVIEW PERFORMANCE
             </button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- PASSAGE DATA ---
     const passages = {
-        "Life Science": `
-            <h2 class="text-2xl font-bold mb-4">Passage 1: The Cambrian Explosion</h2>
-            <p class="mb-4"><strong>[Paragraph 1]</strong> The Cambrian period, beginning approximately 541 million years ago, represents a pivotal juncture in evolutionary biology characterized by the rapid diversification of multicellular organisms. This epochal transition, commonly termed the "Cambrian Explosion," saw the emergence of virtually every major animal phylum recognized today. Prior to this, the Ediacaran biota—soft-bodied organisms with simple architectures—dominated the marine landscape. In stark contrast, Cambrian life introduced complex body plans, specialized tissues, and bilateral symmetry. This shift wasn't merely a numerical increase in species but a fundamental leap in biological complexity that challenged Darwin's gradualist perspective of evolution.</p>
-            <p class="mb-4"><strong>[Paragraph 2]</strong> Central to this rapid diversification was the development of the "genetic toolkit," specifically the Hox gene clusters. These master regulatory genes govern the longitudinal patterning of an embryo, determining where limbs, antennae, or segments appear. The genetic plasticity inherent in these early lineages allowed for significant morphological experimentation without compromising the fundamental viability of the organism. By modulating the expression of these genes, evolution could produce disparate body plans—from the calcified shells of brachiopods to the segmented bodies of trilobites—within a relatively brief geological window.</p>
-            <p class="mb-4"><strong>[Paragraph 3]</strong> Ecological interactions also accelerated this evolutionary pace. The rise of active predation fundamentally altered selection pressures, initiating a biological "arms race." Organisms developed defensive adaptations such as exoskeletons and sensory organs, while predators like <em>Anomalocaris</em> evolved sophisticated locomotion and appendages for capture. This heightened competition forced lineages into specialized niches, moving away from the generalized scavenger strategies of the preceding era. The ocean floor became a complex theater of behavioral interactions, from burrowing into sediment to complex swimming behaviors.</p>
-            <p class="mb-4"><strong>[Paragraph 4]</strong> Environmental factors provided the necessary substrate for these biological advancements. A significant rise in atmospheric oxygen, potentially linked to tectonic activity and the flooding of continental shelves, facilitated the synthesis of collagen—a structural protein requiring high oxygen levels for production. Collagen served as the essential scaffolding for complex tissues and larger body sizes. Furthermore, the expansion of shallow marine environments created diverse habitats, providing the "real estate" necessary for disparate lineages to colonize and diverge. While no single factor fully explains the Cambrian Explosion, it is increasingly viewed as a synergistic event where genetic readiness met favorable environmental conditions and intense ecological competition.</p>
+        "LIFE SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">Paleoclimatology: The Paleocene-Eocene Thermal Maximum (PETM)</h2>
+            <p><strong>[Paragraph 1]</strong> Roughly 56 million years ago, the Earth underwent one of the most rapid and extreme global warming events in the geologic record: the Paleocene-Eocene Thermal Maximum (PETM). During this interval, global temperatures surged by 5 to 8 degrees Celsius in as little as a few thousand years. This hyperthermal event was triggered by a massive injection of carbon into the ocean-atmosphere system, leading to widespread ocean acidification and a drastic shift in biological distributions. While the exact source of the carbon remains a subject of intense debate, the consensus suggests a synergistic release from seafloor methane clathrates, volcanic activity in the North Atlantic, and the combustion of terrestrial peatlands.</p>
+            <p><strong>[Paragraph 2]</strong> The biological response to this heat spike was profound and varied across different ecosystems. In the marine realm, benthic foraminifera—tiny organisms dwelling on the seafloor—suffered a catastrophic extinction event, losing nearly 50% of their species diversity. Scientists hypothesize that this was not caused by temperature alone but by the <span class="highlight text-slate-900">concomitant</span> deoxygenation of deep-sea waters and the corrosive nature of acidified oceans. Conversely, surface-dwelling planktonic species thrived or migrated toward higher latitudes, where previously frigid waters had become temperate. This geographic reshuffling suggests that while some lineages were pushed to the brink, others utilized the warming as a catalyst for range expansion.</p>
+            <p><strong>[Paragraph 3]</strong> On land, the PETM facilitated a critical turning point in mammalian evolution. The warming allowed for the intercontinental migration of "modern" mammal groups, including primates, artiodactyls (even-toed ungulates), and perissodactyls (odd-toed ungulates), across high-latitude land bridges that were formerly impassable due to ice or extreme cold. Curiously, many terrestrial mammals underwent a temporary reduction in body size, a phenomenon known as "dwarfing." Paleontologists argue that this was an adaptive response to nutrient scarcity, as high CO2 levels often lead to faster plant growth but lower nutritional density in foliage, forcing herbivores to survive on less efficient food sources.</p>
+            <p><strong>[Paragraph 4]</strong> The recovery phase of the PETM provides insight into the Earth's natural capacity for carbon sequestration. Over approximately 100,000 to 200,000 years, temperatures gradually returned to pre-event levels. This cooling was primarily driven by the "silicate weathering" feedback loop: increased rainfall and warmth accelerated the chemical breakdown of silicate rocks, which consumes atmospheric CO2 and deposits it as carbonate minerals on the seafloor. Additionally, the proliferation of organic-rich sediments acted as a biological pump, locking away carbon in the deep ocean. The PETM serves as a sobering historical analogue for modern anthropogenic climate change, illustrating both the fragility of biological systems and the immense timescales required for planetary stabilization.</p>
         `,
-        "Social Science": `
-            <h2 class="text-2xl font-bold mb-4">Passage 2: The Advent of Sedentism</h2>
-            <p class="mb-4"><strong>[Paragraph 1]</strong> The transition from a mobile hunter-gatherer existence to a sedentary lifestyle represents one of the most profound shifts in human social organization. Traditionally, archaeologists posited that agriculture was the catalyst for permanent settlement. However, the Natufian culture of the Levant (c. 12,500–9,500 BCE) presents a compelling counter-narrative. The Natufians lived in stable, year-round villages well before the full domestication of plants and animals. Their ability to remain stationary was predicated on the "Broad Spectrum Revolution," a shift toward intensive exploitation of varied local resources like wild cereals and nuts that became abundant as the climate warmed after the last glacial maximum.</p>
-            <p class="mb-4"><strong>[Paragraph 2]</strong> Sedentism was not merely a matter of choice but an investment in physical capital. The Natufians developed heavy, stationary technology, most notably stone mortars and pestles used for processing wild grains. Once a group invested significant labor into constructing stone houses and heavy grinding equipment, the "cost" of mobility—the energy required to transport or rebuild such assets—increased exponentially. This investment effectively anchored the population to specific locales, fostering a sense of territoriality and communal identity that had been absent in previous nomadic bands.</p>
-            <p class="mb-4"><strong>[Paragraph 3]</strong> The demographic repercussions of permanent settlement were immediate and transformative. Permanent residency typically leads to a decrease in birth spacing, as mothers no longer need to carry toddlers over long distances, and soft weaning foods (such as cereal porridges) become more accessible. This population surge necessitated new social structures to manage conflict and resource allocation. Unlike nomadic groups that rely on simple kinship ties, sedentary villages required formal mechanisms for decision-making. The appearance of elaborate burial sites and differentiated grave goods suggests the emergence of social hierarchies and ritualized leadership roles during this period.</p>
-            <p class="mb-4"><strong>[Paragraph 4]</strong> However, this transition was not without its perils. The "Younger Dryas," a sudden cold and dry period around 10,800 BCE, drastically reduced the availability of the wild resources the Natufians relied upon. This environmental crisis forced some groups to return to a more mobile lifestyle, while others doubled down on sedentism by actively managing and tending to specific plant species—a precursor to true agriculture. Thus, sedentism acted as both a luxury of abundance and a trap of necessity, eventually propelling humanity toward the Neolithic Revolution and the subsequent rise of urban civilizations.</p>
+        "SOCIAL SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">The Paradox of Urban Density: The "Lonely Crowd" Phenomenon</h2>
+            <p><strong>[Paragraph 1]</strong> The rise of the megalopolis in the 21st century has brought about a unique sociological contradiction: the more densely populated a city becomes, the more social isolation its residents frequently report. This "urban paradox" suggests that physical proximity does not inherently translate into social cohesion. Early 20th-century sociologists, such as Georg Simmel, argued that the sensory overload of the city forces individuals to develop a "blasé outlook"—a psychological defense mechanism of detachment—to cope with the relentless barrage of stimuli. In this environment, the individual becomes a face in a crowd, anonymous and transient, leading to a state of hyper-individualism that erodes traditional communal bonds.</p>
+            <p><strong>[Paragraph 2]</strong> Modern research into "Third Places"—social environments separate from the two primary spheres of home and work—highlights the structural causes of urban loneliness. In many contemporary cities, the "commodification" of public space has replaced free communal gathering spots with commercialized venues like high-end cafes or malls. When social interaction requires a financial transaction, the barrier to spontaneous community building increases. Furthermore, the design of modern high-rise residential complexes often prioritizes private luxury and security over shared corridors or communal gardens, <span class="highlight text-slate-900">exacerbating</span> the physical and social compartmentalization of the citizenry.</p>
+            <p><strong>[Paragraph 3]</strong> The digital revolution has added a complex layer to this urban isolation. While social media platforms promise connectivity, they often facilitate "weak ties" at the expense of "strong ties." In a dense urban setting, a resident may have thousands of digital interactions but lack a single neighbor they can rely on in a crisis. This discrepancy creates a "phantom community," where the illusion of sociality masks a lack of substantive, local support networks. Sociologists note that this digital displacement is particularly acute in younger demographics, who may navigate the city physically but remain tethered to a digital reality that is detached from their immediate physical surroundings.</p>
+            <p><strong>[Paragraph 4]</strong> To combat this trend, urban planners are increasingly advocating for "placemaking" strategies that prioritize human-centric design. By reclaiming streets for pedestrians, investing in public parks, and encouraging mixed-use developments, cities can foster incidental social encounters. These "micro-interactions"—brief exchanges with a shopkeeper or a neighbor in a park—are the essential building blocks of social capital. While they may seem trivial, they provide the "social glue" that prevents the dense city from devolving into a collection of isolated silos. The challenge for future urbanism lies in balancing the economic efficiency of density with the fundamental human need for authentic, localized belonging.</p>
         `,
-        "Physical Science": `
-            <h2 class="text-2xl font-bold mb-4">Passage 3: Stellar Nucleosynthesis</h2>
-            <p class="mb-4"><strong>[Paragraph 1]</strong> The chemical composition of the modern universe is a testament to the life and death cycles of stars. In the immediate aftermath of the Big Bang, the universe was elemental in the simplest sense, consisting almost entirely of hydrogen and helium, with only trace amounts of lithium. All heavier elements—from the carbon in our DNA to the gold in our jewelry—were forged through the process of stellar nucleosynthesis. This process begins within the scorching cores of stars, where gravity exerts enough pressure to overcome the electrostatic repulsion between atomic nuclei.</p>
-            <p class="mb-4"><strong>[Paragraph 2]</strong> For the majority of a star's life, it exists in a state of hydrostatic equilibrium, where outward radiation pressure from hydrogen fusion balances the inward pull of gravity. However, as massive stars age and exhaust their core hydrogen, they begin fusing heavier elements like helium, carbon, and oxygen. This progression continues until the star develops an iron core. Iron represents a critical thermodynamic threshold; fusing nuclei heavier than iron is endothermic, meaning it consumes more energy than it releases. Without the outward pressure from fusion, the star's core collapses in milliseconds, triggering a catastrophic Type II supernova.</p>
-            <p class="mb-4"><strong>[Paragraph 3]</strong> It is during these violent terminal events that the universe's heaviest elements are created via the "r-process" (rapid neutron capture). In a supernova's extreme environment, atoms are bombarded with neutrons so quickly that they don't have time to undergo radioactive decay before capturing additional neutrons. This allows for the creation of unstable, heavy isotopes that eventually decay into stable elements like uranium and platinum. This contrasts with the "s-process" (slow neutron capture) occurring in aging red giants, which produces lighter "heavy" elements like strontium over thousands of years.</p>
-            <p class="mb-4"><strong>[Paragraph 4]</strong> Recent astrophysical observations have identified an even more prolific environment for the r-process: the merger of two neutron stars, known as a kilonova. These events release colossal amounts of neutron-rich matter, accounting for a significant portion of the universe's heavy metals. The dispersal of these elements into the interstellar medium provides the raw materials for future generations of stars and planets. As astronomer Carl Sagan famously remarked, "we are made of starstuff," a poetic acknowledgment that the very atoms in the human body are the literal remnants of stellar death and cosmic collisions.</p>
+        "PHYSICAL SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">Geodynamics: The Mechanics of Mantle Plumes</h2>
+            <p><strong>[Paragraph 1]</strong> For decades, plate tectonics provided a comprehensive framework for understanding the movement of the Earth's lithospheric plates and the formation of volcanic activity at plate boundaries. However, certain volcanic regions, such as Hawaii and Yellowstone, exist far from any plate margin. To explain these anomalies, the "Mantle Plume Hypothesis" was proposed. It suggests that narrow columns of hot, buoyant rock rise from the core-mantle boundary, roughly 2,900 kilometers below the surface. These plumes act like "thermal blowtorches," melting the overlying lithosphere as it moves above them, creating a linear chain of volcanoes that tracks the plate's motion over millions of years.</p>
+            <p><strong>[Paragraph 2]</strong> The internal structure of a mantle plume is traditionally divided into two parts: a large, bulbous "head" and a long, slender "tail." When the plume head first reaches the base of the lithosphere, it triggers massive "flood basalt" eruptions—catastrophic volcanic events that can cover entire continents in lava. Over time, the head dissipates, and the plume settles into a steady-state "tail" phase. This tail provides a consistent source of magma for "hotspots." The <span class="highlight text-slate-900">persistence</span> of these hotspots is remarkable; the Hawaiian-Emperor seamount chain, for instance, records nearly 80 million years of continuous volcanic activity, providing a permanent reference point for reconstructing the past movements of the Pacific Plate.</p>
+            <p><strong>[Paragraph 3]</strong> Despite its widespread acceptance, the plume hypothesis faces challenges from the "Plate Hypothesis" (or Top-Down model). Skeptics argue that these intraplate volcanic centers are not caused by deep-seated thermal anomalies but by localized "stress-induced" cracks in the lithosphere that allow magma from the upper mantle to escape. This model posits that plate-scale stresses, such as the subduction of oceanic crust elsewhere, can stretch the lithosphere until it fractures. Proponents of this view point out that seismic imaging of deep plumes is often ambiguous, with some hotspots appearing to have no discernible root reaching into the lower mantle.</p>
+            <p><strong>[Paragraph 4]</strong> Modern geophysics is attempting to reconcile these two views through high-resolution seismic tomography. This technology uses earthquake waves to create 3D maps of the Earth's interior, similar to a CT scan. Recent findings suggest a more complex reality: "superplumes" in the lower mantle may feed smaller, secondary plumes that interact with upper mantle convection currents. This "multiscale" approach acknowledges that while deep thermal buoyancy is a primary driver, the physical state of the lithosphere determines where and how that heat eventually reaches the surface. As our imaging capabilities improve, the debate continues to refine our understanding of the Earth as a dynamic, interconnected heat engine.</p>
         `
     };
 
-    // --- QUESTIONS DATA ---
     const questions = [
-        // Passage 1: 1-10
-        { topic: "Life Science", text: "What distinguishes Cambrian organisms from the earlier Ediacaran biota?", options: ["The presence of simple multicellular structures.", "The absence of specialized tissues.", "The development of complex body plans and bilateral symmetry.", "A sedentary lifestyle on the ocean floor."], answer: 2, hint: "Check Paragraph 1: Mention of 'complex body plans, specialized tissues, and bilateral symmetry'.", explanation: "Paragraph 1 contrasts the 'simple architectures' of the Ediacaran biota with the 'complex body plans' and 'bilateral symmetry' of the Cambrian organisms." },
-        { topic: "Life Science", text: "The word 'modulating' in paragraph 2 is closest in meaning to:", options: ["Accelerating", "Adjusting", "Discovering", "Maintaining"], answer: 1, hint: "Context: 'By modulating the expression of these genes...'", explanation: "In this context, modulating refers to adjusting or regulating the degree or manner of gene expression." },
-        { topic: "Life Science", text: "According to paragraph 2, what was the primary role of Hox genes?", options: ["Determining the sequence of DNA replication.", "Directing the spatial arrangement of body segments during development.", "Producing the oxygen necessary for large-scale growth.", "Encoding the proteins used for calcified shells."], answer: 1, hint: "Look at Paragraph 2: 'govern the longitudinal patterning of an embryo'.", explanation: "The text states Hox genes determine where limbs, antennae, or segments appear." },
-        { topic: "Life Science", text: "Which of the following is NOT mentioned in paragraph 3 as a result of the 'arms race'?", options: ["The development of exoskeletons.", "The evolution of sophisticated sensory organs.", "The decrease in competitive pressure among species.", "Specialization into unique ecological niches."], answer: 2, hint: "Paragraph 3 discusses the 'heightened competition'.", explanation: "The text says competition was 'heightened' and forced lineages into specialized niches, making a 'decrease in pressure' incorrect." },
-        { topic: "Life Science", text: "Why does the author mention 'Anomalocaris' in paragraph 3?", options: ["To illustrate a passive scavenger strategy.", "To show that some Cambrian animals lacked appendages.", "To provide an example of a predator that drove evolutionary change.", "To argue that predation was less important than climate."], answer: 2, hint: "Paragraph 3: '...predators like Anomalocaris evolved sophisticated locomotion...'", explanation: "Anomalocaris is cited as a 'formidable predator' in the context of the ecological arms race." },
-        { topic: "Life Science", text: "The word 'facilitated' in paragraph 4 is closest in meaning to:", options: ["Complicated", "Eased", "Restricted", "Identified"], answer: 1, hint: "Context: '...facilitated the synthesis of collagen'.", explanation: "Facilitate means to make a process easier or possible." },
-        { topic: "Life Science", text: "It can be inferred from paragraph 4 that collagen was essential because:", options: ["It served as the primary source of nutrition.", "It provided the physical structure required for larger, complex organisms.", "It allowed animals to survive in low-oxygen environments.", "It was the only protein produced by Ediacaran biota."], answer: 1, hint: "Paragraph 4: 'essential scaffolding for complex tissues and larger body sizes'.", explanation: "The passage links collagen to 'complex tissues' and 'larger body sizes'." },
-        { topic: "Life Science", text: "In paragraph 4, what does the author imply about the cause of the Cambrian Explosion?", options: ["It was caused by a single geological event.", "It resulted from a combination of genetic and environmental factors.", "It was a purely random event with no specific cause.", "It was a slow process that took billions of years."], answer: 1, hint: "Last sentence of Paragraph 4.", explanation: "The author describes it as a 'synergistic event' involving genetic readiness, environment, and competition." },
-        { topic: "Life Science", text: "Which of the following best describes the rhetorical purpose of paragraph 1?", options: ["To challenge the existence of the Cambrian period.", "To introduce the topic by contrasting it with the preceding era.", "To list all 30 animal phyla found in the Cambrian.", "To provide a biography of Charles Darwin."], answer: 1, hint: "Paragraph 1 contrasts Ediacaran with Cambrian life.", explanation: "Paragraph 1 sets the stage by comparing the simple Ediacaran life with the complex Cambrian explosion." },
-        { topic: "Life Science", text: "Sentence Insertion: 'This developmental flexibility enabled the sudden appearance of diverse morphologies.' Where would it fit best?", options: ["After the first sentence of Para 2.", "After the mention of 'Hox gene clusters' in Para 2.", "At the end of Para 2.", "Before the first sentence of Para 3."], answer: 1, hint: "Keyword: 'developmental flexibility' refers to the Hox genes.", explanation: "It explains the result of the master regulatory genes mentioned earlier in the paragraph." },
+        // Life Science (1-10)
+        { topic: "LIFE SCIENCE", text: "What was the primary cause of the PETM according to the passage?", options: ["A sudden increase in solar radiation levels.", "A massive injection of carbon into the atmosphere.", "The expansion of polar ice caps.", "A decrease in volcanic activity in the North Atlantic."], answer: 1, hint: "See Paragraph 1: 'triggered by a massive injection of carbon...'", explanation: "The text explicitly links the PETM to a 'massive injection of carbon' into the ocean-atmosphere system." },
+        { topic: "LIFE SCIENCE", text: "The word 'concomitant' in paragraph 2 is closest in meaning to:", options: ["Unexpected", "Accompanying", "Dangerous", "Temporary"], answer: 1, hint: "Context: 'concomitant deoxygenation...'", explanation: "'Concomitant' means naturally accompanying or associated with something else." },
+        { topic: "LIFE SCIENCE", text: "According to paragraph 2, how did seafloor organisms (benthic foraminifera) react to the PETM?", options: ["They migrated to higher latitudes.", "They underwent a significant extinction event.", "They evolved into larger body sizes.", "They became more diverse due to warmer waters."], answer: 1, hint: "Para 2: 'suffered a catastrophic extinction event...'", explanation: "The passage notes they lost 'nearly 50% of their species diversity'." },
+        { topic: "LIFE SCIENCE", text: "Which of the following is NOT mentioned in paragraph 3 as a group of 'modern' mammals that migrated during the PETM?", options: ["Primates", "Artiodactyls", "Benthic foraminifera", "Perissodactyls"], answer: 2, hint: "Compare the list in Para 3 with Para 2.", explanation: "Benthic foraminifera are seafloor organisms mentioned in Para 2, not modern mammals from Para 3." },
+        { topic: "LIFE SCIENCE", text: "Why did many mammals undergo 'dwarfing' during the PETM?", options: ["To escape predators more easily.", "As an adaptation to lower-quality food sources.", "Because of the lack of oxygen in the air.", "To navigate dense tropical forests."], answer: 1, hint: "Para 3: 'adaptive response to nutrient scarcity'.", explanation: "High CO2 led to faster-growing plants with lower nutritional density, causing mammals to shrink." },
+        { topic: "LIFE SCIENCE", text: "It can be inferred from paragraph 4 that the silicate weathering process:", options: ["Is a rapid process that cools the planet in decades.", "Requires high temperatures and moisture to function efficiently.", "Is the primary cause of ocean acidification.", "Occurs only during volcanic eruptions."], answer: 1, hint: "Para 4: 'increased rainfall and warmth accelerated...'", explanation: "The text says warmth and rain 'accelerated' the process, implying it needs these conditions." },
+        { topic: "LIFE SCIENCE", text: "According to paragraph 4, what role did organic-rich sediments play in the recovery?", options: ["They released carbon back into the air.", "They acted as a pump to store carbon deep in the ocean.", "They blocked the sun's rays, cooling the planet.", "They prevented silicate rocks from weathering."], answer: 1, hint: "Para 4: 'locking away carbon in the deep ocean'.", explanation: "The passage describes them as a 'biological pump' that sequestered carbon." },
+        { topic: "LIFE SCIENCE", text: "The author mentions 'silicate weathering' in order to:", options: ["Explain how the Earth naturally removes excess CO2.", "Argue that rocks are the main source of carbon.", "Contrast geologic cooling with biological cooling.", "Show why the PETM was so destructive."], answer: 0, hint: "Para 4: 'cooling was primarily driven by...'", explanation: "It is introduced as the feedback loop that drove the recovery/cooling phase." },
+        { topic: "LIFE SCIENCE", text: "In paragraph 1, all of the following are cited as potential carbon sources EXCEPT:", options: ["Seafloor methane clathrates", "Volcanic activity", "Terrestrial peatlands", "High-latitude land bridges"], answer: 3, hint: "Look at the list in the final sentence of Para 1.", explanation: "Land bridges are mentioned in Para 3 as migration routes, not carbon sources." },
+        { topic: "LIFE SCIENCE", text: "Sentence Insertion: 'This biological storage effectively removed carbon from the active cycle for millions of years.' Where would it best fit?", options: ["After the first sentence of Paragraph 4.", "After the description of 'silicate weathering'.", "After the mention of 'biological pump' in Paragraph 4.", "Before the final sentence of Paragraph 4."], answer: 2, hint: "Look for 'biological storage' referring back to 'biological pump'.", explanation: "The sentence clarifies the impact of the 'biological pump' mentioned immediately before." },
 
-        // Passage 2: 11-20
-        { topic: "Social Science", text: "The word 'predicated' in paragraph 1 is closest in meaning to:", options: ["Predicted", "Based", "Simplified", "Interrupted"], answer: 1, hint: "Context: 'Their ability to remain stationary was predicated on...'", explanation: "Predicated on means based on or founded on a certain premise." },
-        { topic: "Social Science", text: "According to paragraph 1, how did the Natufians differ from previous models of settlement?", options: ["They farmed before they settled.", "They settled permanently before they developed agriculture.", "They remained nomadic throughout their history.", "They only lived in villages during the winter."], answer: 1, hint: "Paragraph 1: '...a change that predated the actual domestication...'", explanation: "The text notes they lived in 'stable, year-round villages well before the full domestication'." },
-        { topic: "Social Science", text: "The 'Broad Spectrum Revolution' refers to:", options: ["A change in the wavelength of solar radiation.", "A shift toward using a wider variety of local food resources.", "The invention of the wheel for transport.", "The discovery of bronze for tool making."], answer: 1, hint: "Paragraph 1: '...intensive exploitation of varied local resources'.", explanation: "It is defined in the text as the exploitation of varied resources like wild cereals and nuts." },
-        { topic: "Social Science", text: "Why does the author mention 'stone mortars and pestles' in paragraph 2?", options: ["To show that Natufians had no interest in permanent homes.", "To explain why Natufians had to move frequently.", "To illustrate heavy equipment that discouraged mobility.", "To argue that stone tools were less effective than bone tools."], answer: 2, hint: "Paragraph 2: 'investment in physical capital'.", explanation: "The passage uses heavy tools as an example of physical capital that 'anchored' the population." },
-        { topic: "Social Science", text: "The word 'fostering' in paragraph 2 is closest in meaning to:", options: ["Discouraging", "Encouraging", "Neglecting", "Replacing"], answer: 1, hint: "Context: '...fostering a sense of territoriality'.", explanation: "Fostering means encouraging the development of something." },
-        { topic: "Social Science", text: "According to paragraph 3, sedentism often leads to a population increase because:", options: ["Mothers no longer need to transport toddlers over long distances.", "People in villages were healthier than nomads.", "Food was distributed equally among all social classes.", "Natural predators were completely eliminated from the Levant."], answer: 0, hint: "Paragraph 3: 'mothers no longer need to carry toddlers...'", explanation: "The text explicitly links reduced birth spacing to the lack of need for transport and soft weaning foods." },
-        { topic: "Social Science", text: "In paragraph 3, what evidence is provided for the emergence of social hierarchies?", options: ["Written records from Natufian leaders.", "The size of stone houses in villages.", "Elaborate burial sites and differentiated grave goods.", "The use of irrigation systems for farming."], answer: 2, hint: "Paragraph 3: 'appearance of elaborate burial sites...'", explanation: "The text cites burials as the indicator of emerging hierarchies and leadership." },
-        { topic: "Social Science", text: "The word 'perils' in paragraph 4 is closest in meaning to:", options: ["Advantages", "Changes", "Dangers", "Traditions"], answer: 2, hint: "Context: '...was not without its perils'.", explanation: "Perils refers to serious and immediate dangers." },
-        { topic: "Social Science", text: "According to paragraph 4, what was the Natufian response to the Younger Dryas?", options: ["They all died out immediately.", "They all moved to Egypt.", "Some became nomadic again while others began plant management.", "They ignored the climate change and continued as before."], answer: 2, hint: "Paragraph 4: 'Some... return to a more mobile lifestyle, while others doubled down...'", explanation: "The passage notes two distinct adaptive responses to the climate crisis." },
-        { topic: "Social Science", text: "Which sentence best expresses the essential information in the highlighted sentence in paragraph 4? (Sentence: 'Thus, sedentism acted as both a luxury of abundance and a trap of necessity...')", options: ["Sedentism was a temporary phase that people eventually rejected.", "Permanent settlement was caused by wealth but became hard to leave during crises.", "People only lived in one place when they were forced to by nature.", "Sedentism was necessary for agriculture but luxury for hunting."], answer: 1, hint: "Focus on 'luxury' vs 'trap'.", explanation: "The sentence suggests that while abundance allowed sedentism, the investment made it a 'trap' people couldn't easily leave when resources dwindled." },
+        // Social Science (11-20)
+        { topic: "SOCIAL SCIENCE", text: "What is the 'urban paradox' mentioned in paragraph 1?", options: ["Cities are cleaner but more crowded.", "Physical proximity does not lead to social closeness.", "Higher density reduces the cost of living.", "Technology makes cities feel larger than they are."], answer: 1, hint: "Para 1: 'the more densely populated... the more social isolation'.", explanation: "The paradox is that being physically close to others doesn't guarantee social connection." },
+        { topic: "SOCIAL SCIENCE", text: "The word 'exacerbating' in paragraph 2 is closest in meaning to:", options: ["Improving", "Worsening", "Clarifying", "Finishing"], answer: 1, hint: "Context: 'exacerbating the physical and social compartmentalization'.", explanation: "'Exacerbate' means to make a problem, bad situation, or negative feeling worse." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 2, why is the 'commodification' of public space a problem?", options: ["It makes the city too expensive to live in.", "It creates barriers to spontaneous community building.", "It leads to the destruction of historical buildings.", "It reduces the amount of luxury housing available."], answer: 1, hint: "Para 2: 'barrier to spontaneous community building increases'.", explanation: "When social spaces require money, people are less likely to interact freely." },
+        { topic: "SOCIAL SCIENCE", text: "Why does the author mention 'high-rise residential complexes' in paragraph 2?", options: ["To praise their architectural innovation.", "To show how they prioritize privacy over community.", "To explain why cities are becoming more vertical.", "To argue that security is the most important urban need."], answer: 1, hint: "Para 2: 'prioritizes private luxury... over shared corridors'.", explanation: "They are cited as an example of design that increases compartmentalization." },
+        { topic: "SOCIAL SCIENCE", text: "In paragraph 3, the term 'phantom community' refers to:", options: ["A city with no residents.", "A digital network that lacks real-world support.", "A group of people who live in the same building.", "A historical neighborhood that has been demolished."], answer: 1, hint: "Para 3: 'illusion of sociality masks a lack of substantive... support'.", explanation: "It describes the gap between online popularity and real-life isolation." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 3, what is a characteristic of 'weak ties' compared to 'strong ties'?", options: ["Weak ties are only found in physical environments.", "Weak ties do not provide reliable support in a crisis.", "Strong ties are easier to form in a megalopolis.", "Younger demographics prefer strong ties over weak ties."], answer: 1, hint: "Para 3: 'lack a single neighbor they can rely on in a crisis'.", explanation: "The text implies digital 'weak ties' are superficial compared to dependable 'strong ties'." },
+        { topic: "SOCIAL SCIENCE", text: "The word 'acute' in paragraph 3 is closest in meaning to:", options: ["Sudden", "Sharp or intense", "Boring", "Unknown"], answer: 1, hint: "Context: 'particularly acute in younger demographics'.", explanation: "In this context, 'acute' means sharp, intense, or strongly felt." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 4, what are 'micro-interactions'?", options: ["Conversations via social media apps.", "Brief, incidental social encounters.", "Large-scale community protests.", "Financial transactions in commercial spaces."], answer: 1, hint: "Para 4: 'brief exchanges with a shopkeeper...'", explanation: "The text defines them as small, brief face-to-face exchanges." },
+        { topic: "SOCIAL SCIENCE", text: "What is the rhetorical purpose of paragraph 4?", options: ["To warn that cities will eventually collapse.", "To propose solutions to the problem of urban isolation.", "To criticize urban planners for their past mistakes.", "To explain the economic benefits of city density."], answer: 1, hint: "Para 4: 'combat this trend... placemaking strategies'.", explanation: "The paragraph focuses on 'placemaking' as a way to solve the loneliness described earlier." },
+        { topic: "SOCIAL SCIENCE", text: "It can be inferred from paragraph 1 that Georg Simmel's 'blasé outlook' is:", options: ["An intentional choice to be rude.", "A subconscious reaction to too much information.", "A sign of superior intelligence.", "A result of living in small rural villages."], answer: 1, hint: "Para 1: 'psychological defense mechanism... cope with the relentless barrage'.", explanation: "It is described as a 'defense mechanism' against sensory overload, implying a reaction rather than a simple choice." },
 
-        // Passage 3: 21-30
-        { topic: "Physical Science", text: "According to paragraph 1, what elements were present immediately after the Big Bang?", options: ["All 118 elements of the periodic table.", "Primarily hydrogen and helium.", "Carbon, oxygen, and iron.", "Gold and platinum exclusively."], answer: 1, hint: "Paragraph 1: 'consisting almost entirely of hydrogen and helium'.", explanation: "The text states the early universe was simple, with trace amounts of lithium." },
-        { topic: "Physical Science", text: "The word 'forged' in paragraph 1 is closest in meaning to:", options: ["Discovered", "Created", "Fake", "Hidden"], answer: 1, hint: "Context: '...were forged through the process of stellar nucleosynthesis'.", explanation: "Forged in this scientific context means created or formed through intense processes." },
-        { topic: "Physical Science", text: "Why is 'hydrostatic equilibrium' important for a star's stability?", options: ["It ensures the star rotates at a constant speed.", "It balances the inward pull of gravity with outward radiation pressure.", "It allows the star to create iron immediately.", "It prevents the star from becoming too hot."], answer: 1, hint: "Paragraph 2: 'where outward radiation pressure... balances the inward pull of gravity'.", explanation: "Equilibrium is defined by the balance of these two opposing forces." },
-        { topic: "Physical Science", text: "According to paragraph 2, why does iron fusion lead to a core collapse?", options: ["Iron is too heavy for gravity to pull.", "Fusing iron consumes energy instead of releasing it.", "Iron causes the star to spin too fast.", "Iron acts as a lubricant that makes the core slippery."], answer: 1, hint: "Paragraph 2: 'fusing nuclei heavier than iron is endothermic... consumes more energy'.", explanation: "Because iron fusion is endothermic, it stops the outward pressure that keeps the star from collapsing." },
-        { topic: "Physical Science", text: "The word 'catastrophic' in paragraph 2 is closest in meaning to:", options: ["Unexpected", "Disastrous", "Colorful", "Scientific"], answer: 1, hint: "Context: 'triggering a catastrophic Type II supernova'.", explanation: "Catastrophic means involving or causing sudden great damage or suffering." },
-        { topic: "Physical Science", text: "What is the primary characteristic of the 'r-process' mentioned in paragraph 3?", options: ["It happens very slowly over billions of years.", "It involves capturing neutrons more quickly than the atom can decay.", "It only creates hydrogen atoms.", "It occurs only in the Sun."], answer: 1, hint: "Paragraph 3: 'bombarded with neutrons so quickly...'", explanation: "The 'r' stands for rapid, where neutron capture happens faster than radioactive decay." },
-        { topic: "Physical Science", text: "How does the 's-process' differ from the 'r-process'?", options: ["The s-process creates iron, while the r-process creates hydrogen.", "The s-process is faster than the r-process.", "The s-process occurs in aging red giants and is much slower.", "There is no difference between them."], answer: 2, hint: "Paragraph 3: 'contrasts with the s-process... occurring in aging red giants'.", explanation: "The s-process is 'slow neutron capture' and occurs over thousands of years in red giants." },
-        { topic: "Physical Science", text: "What is a 'kilonova'?", options: ["A type of small planet.", "The merger of two neutron stars.", "The first stage of the Big Bang.", "A star that never fuses helium."], answer: 1, hint: "Paragraph 4: 'the merger of two neutron stars, known as a kilonova'.", explanation: "The text explicitly defines a kilonova as a neutron star merger." },
-        { topic: "Physical Science", text: "What is the author's purpose in mentioning Carl Sagan's quote?", options: ["To argue that astronomers are better than biologists.", "To emphasize the cosmic origin of the elements in the human body.", "To show that humans will eventually live on stars.", "To promote a book written by Sagan."], answer: 1, hint: "Last sentence of the passage.", explanation: "The quote serves to summarize the fact that heavy elements in our bodies originated in stars." },
-        { topic: "Physical Science", text: "Sentence Insertion: 'This rapid bombardment is only possible in environments with extremely high neutron density.' Where would this fit best?", options: ["After the mention of 'r-process' in Para 3.", "Before the mention of 's-process' in Para 3.", "After the definition of 'hydrostatic equilibrium' in Para 2.", "At the start of Para 1."], answer: 0, hint: "Focus on 'rapid bombardment'.", explanation: "It explains the conditions required for the r-process just described in the previous sentence." }
+        // Physical Science (21-30)
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 1, how do 'mantle plumes' differ from standard plate tectonics?", options: ["They occur at plate boundaries.", "They explain volcanic activity in the middle of plates.", "They are caused by the cooling of the Earth's core.", "They move faster than the lithospheric plates."], answer: 1, hint: "Para 1: 'exist far from any plate margin'.", explanation: "Plumes explain intraplate volcanism, whereas standard tectonics explains boundary volcanism." },
+        { topic: "PHYSICAL SCIENCE", text: "The word 'persistence' in paragraph 2 is closest in meaning to:", options: ["Size", "Endurance", "Difficulty", "Hotness"], answer: 1, hint: "Context: 'persistence of these hotspots is remarkable'.", explanation: "'Persistence' refers to the long-lasting nature or endurance of the hotspots." },
+        { topic: "PHYSICAL SCIENCE", text: "What happens when a 'plume head' first hits the lithosphere?", options: ["It creates a long chain of small islands.", "It triggers massive flood basalt eruptions.", "It cools down immediately and turns into granite.", "It pushes the plate into the mantle."], answer: 1, hint: "Para 2: 'When the plume head first reaches... it triggers massive flood basalt'.", explanation: "The head phase is associated with catastrophic, continent-wide lava flows." },
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 2, what is the 'tail' phase of a plume?", options: ["A period of no volcanic activity.", "A steady-state supply of magma for hotspots.", "The moment the plume sinks back to the core.", "The part of the volcano that is underwater."], answer: 1, hint: "Para 2: 'settles into a steady-state tail phase'.", explanation: "The tail provides the consistent magma source for persistent hotspots." },
+        { topic: "PHYSICAL SCIENCE", text: "The 'Plate Hypothesis' mentioned in paragraph 3 suggests that:", options: ["Magma comes from the core-mantle boundary.", "Volcanoes are caused by cracks in the crust due to stress.", "Plumes are much wider than previously thought.", "The Pacific Plate is not actually moving."], answer: 1, hint: "Para 3: 'caused by localized stress-induced cracks'.", explanation: "This 'top-down' model blames surface stresses rather than deep thermal plumes." },
+        { topic: "PHYSICAL SCIENCE", text: "Why do some scientists remain skeptical of the Mantle Plume Hypothesis?", options: ["They believe Hawaii is not a volcano.", "Seismic imaging of deep plumes is often unclear.", "They think the Earth's core is cold.", "Volcanoes only exist on land."], answer: 1, hint: "Para 3: 'seismic imaging of deep plumes is often ambiguous'.", explanation: "The lack of clear 3D 'roots' in seismic data is a primary point of skepticism." },
+        { topic: "PHYSICAL SCIENCE", text: "What is 'seismic tomography' compared to in the passage?", options: ["A microscope", "A CT scan", "A telescope", "A compass"], answer: 1, hint: "Para 4: 'similar to a CT scan'.", explanation: "The author uses the medical analogy to explain how 3D maps of the interior are created." },
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 4, what is the 'multiscale' approach?", options: ["A way to measure the height of volcanoes.", "A model where deep superplumes interact with upper mantle currents.", "A theory that only considers the crust.", "The use of multiple scales to weigh lava."], answer: 1, hint: "Para 4: 'superplumes... feed smaller, secondary plumes'.", explanation: "It combines deep-source buoyancy with upper-mantle dynamics." },
+        { topic: "PHYSICAL SCIENCE", text: "The word 'reconcile' in paragraph 4 is closest in meaning to:", options: ["Separate", "Harmonize", "Reject", "Discover"], answer: 1, hint: "Context: 'attempting to reconcile these two views'.", explanation: "'Reconcile' means to find a way in which two competing ideas can both be true." },
+        { topic: "PHYSICAL SCIENCE", text: "Sentence Insertion: 'By contrast, the tail is much narrower and can last for tens of millions of years.' Where would this fit best?", options: ["Before the description of the 'head' in Paragraph 2.", "After the mention of 'flood basalt' in Paragraph 2.", "After the definition of 'steady-state tail phase' in Paragraph 2.", "At the end of Paragraph 3."], answer: 2, hint: "Look for the transition between the head and the tail description.", explanation: "It provides a direct comparison of the 'tail' characteristics to the previously described 'head'." }
     ];
 
     let currentQuestionIndex = 0;
@@ -181,7 +185,7 @@
     let timerInterval;
     let secondsElapsed = 0;
 
-    // DOM Elements
+    // DOM
     const passageContent = document.getElementById('passage-content');
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
@@ -207,86 +211,68 @@
         }, 1000);
     }
 
-    function initQuiz() {
-        startTimer();
-        renderQuestion();
-    }
-
     function renderQuestion() {
         const q = questions[currentQuestionIndex];
         
-        // Update Metadata
-        progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        progressText.innerText = `ITEM ${currentQuestionIndex + 1} OF ${questions.length}`;
         progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
         topicBadge.innerText = q.topic;
         
-        // Update Passage Side
         passageContent.innerHTML = passages[q.topic];
         
-        // Scroll to top of passage when topic changes
+        // Scroll passage if topic changed
         if (currentQuestionIndex === 0 || questions[currentQuestionIndex].topic !== questions[currentQuestionIndex-1]?.topic) {
             document.getElementById('passage-container').scrollTop = 0;
         }
 
-        // Reset Hint
         hintBox.classList.add('hidden');
-        
-        // Update Question
         questionText.innerText = q.text;
         optionsList.innerHTML = '';
         
         q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
-            btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 transition-all flex items-start group`;
+            btn.className = `w-full text-left p-5 rounded-2xl border-2 border-slate-100 transition-all flex items-start group hover:border-indigo-200`;
             
-            const label = String.fromCharCode(65 + index); // A, B, C, D
+            const label = String.fromCharCode(65 + index);
             btn.innerHTML = `
-                <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 mr-4 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">${label}</span> 
-                <span class="flex-grow pt-1">${opt}</span>
+                <span class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-400 mr-5 group-hover:bg-indigo-600 group-hover:text-white transition-all">${label}</span> 
+                <span class="flex-grow pt-2 font-medium text-slate-700">${opt}</span>
             `;
             
-            // Handle Selection
             if (userAnswers[currentQuestionIndex] === index) {
-                btn.classList.add('selected');
-                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-blue-600');
-                btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                btn.classList.add('selected', 'border-indigo-500');
+                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-indigo-600');
+                btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
             }
 
             if (isReviewMode) {
                 if (index === q.answer) {
                     btn.classList.add('correct');
-                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-emerald-600');
-                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-emerald-500');
+                    btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
                 } else if (userAnswers[currentQuestionIndex] === index) {
                     btn.classList.add('incorrect');
-                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-rose-600');
-                    btn.querySelector('span').classList.replace('text-slate-500', 'text-white');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-rose-500');
+                    btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
                 }
                 btn.disabled = true;
             } else {
-                btn.onclick = () => selectOption(index);
+                btn.onclick = () => {
+                    userAnswers[currentQuestionIndex] = index;
+                    renderQuestion();
+                };
             }
-            
             optionsList.appendChild(btn);
         });
 
-        // Show Feedback in Review Mode
         if (isReviewMode) {
             feedbackArea.classList.remove('hidden');
             explanationText.innerHTML = q.explanation;
-            explanationText.className = "text-sm leading-relaxed " + (userAnswers[currentQuestionIndex] === q.answer ? "text-emerald-800" : "text-slate-700");
-        } else {
-            feedbackArea.classList.add('hidden');
+            feedbackArea.className = "mt-10 p-6 rounded-2xl border-2 " + (userAnswers[currentQuestionIndex] === q.answer ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900");
         }
 
-        // Nav Buttons
         prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "Finish Review" : "Finish Test") : "Next";
-    }
-
-    function selectOption(index) {
-        userAnswers[currentQuestionIndex] = index;
-        renderQuestion();
+        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "END REVIEW" : "SUBMIT") : "NEXT";
     }
 
     function nextQuestion() {
@@ -304,72 +290,36 @@
         }
     }
 
-    function prevQuestion() {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            renderQuestion();
-            document.getElementById('question-area').scrollTop = 0;
-        }
-    }
-
-    function showHint() {
-        hintBox.innerText = questions[currentQuestionIndex].hint;
-        hintBox.classList.remove('hidden');
-    }
-
     function showResults() {
         resultsScreen.classList.remove('hidden');
-        
         let score = 0;
-        userAnswers.forEach((ans, i) => {
-            if (ans === questions[i].answer) score++;
-        });
+        userAnswers.forEach((ans, i) => { if (ans === questions[i].answer) score++; });
+        document.getElementById('final-score').innerText = Math.round((score/30)*100) + "%";
         
-        document.getElementById('final-score').innerText = score;
-        
-        // Breakdown
         const breakdown = document.getElementById('section-breakdown');
         breakdown.innerHTML = `
-            <div class="space-y-1">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Breakdown by Topic</p>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-slate-600">Life Science</span>
-                    <span class="font-bold">${calculateSection(0, 9)}/10</span>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-slate-600">Social Science</span>
-                    <span class="font-bold">${calculateSection(10, 19)}/10</span>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-slate-600">Physical Science</span>
-                    <span class="font-bold">${calculateSection(20, 29)}/10</span>
-                </div>
+            <div class="space-y-2">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competency Breakdown</p>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Life Science</span><span class="font-bold">${calculateSection(0, 9)}/10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Social Science</span><span class="font-bold">${calculateSection(10, 19)}/10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Physical Science</span><span class="font-bold">${calculateSection(20, 29)}/10</span></div>
             </div>
         `;
     }
 
     function calculateSection(start, end) {
         let s = 0;
-        for(let i=start; i<=end; i++) {
-            if(userAnswers[i] === questions[i].answer) s++;
-        }
+        for(let i=start; i<=end; i++) if(userAnswers[i] === questions[i].answer) s++;
         return s;
     }
 
-    function reviewMistakes() {
-        isReviewMode = true;
-        currentQuestionIndex = 0;
-        resultsScreen.classList.add('hidden');
-        renderQuestion();
-    }
-
-    // Event Listeners
     nextBtn.onclick = nextQuestion;
-    prevBtn.onclick = prevQuestion;
-    hintBtn.onclick = showHint;
-    document.getElementById('review-btn').onclick = reviewMistakes;
+    prevBtn.onclick = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } };
+    hintBtn.onclick = () => { hintBox.innerText = questions[currentQuestionIndex].hint; hintBox.classList.toggle('hidden'); };
+    document.getElementById('review-btn').onclick = () => { isReviewMode = true; currentQuestionIndex = 0; resultsScreen.classList.add('hidden'); renderQuestion(); };
 
-    initQuiz();
+    startTimer();
+    renderQuestion();
 </script>
 </body>
 </html>
