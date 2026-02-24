@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EGCIS Test Software - TOEFL iBT Reading</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>EGCIS Test Software - TOEFL iBT Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Montserrat', sans-serif; }
         .hidden { display: none; }
@@ -15,102 +13,98 @@
         .incorrect { background-color: #fee2e2; border: 2px solid #ef4444; }
         .selected { border: 2px solid #3b82f6; background-color: #eff6ff; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .prose p { margin-bottom: 1.25rem; line-height: 1.75; font-size: 1.05rem; text-align: justify; }
-        .highlight { background-color: #fef08a; padding: 2px 4px; border-radius: 2px; font-weight: 500; }
+        .prose p { margin-bottom: 1.5rem; line-height: 1.8; color: #1e293b; text-align: justify; }
+        .source-note { font-style: italic; font-size: 0.75rem; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 2rem; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased">
 
 <div id="app" class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
     <!-- Header -->
-    <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 border-slate-200">
+    <header class="mb-6 flex flex-col md:flex-row justify-between items-end border-b pb-6 border-slate-200">
         <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">EGCIS Test Software</h1>
-            <p class="text-slate-500 font-semibold text-sm">TOEFL® is a registered trademark of ETS. This product is not endorsed or approved by ETS.</p>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tighter">EGCIS Test Software</h1>
+            <p class="text-slate-500 font-semibold text-sm">Reading Practice Interface</p>
+            <p class="text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-widest">TOEFL® is a registered trademark of ETS. This product is not endorsed or approved by ETS.</p>
         </div>
-        <div id="timer-display" class="mt-4 md:mt-0 px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-xl tracking-widest">
+        <div id="timer-display" class="mt-4 md:mt-0 px-8 py-3 bg-slate-900 text-white rounded-2xl font-mono text-2xl shadow-xl border-b-4 border-blue-600">
             00:00:00
         </div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-220px)]">
-        <!-- Left Column: Reading Passage -->
-        <div id="passage-container" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 overflow-y-auto scrollbar-hide">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-250px)]">
+        <!-- Left: Reading Passage -->
+        <div id="passage-container" class="bg-white rounded-3xl shadow-sm border border-slate-200 p-10 overflow-y-auto scroll-smooth">
             <div id="passage-content" class="prose prose-slate max-w-none">
-                <!-- Content dynamically injected -->
+                <!-- Content Injected Here -->
             </div>
         </div>
 
-        <!-- Right Column: Question Interface -->
-        <div id="quiz-container" class="bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden">
+        <!-- Right: Question Interface -->
+        <div id="quiz-container" class="bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
             <!-- Progress Tracker -->
-            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
-                <div class="flex justify-between text-xs font-black text-slate-400 uppercase tracking-widest mb-3">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex justify-between text-[12px] font-black text-slate-400 uppercase tracking-widest mb-4">
                     <span id="progress-text">Question 1 of 30</span>
-                    <span id="topic-badge" class="bg-indigo-600 text-white px-3 py-1 rounded-full">LIFE SCIENCE</span>
+                    <span id="topic-badge" class="bg-blue-600 text-white px-4 py-1 rounded-full shadow-sm">LOADING...</span>
                 </div>
-                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-700 ease-in-out" style="width: 3.33%"></div>
+                <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-1000 ease-in-out" style="width: 3.33%"></div>
                 </div>
             </div>
 
-            <!-- Question Content -->
-            <div id="question-area" class="p-8 flex-grow overflow-y-auto">
-                <div id="hint-box" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-sm text-blue-900 hidden italic">
-                    <!-- Hint text -->
+            <!-- Question Area -->
+            <div id="question-area" class="p-10 flex-grow overflow-y-auto">
+                <div id="hint-box" class="mb-8 p-5 bg-blue-50 border-l-8 border-blue-500 text-sm text-blue-900 rounded-xl hidden">
+                    <!-- Hint -->
                 </div>
                 
-                <h2 id="question-text" class="text-xl font-extrabold text-slate-800 mb-8 leading-tight"></h2>
+                <h2 id="question-text" class="text-xl font-bold text-slate-800 mb-10 leading-relaxed"></h2>
 
                 <div id="options-list" class="space-y-4">
-                    <!-- Options injected here -->
+                    <!-- Options -->
                 </div>
 
-                <!-- Feedback Area (Only in Review Mode) -->
-                <div id="feedback-area" class="mt-10 p-6 rounded-2xl border-2 hidden transition-all duration-300">
-                    <h3 class="font-black text-xs mb-3 uppercase tracking-widest text-slate-400">Rational Explanation</h3>
-                    <p id="explanation-text" class="text-sm font-medium leading-relaxed"></p>
+                <!-- Explanation Area -->
+                <div id="feedback-area" class="mt-12 p-8 rounded-2xl border-2 border-slate-100 bg-slate-50 hidden">
+                    <h3 class="font-black text-xs mb-4 uppercase tracking-[0.2em] text-blue-600">Performance Feedback & Logic</h3>
+                    <p id="explanation-text" class="text-sm leading-relaxed text-slate-700 font-medium"></p>
                 </div>
             </div>
 
-            <!-- Footer Controls -->
+            <!-- Footer -->
             <div class="p-6 border-t border-slate-100 bg-white flex justify-between items-center">
-                <button id="prev-btn" class="px-6 py-3 text-sm font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-30 transition-all">
-                    PREVIOUS
+                <button id="prev-btn" class="px-8 py-4 text-xs font-black text-slate-500 bg-slate-100 rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-widest">
+                    Back
                 </button>
-                <button id="hint-btn" class="text-xs font-black text-indigo-600 hover:text-indigo-800 uppercase tracking-widest underline decoration-2 underline-offset-4">
-                    Reference
+                <button id="hint-btn" class="text-xs font-black text-blue-600 hover:text-blue-800 tracking-widest uppercase border-b-2 border-blue-100">
+                    Paragraph Reference
                 </button>
-                <button id="next-btn" class="px-8 py-3 text-sm font-black text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all">
-                    NEXT
+                <button id="next-btn" class="px-10 py-4 text-xs font-black text-white bg-blue-600 rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all uppercase tracking-widest">
+                    Next
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Results Screen -->
-    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center transform scale-95 animate-in fade-in zoom-in duration-300">
-            <div class="mb-8 inline-flex p-6 bg-indigo-50 text-indigo-600 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-            </div>
-            <h2 class="text-4xl font-black text-slate-800 mb-3">Diagnostic Complete</h2>
-            <p class="text-slate-500 mb-10 font-medium">You have navigated through the EGCIS high-density reading assessment.</p>
+    <!-- Results Modal -->
+    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xl z-50 flex items-center justify-center p-6">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-3xl w-full p-12 text-center">
+            <h2 class="text-5xl font-black text-slate-900 mb-4 tracking-tighter italic">TEST COMPLETE</h2>
+            <p class="text-slate-500 mb-12 font-semibold">Your assessment in EGCIS Test Software has been finalized.</p>
             
-            <div class="grid grid-cols-2 gap-6 mb-10">
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span class="block text-5xl font-black text-indigo-600 mb-1" id="final-score">0</span>
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Total Accuracy</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="p-10 bg-slate-900 rounded-[2rem] text-white flex flex-col items-center justify-center">
+                    <span class="text-7xl font-black mb-2" id="final-score">0</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Scaled Score / 30</span>
                 </div>
-                <div id="section-breakdown" class="text-left space-y-3 py-2 px-6 border-l-2 border-slate-100">
-                    <!-- Section scores -->
+                <div id="section-breakdown" class="text-left space-y-4 p-4 border-l-2 border-slate-100">
+                    <!-- Breakdown -->
                 </div>
             </div>
 
-            <button id="review-btn" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
-                REVIEW PERFORMANCE
+            <button id="review-btn" class="w-full py-6 bg-blue-600 text-white rounded-3xl font-black text-2xl hover:bg-blue-700 shadow-2xl shadow-blue-200 transition-all active:scale-[0.98]">
+                ENTER REVIEW MODE
             </button>
         </div>
     </div>
@@ -118,65 +112,63 @@
 
 <script>
     const passages = {
-        "LIFE SCIENCE": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">Paleoclimatology: The Paleocene-Eocene Thermal Maximum (PETM)</h2>
-            <p><strong>[Paragraph 1]</strong> Roughly 56 million years ago, the Earth underwent one of the most rapid and extreme global warming events in the geologic record: the Paleocene-Eocene Thermal Maximum (PETM). During this interval, global temperatures surged by 5 to 8 degrees Celsius in as little as a few thousand years. This hyperthermal event was triggered by a massive injection of carbon into the ocean-atmosphere system, leading to widespread ocean acidification and a drastic shift in biological distributions. While the exact source of the carbon remains a subject of intense debate, the consensus suggests a synergistic release from seafloor methane clathrates, volcanic activity in the North Atlantic, and the combustion of terrestrial peatlands.</p>
-            <p><strong>[Paragraph 2]</strong> The biological response to this heat spike was profound and varied across different ecosystems. In the marine realm, benthic foraminifera—tiny organisms dwelling on the seafloor—suffered a catastrophic extinction event, losing nearly 50% of their species diversity. Scientists hypothesize that this was not caused by temperature alone but by the <span class="highlight text-slate-900">concomitant</span> deoxygenation of deep-sea waters and the corrosive nature of acidified oceans. Conversely, surface-dwelling planktonic species thrived or migrated toward higher latitudes, where previously frigid waters had become temperate. This geographic reshuffling suggests that while some lineages were pushed to the brink, others utilized the warming as a catalyst for range expansion.</p>
-            <p><strong>[Paragraph 3]</strong> On land, the PETM facilitated a critical turning point in mammalian evolution. The warming allowed for the intercontinental migration of "modern" mammal groups, including primates, artiodactyls (even-toed ungulates), and perissodactyls (odd-toed ungulates), across high-latitude land bridges that were formerly impassable due to ice or extreme cold. Curiously, many terrestrial mammals underwent a temporary reduction in body size, a phenomenon known as "dwarfing." Paleontologists argue that this was an adaptive response to nutrient scarcity, as high CO2 levels often lead to faster plant growth but lower nutritional density in foliage, forcing herbivores to survive on less efficient food sources.</p>
-            <p><strong>[Paragraph 4]</strong> The recovery phase of the PETM provides insight into the Earth's natural capacity for carbon sequestration. Over approximately 100,000 to 200,000 years, temperatures gradually returned to pre-event levels. This cooling was primarily driven by the "silicate weathering" feedback loop: increased rainfall and warmth accelerated the chemical breakdown of silicate rocks, which consumes atmospheric CO2 and deposits it as carbonate minerals on the seafloor. Additionally, the proliferation of organic-rich sediments acted as a biological pump, locking away carbon in the deep ocean. The PETM serves as a sobering historical analogue for modern anthropogenic climate change, illustrating both the fragility of biological systems and the immense timescales required for planetary stabilization.</p>
+        "Life Science": `
+            <h2 class="text-3xl font-black mb-8 text-slate-900">Passage 1: Epigenetic Mechanisms in Phenotypic Plasticity</h2>
+            <p><strong>[Paragraph 1]</strong> The traditional central dogma of molecular biology, which suggests a unidirectional flow of information from DNA to RNA to protein, has been significantly nuanced by the emergence of epigenetics. Epigenetics refers to heritable changes in gene expression that do not involve alterations to the underlying DNA sequence. These changes are primarily mediated by biochemical modifications such as DNA methylation and histone acetylation. Such mechanisms act as molecular "switches" that can silence or activate specific genetic loci in response to environmental cues. This provides a bridge between the genotype and the phenotype, allowing organisms to exhibit phenotypic plasticity—the ability of a single genotype to produce multiple phenotypes in varied environments.</p>
+            <p><strong>[Paragraph 2]</strong> DNA methylation typically occurs at CpG islands, where a methyl group is added to the cytosine base. This modification often leads to transcriptional silencing by physically impeding the binding of transcription factors or by recruiting proteins that promote a highly condensed chromatin state known as heterochromatin. In contrast, histone acetylation—the addition of an acetyl group to lysine residues on histone tails—neutralizes the positive charge of the histones. This reduces the affinity between histones and the negatively charged DNA, resulting in a more relaxed chromatin structure (euchromatin) that is accessible to the transcriptional machinery. The dynamic interplay between these opposing modifications allows for a finely tuned regulatory landscape.</p>
+            <p><strong>[Paragraph 3]</strong> One of the most compelling examples of epigenetic regulation is found in the developmental trajectories of social insects, such as honeybees. While queens and workers share identical genetic sequences, their divergent physiological and behavioral traits are determined by their diet during the larval stage. Larvae fed exclusively on royal jelly undergo epigenetic reprogramming that suppresses the methylation of genes associated with queen development. This dietary intervention effectively bypasses the default "worker" pathway, illustrating how extrinsic nutritional factors can dictate complex biological outcomes without genomic mutation. Such findings challenge the notion of genetic determinism and highlight the role of environmental interaction in shaping life history.</p>
+            <p><strong>[Paragraph 4]</strong> However, epigenetic changes are not always beneficial. Maladaptive epigenetic modifications can be induced by chronic environmental stressors, such as pollution or nutritional deficiency, leading to increased susceptibility to metabolic and neurological disorders. Furthermore, the phenomenon of transgenerational epigenetic inheritance suggests that some of these modifications can be passed to subsequent generations, potentially pre-adapting—or pre-disposing—offspring to the conditions experienced by their ancestors. As research continues, the boundaries between nature and nurture continue to blur, suggesting a more integrated model of evolution where acquired traits can influence the genetic trajectory of a lineage over geological time.</p>
+            <div class="source-note">Source: Original academic text synthesized for EGCIS Test Software. No external copyrighted material used.</div>
         `,
-        "SOCIAL SCIENCE": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">The Paradox of Urban Density: The "Lonely Crowd" Phenomenon</h2>
-            <p><strong>[Paragraph 1]</strong> The rise of the megalopolis in the 21st century has brought about a unique sociological contradiction: the more densely populated a city becomes, the more social isolation its residents frequently report. This "urban paradox" suggests that physical proximity does not inherently translate into social cohesion. Early 20th-century sociologists, such as Georg Simmel, argued that the sensory overload of the city forces individuals to develop a "blasé outlook"—a psychological defense mechanism of detachment—to cope with the relentless barrage of stimuli. In this environment, the individual becomes a face in a crowd, anonymous and transient, leading to a state of hyper-individualism that erodes traditional communal bonds.</p>
-            <p><strong>[Paragraph 2]</strong> Modern research into "Third Places"—social environments separate from the two primary spheres of home and work—highlights the structural causes of urban loneliness. In many contemporary cities, the "commodification" of public space has replaced free communal gathering spots with commercialized venues like high-end cafes or malls. When social interaction requires a financial transaction, the barrier to spontaneous community building increases. Furthermore, the design of modern high-rise residential complexes often prioritizes private luxury and security over shared corridors or communal gardens, <span class="highlight text-slate-900">exacerbating</span> the physical and social compartmentalization of the citizenry.</p>
-            <p><strong>[Paragraph 3]</strong> The digital revolution has added a complex layer to this urban isolation. While social media platforms promise connectivity, they often facilitate "weak ties" at the expense of "strong ties." In a dense urban setting, a resident may have thousands of digital interactions but lack a single neighbor they can rely on in a crisis. This discrepancy creates a "phantom community," where the illusion of sociality masks a lack of substantive, local support networks. Sociologists note that this digital displacement is particularly acute in younger demographics, who may navigate the city physically but remain tethered to a digital reality that is detached from their immediate physical surroundings.</p>
-            <p><strong>[Paragraph 4]</strong> To combat this trend, urban planners are increasingly advocating for "placemaking" strategies that prioritize human-centric design. By reclaiming streets for pedestrians, investing in public parks, and encouraging mixed-use developments, cities can foster incidental social encounters. These "micro-interactions"—brief exchanges with a shopkeeper or a neighbor in a park—are the essential building blocks of social capital. While they may seem trivial, they provide the "social glue" that prevents the dense city from devolving into a collection of isolated silos. The challenge for future urbanism lies in balancing the economic efficiency of density with the fundamental human need for authentic, localized belonging.</p>
+        "Social Science": `
+            <h2 class="text-3xl font-black mb-8 text-slate-900">Passage 2: The Urban Revolution and Social Stratification</h2>
+            <p><strong>[Paragraph 1]</strong> The transition from small, egalitarian Neolithic villages to the first complex urban centers, often termed the "Urban Revolution," represents a seminal shift in human social architecture. This process, which first unfolded in the alluvial plains of Mesopotamia around the fourth millennium BCE, was characterized by unprecedented demographic growth and the emergence of specialized labor. Unlike the self-sufficient agrarian communities that preceded them, early cities relied on a surplus of food produced by a rural hinterland. This surplus enabled a segment of the population to abandon food production in favor of specialized crafts, administration, and religious roles. Consequently, the social fabric became increasingly heterogeneous, moving away from kinship-based organization toward institutionalized hierarchy.</p>
+            <p><strong>[Paragraph 2]</strong> Central to this transition was the role of the "temple-state" economy. In cities like Uruk, the temple served not only as a spiritual center but also as a primary hub for resource redistribution. Priestly elites managed the collection of agricultural tithes and the allocation of rations to laborers and craftsmen. This centralized control over essential resources necessitated the invention of complex recording systems, eventually leading to the development of cuneiform writing. Writing was not initially used for literature or poetry but as an accounting tool to track grain, livestock, and labor hours. This administrative technological leap reinforced the power of the nascent bureaucracy, further entrenching the divide between the literate elite and the illiterate peasantry.</p>
+            <p><strong>[Paragraph 3]</strong> Social stratification was also physically manifested in the urban landscape. The architectural layout of early cities often featured a central citadel or ziggurat that towered over the surrounding residential districts. These monumental structures served as visual reminders of the divine and political authority of the ruling class. Furthermore, the differentiation of grave goods in urban cemeteries provides stark evidence of emerging inequality. While the majority of burials contained simple utilitarian items, royal tombs were often adorned with exotic materials like lapis lazuli and gold, indicating vast differences in wealth and status. This disparity suggests that the "Urban Revolution" was not merely a change in settlement size but a fundamental restructuring of how human value and power were assigned.</p>
+            <p><strong>[Paragraph 4]</strong> Despite the benefits of urban life, such as increased security and technological innovation, the shift to city-dwelling introduced new vulnerabilities. High population density facilitated the rapid spread of infectious diseases, while the reliance on a narrow range of domesticated crops made urban centers susceptible to famine during climatic shifts. Moreover, the rigid social hierarchies often led to internal friction and class-based conflict. As cities expanded and competed for finite resources like water and arable land, the need for organized warfare arose, giving birth to a specialized warrior class and the concept of the territorial state. Thus, the Urban Revolution set the stage for both the highest achievements of human civilization and its most persistent social challenges.</p>
+            <div class="source-note">Source: Original academic text synthesized for EGCIS Test Software. No external copyrighted material used.</div>
         `,
-        "PHYSICAL SCIENCE": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">Geodynamics: The Mechanics of Mantle Plumes</h2>
-            <p><strong>[Paragraph 1]</strong> For decades, plate tectonics provided a comprehensive framework for understanding the movement of the Earth's lithospheric plates and the formation of volcanic activity at plate boundaries. However, certain volcanic regions, such as Hawaii and Yellowstone, exist far from any plate margin. To explain these anomalies, the "Mantle Plume Hypothesis" was proposed. It suggests that narrow columns of hot, buoyant rock rise from the core-mantle boundary, roughly 2,900 kilometers below the surface. These plumes act like "thermal blowtorches," melting the overlying lithosphere as it moves above them, creating a linear chain of volcanoes that tracks the plate's motion over millions of years.</p>
-            <p><strong>[Paragraph 2]</strong> The internal structure of a mantle plume is traditionally divided into two parts: a large, bulbous "head" and a long, slender "tail." When the plume head first reaches the base of the lithosphere, it triggers massive "flood basalt" eruptions—catastrophic volcanic events that can cover entire continents in lava. Over time, the head dissipates, and the plume settles into a steady-state "tail" phase. This tail provides a consistent source of magma for "hotspots." The <span class="highlight text-slate-900">persistence</span> of these hotspots is remarkable; the Hawaiian-Emperor seamount chain, for instance, records nearly 80 million years of continuous volcanic activity, providing a permanent reference point for reconstructing the past movements of the Pacific Plate.</p>
-            <p><strong>[Paragraph 3]</strong> Despite its widespread acceptance, the plume hypothesis faces challenges from the "Plate Hypothesis" (or Top-Down model). Skeptics argue that these intraplate volcanic centers are not caused by deep-seated thermal anomalies but by localized "stress-induced" cracks in the lithosphere that allow magma from the upper mantle to escape. This model posits that plate-scale stresses, such as the subduction of oceanic crust elsewhere, can stretch the lithosphere until it fractures. Proponents of this view point out that seismic imaging of deep plumes is often ambiguous, with some hotspots appearing to have no discernible root reaching into the lower mantle.</p>
-            <p><strong>[Paragraph 4]</strong> Modern geophysics is attempting to reconcile these two views through high-resolution seismic tomography. This technology uses earthquake waves to create 3D maps of the Earth's interior, similar to a CT scan. Recent findings suggest a more complex reality: "superplumes" in the lower mantle may feed smaller, secondary plumes that interact with upper mantle convection currents. This "multiscale" approach acknowledges that while deep thermal buoyancy is a primary driver, the physical state of the lithosphere determines where and how that heat eventually reaches the surface. As our imaging capabilities improve, the debate continues to refine our understanding of the Earth as a dynamic, interconnected heat engine.</p>
+        "Physical Science": `
+            <h2 class="text-3xl font-black mb-8 text-slate-900">Passage 3: Thermodynamics and the Arrow of Time</h2>
+            <p><strong>[Paragraph 1]</strong> At the macroscopic level, the universe appears to possess a distinct temporal directionality, moving inexorably from the past toward the future. This "arrow of time" is fundamentally rooted in the second law of thermodynamics, which states that the total entropy of an isolated system can never decrease over time. Entropy is often colloquially described as "disorder," but more precisely, it is a measure of the number of microscopic configurations that correspond to a specific macroscopic state. Because there are vastly more ways for a system to be in a high-entropy, disordered state than in a low-entropy, ordered one, physical processes naturally tend toward the former. This statistical inevitability governs everything from the melting of an ice cube to the eventual heat death of the universe.</p>
+            <p><strong>[Paragraph 2]</strong> Interestingly, the fundamental laws of physics—including Newton’s laws of motion and the equations of quantum mechanics—are time-reversible. This means that if the velocity of every particle in the universe were suddenly reversed, the system would theoretically retrace its steps back to its original state. This creates a profound paradox: how can time-reversible microscopic laws give rise to a time-irreversible macroscopic reality? This "Loschmidt's paradox" suggests that the arrow of time is not a fundamental property of the laws themselves but an emergent phenomenon resulting from the universe's initial conditions. Specifically, the universe must have started in an exceptionally low-entropy state at the moment of the Big Bang.</p>
+            <p><strong>[Paragraph 3]</strong> The role of gravity adds another layer of complexity to the thermodynamic narrative. While gravity typically acts to pull matter together into ordered structures like stars and galaxies, this seemingly "ordered" behavior actually increases the total entropy of the universe. As gas clouds collapse under gravity, they release enormous amounts of heat and radiation, contributing significantly to the universal entropy budget. Furthermore, black holes represent the ultimate high-entropy states. According to the Bekenstein-Hawking formula, the entropy of a black hole is proportional to the surface area of its event horizon. This suggests that the final state of the universe will be one dominated by black holes that eventually evaporate into a state of maximum, uniform disorder.</p>
+            <p><strong>[Paragraph 4]</strong> Contemporary research in "quantum thermodynamics" is attempting to reconcile these macroscopic observations with the probabilistic nature of the subatomic world. In the quantum realm, the definition of entropy becomes more nuanced, involving the concept of information and entanglement. Some theorists argue that time itself may be an emergent property of quantum entanglement rather than a fundamental dimension. As we refine our understanding of how information is processed and lost at the quantum level, we may eventually solve the mystery of why time flows only in one direction. Regardless of the eventual outcome, the link between thermodynamics and time remains one of the most significant intersections in modern theoretical physics.</p>
+            <div class="source-note">Source: Original academic text synthesized for EGCIS Test Software. No external copyrighted material used.</div>
         `
     };
 
     const questions = [
-        // Life Science (1-10)
-        { topic: "LIFE SCIENCE", text: "What was the primary cause of the PETM according to the passage?", options: ["A sudden increase in solar radiation levels.", "A massive injection of carbon into the atmosphere.", "The expansion of polar ice caps.", "A decrease in volcanic activity in the North Atlantic."], answer: 1, hint: "See Paragraph 1: 'triggered by a massive injection of carbon...'", explanation: "The text explicitly links the PETM to a 'massive injection of carbon' into the ocean-atmosphere system." },
-        { topic: "LIFE SCIENCE", text: "The word 'concomitant' in paragraph 2 is closest in meaning to:", options: ["Unexpected", "Accompanying", "Dangerous", "Temporary"], answer: 1, hint: "Context: 'concomitant deoxygenation...'", explanation: "'Concomitant' means naturally accompanying or associated with something else." },
-        { topic: "LIFE SCIENCE", text: "According to paragraph 2, how did seafloor organisms (benthic foraminifera) react to the PETM?", options: ["They migrated to higher latitudes.", "They underwent a significant extinction event.", "They evolved into larger body sizes.", "They became more diverse due to warmer waters."], answer: 1, hint: "Para 2: 'suffered a catastrophic extinction event...'", explanation: "The passage notes they lost 'nearly 50% of their species diversity'." },
-        { topic: "LIFE SCIENCE", text: "Which of the following is NOT mentioned in paragraph 3 as a group of 'modern' mammals that migrated during the PETM?", options: ["Primates", "Artiodactyls", "Benthic foraminifera", "Perissodactyls"], answer: 2, hint: "Compare the list in Para 3 with Para 2.", explanation: "Benthic foraminifera are seafloor organisms mentioned in Para 2, not modern mammals from Para 3." },
-        { topic: "LIFE SCIENCE", text: "Why did many mammals undergo 'dwarfing' during the PETM?", options: ["To escape predators more easily.", "As an adaptation to lower-quality food sources.", "Because of the lack of oxygen in the air.", "To navigate dense tropical forests."], answer: 1, hint: "Para 3: 'adaptive response to nutrient scarcity'.", explanation: "High CO2 led to faster-growing plants with lower nutritional density, causing mammals to shrink." },
-        { topic: "LIFE SCIENCE", text: "It can be inferred from paragraph 4 that the silicate weathering process:", options: ["Is a rapid process that cools the planet in decades.", "Requires high temperatures and moisture to function efficiently.", "Is the primary cause of ocean acidification.", "Occurs only during volcanic eruptions."], answer: 1, hint: "Para 4: 'increased rainfall and warmth accelerated...'", explanation: "The text says warmth and rain 'accelerated' the process, implying it needs these conditions." },
-        { topic: "LIFE SCIENCE", text: "According to paragraph 4, what role did organic-rich sediments play in the recovery?", options: ["They released carbon back into the air.", "They acted as a pump to store carbon deep in the ocean.", "They blocked the sun's rays, cooling the planet.", "They prevented silicate rocks from weathering."], answer: 1, hint: "Para 4: 'locking away carbon in the deep ocean'.", explanation: "The passage describes them as a 'biological pump' that sequestered carbon." },
-        { topic: "LIFE SCIENCE", text: "The author mentions 'silicate weathering' in order to:", options: ["Explain how the Earth naturally removes excess CO2.", "Argue that rocks are the main source of carbon.", "Contrast geologic cooling with biological cooling.", "Show why the PETM was so destructive."], answer: 0, hint: "Para 4: 'cooling was primarily driven by...'", explanation: "It is introduced as the feedback loop that drove the recovery/cooling phase." },
-        { topic: "LIFE SCIENCE", text: "In paragraph 1, all of the following are cited as potential carbon sources EXCEPT:", options: ["Seafloor methane clathrates", "Volcanic activity", "Terrestrial peatlands", "High-latitude land bridges"], answer: 3, hint: "Look at the list in the final sentence of Para 1.", explanation: "Land bridges are mentioned in Para 3 as migration routes, not carbon sources." },
-        { topic: "LIFE SCIENCE", text: "Sentence Insertion: 'This biological storage effectively removed carbon from the active cycle for millions of years.' Where would it best fit?", options: ["After the first sentence of Paragraph 4.", "After the description of 'silicate weathering'.", "After the mention of 'biological pump' in Paragraph 4.", "Before the final sentence of Paragraph 4."], answer: 2, hint: "Look for 'biological storage' referring back to 'biological pump'.", explanation: "The sentence clarifies the impact of the 'biological pump' mentioned immediately before." },
-
-        // Social Science (11-20)
-        { topic: "SOCIAL SCIENCE", text: "What is the 'urban paradox' mentioned in paragraph 1?", options: ["Cities are cleaner but more crowded.", "Physical proximity does not lead to social closeness.", "Higher density reduces the cost of living.", "Technology makes cities feel larger than they are."], answer: 1, hint: "Para 1: 'the more densely populated... the more social isolation'.", explanation: "The paradox is that being physically close to others doesn't guarantee social connection." },
-        { topic: "SOCIAL SCIENCE", text: "The word 'exacerbating' in paragraph 2 is closest in meaning to:", options: ["Improving", "Worsening", "Clarifying", "Finishing"], answer: 1, hint: "Context: 'exacerbating the physical and social compartmentalization'.", explanation: "'Exacerbate' means to make a problem, bad situation, or negative feeling worse." },
-        { topic: "SOCIAL SCIENCE", text: "According to paragraph 2, why is the 'commodification' of public space a problem?", options: ["It makes the city too expensive to live in.", "It creates barriers to spontaneous community building.", "It leads to the destruction of historical buildings.", "It reduces the amount of luxury housing available."], answer: 1, hint: "Para 2: 'barrier to spontaneous community building increases'.", explanation: "When social spaces require money, people are less likely to interact freely." },
-        { topic: "SOCIAL SCIENCE", text: "Why does the author mention 'high-rise residential complexes' in paragraph 2?", options: ["To praise their architectural innovation.", "To show how they prioritize privacy over community.", "To explain why cities are becoming more vertical.", "To argue that security is the most important urban need."], answer: 1, hint: "Para 2: 'prioritizes private luxury... over shared corridors'.", explanation: "They are cited as an example of design that increases compartmentalization." },
-        { topic: "SOCIAL SCIENCE", text: "In paragraph 3, the term 'phantom community' refers to:", options: ["A city with no residents.", "A digital network that lacks real-world support.", "A group of people who live in the same building.", "A historical neighborhood that has been demolished."], answer: 1, hint: "Para 3: 'illusion of sociality masks a lack of substantive... support'.", explanation: "It describes the gap between online popularity and real-life isolation." },
-        { topic: "SOCIAL SCIENCE", text: "According to paragraph 3, what is a characteristic of 'weak ties' compared to 'strong ties'?", options: ["Weak ties are only found in physical environments.", "Weak ties do not provide reliable support in a crisis.", "Strong ties are easier to form in a megalopolis.", "Younger demographics prefer strong ties over weak ties."], answer: 1, hint: "Para 3: 'lack a single neighbor they can rely on in a crisis'.", explanation: "The text implies digital 'weak ties' are superficial compared to dependable 'strong ties'." },
-        { topic: "SOCIAL SCIENCE", text: "The word 'acute' in paragraph 3 is closest in meaning to:", options: ["Sudden", "Sharp or intense", "Boring", "Unknown"], answer: 1, hint: "Context: 'particularly acute in younger demographics'.", explanation: "In this context, 'acute' means sharp, intense, or strongly felt." },
-        { topic: "SOCIAL SCIENCE", text: "According to paragraph 4, what are 'micro-interactions'?", options: ["Conversations via social media apps.", "Brief, incidental social encounters.", "Large-scale community protests.", "Financial transactions in commercial spaces."], answer: 1, hint: "Para 4: 'brief exchanges with a shopkeeper...'", explanation: "The text defines them as small, brief face-to-face exchanges." },
-        { topic: "SOCIAL SCIENCE", text: "What is the rhetorical purpose of paragraph 4?", options: ["To warn that cities will eventually collapse.", "To propose solutions to the problem of urban isolation.", "To criticize urban planners for their past mistakes.", "To explain the economic benefits of city density."], answer: 1, hint: "Para 4: 'combat this trend... placemaking strategies'.", explanation: "The paragraph focuses on 'placemaking' as a way to solve the loneliness described earlier." },
-        { topic: "SOCIAL SCIENCE", text: "It can be inferred from paragraph 1 that Georg Simmel's 'blasé outlook' is:", options: ["An intentional choice to be rude.", "A subconscious reaction to too much information.", "A sign of superior intelligence.", "A result of living in small rural villages."], answer: 1, hint: "Para 1: 'psychological defense mechanism... cope with the relentless barrage'.", explanation: "It is described as a 'defense mechanism' against sensory overload, implying a reaction rather than a simple choice." },
-
-        // Physical Science (21-30)
-        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 1, how do 'mantle plumes' differ from standard plate tectonics?", options: ["They occur at plate boundaries.", "They explain volcanic activity in the middle of plates.", "They are caused by the cooling of the Earth's core.", "They move faster than the lithospheric plates."], answer: 1, hint: "Para 1: 'exist far from any plate margin'.", explanation: "Plumes explain intraplate volcanism, whereas standard tectonics explains boundary volcanism." },
-        { topic: "PHYSICAL SCIENCE", text: "The word 'persistence' in paragraph 2 is closest in meaning to:", options: ["Size", "Endurance", "Difficulty", "Hotness"], answer: 1, hint: "Context: 'persistence of these hotspots is remarkable'.", explanation: "'Persistence' refers to the long-lasting nature or endurance of the hotspots." },
-        { topic: "PHYSICAL SCIENCE", text: "What happens when a 'plume head' first hits the lithosphere?", options: ["It creates a long chain of small islands.", "It triggers massive flood basalt eruptions.", "It cools down immediately and turns into granite.", "It pushes the plate into the mantle."], answer: 1, hint: "Para 2: 'When the plume head first reaches... it triggers massive flood basalt'.", explanation: "The head phase is associated with catastrophic, continent-wide lava flows." },
-        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 2, what is the 'tail' phase of a plume?", options: ["A period of no volcanic activity.", "A steady-state supply of magma for hotspots.", "The moment the plume sinks back to the core.", "The part of the volcano that is underwater."], answer: 1, hint: "Para 2: 'settles into a steady-state tail phase'.", explanation: "The tail provides the consistent magma source for persistent hotspots." },
-        { topic: "PHYSICAL SCIENCE", text: "The 'Plate Hypothesis' mentioned in paragraph 3 suggests that:", options: ["Magma comes from the core-mantle boundary.", "Volcanoes are caused by cracks in the crust due to stress.", "Plumes are much wider than previously thought.", "The Pacific Plate is not actually moving."], answer: 1, hint: "Para 3: 'caused by localized stress-induced cracks'.", explanation: "This 'top-down' model blames surface stresses rather than deep thermal plumes." },
-        { topic: "PHYSICAL SCIENCE", text: "Why do some scientists remain skeptical of the Mantle Plume Hypothesis?", options: ["They believe Hawaii is not a volcano.", "Seismic imaging of deep plumes is often unclear.", "They think the Earth's core is cold.", "Volcanoes only exist on land."], answer: 1, hint: "Para 3: 'seismic imaging of deep plumes is often ambiguous'.", explanation: "The lack of clear 3D 'roots' in seismic data is a primary point of skepticism." },
-        { topic: "PHYSICAL SCIENCE", text: "What is 'seismic tomography' compared to in the passage?", options: ["A microscope", "A CT scan", "A telescope", "A compass"], answer: 1, hint: "Para 4: 'similar to a CT scan'.", explanation: "The author uses the medical analogy to explain how 3D maps of the interior are created." },
-        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 4, what is the 'multiscale' approach?", options: ["A way to measure the height of volcanoes.", "A model where deep superplumes interact with upper mantle currents.", "A theory that only considers the crust.", "The use of multiple scales to weigh lava."], answer: 1, hint: "Para 4: 'superplumes... feed smaller, secondary plumes'.", explanation: "It combines deep-source buoyancy with upper-mantle dynamics." },
-        { topic: "PHYSICAL SCIENCE", text: "The word 'reconcile' in paragraph 4 is closest in meaning to:", options: ["Separate", "Harmonize", "Reject", "Discover"], answer: 1, hint: "Context: 'attempting to reconcile these two views'.", explanation: "'Reconcile' means to find a way in which two competing ideas can both be true." },
-        { topic: "PHYSICAL SCIENCE", text: "Sentence Insertion: 'By contrast, the tail is much narrower and can last for tens of millions of years.' Where would this fit best?", options: ["Before the description of the 'head' in Paragraph 2.", "After the mention of 'flood basalt' in Paragraph 2.", "After the definition of 'steady-state tail phase' in Paragraph 2.", "At the end of Paragraph 3."], answer: 2, hint: "Look for the transition between the head and the tail description.", explanation: "It provides a direct comparison of the 'tail' characteristics to the previously described 'head'." }
+        { topic: "Life Science", text: "According to paragraph 1, how does epigenetics differ from traditional genetic mutations?", options: ["It involves changes to the chemical structure of DNA bases.", "It does not involve changes to the underlying DNA sequence.", "It only occurs in social insects like honeybees.", "It is a unidirectional flow of information from RNA to protein."], answer: 1, hint: "Check Para 1 for the definition of epigenetics.", explanation: "The text explicitly states that epigenetics involves 'heritable changes in gene expression that do not involve alterations to the underlying DNA sequence'." },
+        { topic: "Life Science", text: "According to paragraph 2, what is the effect of histone acetylation on DNA?", options: ["It adds a positive charge to lysine residues.", "It increases the affinity between histones and DNA.", "It creates a more relaxed chromatin structure.", "It triggers the immediate destruction of DNA strands."], answer: 2, hint: "Para 2: Look for 'euchromatin'.", explanation: "Histone acetylation neutralizes charges, leading to 'euchromatin' which is a more relaxed and accessible structure." },
+        { topic: "Life Science", text: "Which of the following is NOT mentioned in paragraph 3 as a result of royal jelly consumption in larvae?", options: ["Epigenetic reprogramming", "Suppression of methylation in queen-associated genes", "The emergence of a worker bee phenotype", "Changes in physiological and behavioral traits"], answer: 2, hint: "Para 3: 'bypasses the default worker pathway'.", explanation: "The text says royal jelly *suppresses* the worker pathway and creates a queen, so the worker phenotype is NOT the result of royal jelly." },
+        { topic: "Social Science", text: "According to paragraph 1, what allowed urban segment of the population to focus on specialized crafts?", options: ["The self-sufficiency of urban households.", "The discovery of bronze and iron tools.", "A surplus of food produced by the rural hinterland.", "The elimination of kinship-based organization."], answer: 2, hint: "Para 1: 'surplus of food produced by a rural hinterland'.", explanation: "The passage notes that early cities 'relied on a surplus of food' which allowed others to abandon food production for specialized roles." },
+        { topic: "Social Science", text: "According to paragraph 2, what was the original purpose of the first writing systems?", options: ["To record epic poetry and religious myths.", "To serve as a tool for agricultural accounting.", "To communicate with distant royal families.", "To teach literacy to the peasant class."], answer: 1, hint: "Para 2: 'Writing was not initially used for literature...'.", explanation: "The text states writing was initially used as an 'accounting tool to track grain, livestock, and labor hours'." },
+        { topic: "Social Science", text: "Which of the following is NOT described as a manifestation of social stratification in paragraph 3?", options: ["The presence of towering ziggurats.", "The differentiation of goods found in royal versus common graves.", "The use of gold and lapis lazuli by the ruling class.", "The construction of egalitarian residential districts."], answer: 3, hint: "Para 3: Look for things that show inequality.", explanation: "The text describes ziggurats and differentiated grave goods as signs of hierarchy; 'egalitarian' districts would contradict this." },
+        { topic: "Physical Science", text: "According to paragraph 1, what determines the temporal directionality of the universe?", options: ["The total amount of energy in the universe.", "The constant decrease of entropy over time.", "The second law of thermodynamics.", "The microscopic laws of Newton."], answer: 2, hint: "Para 1: 'fundamentally rooted in...'.", explanation: "Paragraph 1 states the 'arrow of time' is 'fundamentally rooted in the second law of thermodynamics'." },
+        { topic: "Physical Science", text: "What does the Bekenstein-Hawking formula relate to black holes?", options: ["The speed at which light escapes them.", "The relationship between entropy and the event horizon's area.", "The fact that black holes cannot possess entropy.", "The chemical composition of the star that formed them."], answer: 1, hint: "Para 3: Mention of black holes and event horizons.", explanation: "The formula states that the entropy of a black hole is 'proportional to the surface area of its event horizon'." },
+        { topic: "Physical Science", text: "According to paragraph 1, why do physical processes tend toward disorder?", options: ["Disordered states are statistically more likely.", "Ordered states contain too much energy to be stable.", "The laws of gravity actively push particles apart.", "Disorder is the only way to conserve energy."], answer: 0, hint: "Para 1: 'vastly more ways for a system to be in a high-entropy... state'.", explanation: "It is a statistical argument: disordered states have more corresponding microscopic configurations." },
+        { topic: "Life Science", text: "What does paragraph 4 suggest about transgenerational epigenetic inheritance?", options: ["It only affects the generation immediately following a stressor.", "It ensures that offspring are always healthier than parents.", "It can pass environmental modifications to future generations.", "It completely replaces the DNA sequence with new information."], answer: 2, hint: "Para 4: 'passed to subsequent generations'.", explanation: "The text states modifications 'can be passed to subsequent generations, potentially pre-adapting... offspring'." },
+        { topic: "Life Science", text: "The word 'nuanced' in paragraph 1 is closest in meaning to:", options: ["Simplified", "Refined", "Ignored", "Destroyed"], answer: 1, hint: "Context: 'significantly nuanced by the emergence of epigenetics'.", explanation: "Nuanced here means to add detail or sophistication to a previously simple idea." },
+        { topic: "Life Science", text: "The word 'impeding' in paragraph 2 is closest in meaning to:", options: ["Encouraging", "Hiding", "Obstructing", "Identifying"], answer: 2, hint: "Context: 'physically impeding the binding of transcription factors'.", explanation: "To impede is to delay or prevent someone or something by obstructing them." },
+        { topic: "Social Science", text: "The word 'heterogeneous' in paragraph 1 is closest in meaning to:", options: ["Diverse", "Uniform", "Peaceful", "Crowded"], answer: 0, hint: "Context: 'social fabric became increasingly heterogeneous'.", explanation: "In this context, it refers to a society made up of different types of people and roles." },
+        { topic: "Social Science", text: "Why does the author use the phrase 'temple-state' economy in paragraph 2?", options: ["To argue that religion was the only factor in city growth.", "To emphasize the dual religious and economic role of urban institutions.", "To criticize the greed of the priestly elites.", "To show that early cities lacked a centralized government."], answer: 1, hint: "Para 2: 'served not only as a spiritual center but also as a primary hub for resource redistribution'.", explanation: "The term highlights how the temple integrated both the spiritual and administrative/economic management of the city." },
+        { topic: "Physical Science", text: "The word 'inexorably' in paragraph 1 is closest in meaning to:", options: ["Slowly", "Unstoppably", "Unnecessarily", "Briefly"], answer: 1, hint: "Context: 'moving inexorably from the past toward the future'.", explanation: "Inexorably means in a way that is impossible to stop or prevent." },
+        { topic: "Physical Science", text: "What is the author's rhetorical purpose in mentioning 'Loschmidt's paradox' in paragraph 2?", options: ["To prove that the arrow of time does not exist.", "To highlight the conflict between microscopic laws and macroscopic observations.", "To explain why Newton's laws are superior to quantum mechanics.", "To provide a historical biography of the scientist Loschmidt."], answer: 1, hint: "Para 2: 'how can time-reversible microscopic laws give rise to a time-irreversible macroscopic reality?'.", explanation: "The paradox is used to introduce the fundamental problem of reconciling microscopic symmetry with macroscopic directionality." },
+        { topic: "Life Science", text: "The word 'extrinsic' in paragraph 3 is closest in meaning to:", options: ["Internal", "External", "Genetic", "Rare"], answer: 1, hint: "Context: 'extrinsic nutritional factors'.", explanation: "Extrinsic means coming from the outside; in this case, from the diet/environment." },
+        { topic: "Social Science", text: "The word 'nascent' in paragraph 2 is closest in meaning to:", options: ["Corrupt", "Emerging", "Dying", "Powerful"], answer: 1, hint: "Context: 'power of the nascent bureaucracy'.", explanation: "Nascent refers to something that is just coming into existence or beginning to display potential." },
+        { topic: "Physical Science", text: "The word 'emergent' in paragraph 2 is closest in meaning to:", options: ["Urgent", "Resulting", "Secret", "Standard"], answer: 1, hint: "Context: 'arrow of time is not a fundamental property... but an emergent phenomenon'.", explanation: "Emergent in physics refers to a property that appears in a complex system but not in its individual parts." },
+        { topic: "Social Science", text: "Why does the author mention 'royal tombs' in paragraph 3?", options: ["To provide evidence of the religious burial rites used in Uruk.", "To illustrate the disparity in wealth that accompanied social stratification.", "To show that Mesopotamians were the first to use gold.", "To explain the architectural techniques used to build ziggurats."], answer: 1, hint: "Para 3: 'differentiation of grave goods... provides stark evidence'.", explanation: "The royal tombs, contrasted with common burials, serve as physical proof of the extreme social inequality in early cities." },
+        { topic: "Life Science", text: "What can be inferred from paragraph 1 about phenotypic plasticity?", options: ["It is a mutation that changes the DNA sequence permanently.", "It allows an organism to adapt to its surroundings without changing its genes.", "It is only possible if the organism has a very short lifespan.", "It is the primary cause of genetic determinism."], answer: 1, hint: "Para 1: 'ability of a single genotype to produce multiple phenotypes'.", explanation: "Since it allows 'varied environments' to produce different results from 'a single genotype', it implies adaptation without genetic mutation." },
+        { topic: "Social Science", text: "It can be inferred from paragraph 4 that the Urban Revolution:", options: ["Completely eliminated the threat of famine for human populations.", "Created as many long-term problems as it did cultural advancements.", "Was a peaceful transition with no internal conflict.", "Led to a decrease in the overall human population density."], answer: 1, hint: "Para 4: 'highest achievements... and its most persistent social challenges'.", explanation: "The text mentions achievements (innovation, security) but balances them with challenges (disease, famine, warfare, class conflict)." },
+        { topic: "Physical Science", text: "In paragraph 3, what is implied about the future state of the universe?", options: ["It will eventually return to a low-entropy state like the Big Bang.", "It will be defined by a complete lack of structure and total disorder.", "It will become a single, massive black hole that lasts forever.", "It will stop expanding as gravity overcomes entropy."], answer: 1, hint: "Para 3: 'state of maximum, uniform disorder'.", explanation: "The text suggests the final state involves black hole evaporation leading to 'maximum, uniform disorder'." },
+        { topic: "Life Science", text: "It can be inferred from paragraph 3 that queen honeybees are 'made' rather than 'born'.", options: ["True, because they have different DNA than workers.", "True, because environmental diet triggers their development.", "False, because every bee starts with queen potential.", "False, because royal jelly is only a myth."], answer: 1, hint: "Para 3: 'determined by their diet during the larval stage'.", explanation: "Since queens and workers are genetically identical, the queen phenotype is 'made' by the external stimulus of royal jelly." },
+        { topic: "Physical Science", text: "It can be inferred from paragraph 2 that if the universe had started in a high-entropy state:", options: ["Time would move backward instead of forward.", "There would be no discernible arrow of time.", "Gravity would be much stronger today.", "The Big Bang would not have produced any heat."], answer: 1, hint: "Para 2: 'must have started in an exceptionally low-entropy state'.", explanation: "If time directionality depends on the move from low to high entropy, starting at high entropy would leave no room for that progression." },
+        { topic: "Social Science", text: "Sentence Insertion: 'This institutionalization of power was often justified by religious ideologies.' Where would this fit best?", options: ["At the end of Paragraph 1.", "After the first sentence of Paragraph 2.", "Before the mention of writing in Paragraph 2.", "At the beginning of Paragraph 4."], answer: 1, hint: "Para 2: Discusses 'temple-state' and priestly elites.", explanation: "It fits perfectly after the introduction of the temple-state as the hub of redistribution and religious power." },
+        { topic: "Physical Science", text: "Sentence Insertion: 'This realization led to the understanding that order and entropy are not always intuitive opposites.' Where would this fit best?", options: ["After the first sentence of Para 3.", "After the mention of 'gas clouds' in Para 3.", "At the end of Para 3.", "Before the final sentence of Para 4."], answer: 1, hint: "Para 3: Discusses how gravity creating order actually increases entropy.", explanation: "It summarizes the point that stars (ordered structures) actually contribute to universal entropy (disorder)." },
+        { topic: "Life Science", text: "Sentence Insertion: 'Such epigenetic legacies force a reconsideration of how rapidly a population can respond to environmental change.' Where would this fit best?", options: ["After the first sentence of Para 4.", "After the mention of 'transgenerational epigenetic inheritance' in Para 4.", "At the end of Para 4.", "Before the mention of 'pollution' in Para 4."], answer: 1, hint: "Para 4: Discusses passing changes to offspring.", explanation: "It follows the idea that modifications can be passed down, impacting how populations evolve." },
+        { topic: "Social Science", text: "In paragraph 4, the author mentions the 'specialized warrior class' primarily to:", options: ["Argue that urban life was more dangerous than village life.", "Explain how competition for resources led to new social roles.", "Show that early cities were constantly being destroyed.", "Criticize the waste of resources on military technology."], answer: 1, hint: "Para 4: 'compete for finite resources... need for organized warfare arose'.", explanation: "The author uses the warrior class as an example of a new societal role that emerged from the pressures of urban competition." },
+        { topic: "Physical Science", text: "What can be inferred about 'quantum thermodynamics' from paragraph 4?", options: ["It is a field that has already solved the mystery of time.", "It treats information as a key component of thermodynamic systems.", "It rejects the second law of thermodynamics entirely.", "It is only relevant for large objects like stars and planets."], answer: 1, hint: "Para 4: 'involving the concept of information and entanglement'.", explanation: "The text states that in this field, entropy involves 'the concept of information and entanglement', implying information is a core component." }
     ];
 
     let currentQuestionIndex = 0;
@@ -185,7 +177,6 @@
     let timerInterval;
     let secondsElapsed = 0;
 
-    // DOM
     const passageContent = document.getElementById('passage-content');
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
@@ -213,14 +204,16 @@
 
     function renderQuestion() {
         const q = questions[currentQuestionIndex];
-        
-        progressText.innerText = `ITEM ${currentQuestionIndex + 1} OF ${questions.length}`;
+        progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
         progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
-        topicBadge.innerText = q.topic;
+        topicBadge.innerText = q.topic.toUpperCase();
         
+        if(q.topic === "Life Science") topicBadge.className = "bg-emerald-600 text-white px-4 py-1 rounded-full shadow-sm text-[10px] font-black";
+        if(q.topic === "Social Science") topicBadge.className = "bg-blue-600 text-white px-4 py-1 rounded-full shadow-sm text-[10px] font-black";
+        if(q.topic === "Physical Science") topicBadge.className = "bg-indigo-600 text-white px-4 py-1 rounded-full shadow-sm text-[10px] font-black";
+
         passageContent.innerHTML = passages[q.topic];
         
-        // Scroll passage if topic changed
         if (currentQuestionIndex === 0 || questions[currentQuestionIndex].topic !== questions[currentQuestionIndex-1]?.topic) {
             document.getElementById('passage-container').scrollTop = 0;
         }
@@ -231,17 +224,17 @@
         
         q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
-            btn.className = `w-full text-left p-5 rounded-2xl border-2 border-slate-100 transition-all flex items-start group hover:border-indigo-200`;
-            
+            btn.className = `w-full text-left p-6 rounded-2xl border-2 border-slate-100 transition-all flex items-start group hover:border-blue-200 hover:bg-blue-50/30`;
             const label = String.fromCharCode(65 + index);
             btn.innerHTML = `
-                <span class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-400 mr-5 group-hover:bg-indigo-600 group-hover:text-white transition-all">${label}</span> 
-                <span class="flex-grow pt-2 font-medium text-slate-700">${opt}</span>
+                <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-black text-slate-400 mr-6 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner">${label}</span> 
+                <span class="flex-grow pt-2 font-bold text-slate-700">${opt}</span>
             `;
             
             if (userAnswers[currentQuestionIndex] === index) {
-                btn.classList.add('selected', 'border-indigo-500');
-                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-indigo-600');
+                btn.classList.replace('border-slate-100', 'border-blue-600');
+                btn.classList.add('bg-blue-50');
+                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-blue-600');
                 btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
             }
 
@@ -268,11 +261,13 @@
         if (isReviewMode) {
             feedbackArea.classList.remove('hidden');
             explanationText.innerHTML = q.explanation;
-            feedbackArea.className = "mt-10 p-6 rounded-2xl border-2 " + (userAnswers[currentQuestionIndex] === q.answer ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900");
+            explanationText.className = "text-sm leading-relaxed font-bold " + (userAnswers[currentQuestionIndex] === q.answer ? "text-emerald-700" : "text-slate-500");
+        } else {
+            feedbackArea.classList.add('hidden');
         }
 
         prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "END REVIEW" : "SUBMIT") : "NEXT";
+        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "Return to Start" : "Finalize Test") : "Next";
     }
 
     function nextQuestion() {
@@ -290,36 +285,57 @@
         }
     }
 
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+            document.getElementById('question-area').scrollTop = 0;
+        }
+    }
+
+    function showHint() {
+        hintBox.innerHTML = `<strong>Reference Guide:</strong> ${questions[currentQuestionIndex].hint}`;
+        hintBox.classList.remove('hidden');
+    }
+
     function showResults() {
         resultsScreen.classList.remove('hidden');
         let score = 0;
         userAnswers.forEach((ans, i) => { if (ans === questions[i].answer) score++; });
-        document.getElementById('final-score').innerText = Math.round((score/30)*100) + "%";
-        
+        document.getElementById('final-score').innerText = score;
         const breakdown = document.getElementById('section-breakdown');
         breakdown.innerHTML = `
-            <div class="space-y-2">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competency Breakdown</p>
-                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Life Science</span><span class="font-bold">${calculateSection(0, 9)}/10</span></div>
-                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Social Science</span><span class="font-bold">${calculateSection(10, 19)}/10</span></div>
-                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Physical Science</span><span class="font-bold">${calculateSection(20, 29)}/10</span></div>
+            <div class="space-y-4">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Category Performance</p>
+                <div class="flex justify-between items-center"><span class="text-slate-600 font-black">Life Science</span><span class="font-black text-emerald-600 bg-emerald-50 px-4 py-1 rounded-xl">${calculateSection(0, 9)} / 10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-600 font-black">Social Science</span><span class="font-black text-blue-600 bg-blue-50 px-4 py-1 rounded-xl">${calculateSection(10, 19)} / 10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-600 font-black">Physical Science</span><span class="font-black text-indigo-600 bg-indigo-50 px-4 py-1 rounded-xl">${calculateSection(20, 29)} / 10</span></div>
             </div>
         `;
     }
 
     function calculateSection(start, end) {
         let s = 0;
-        for(let i=start; i<=end; i++) if(userAnswers[i] === questions[i].answer) s++;
+        for(let i=start; i<=end; i++) { if(userAnswers[i] === questions[i].answer) s++; }
         return s;
     }
 
-    nextBtn.onclick = nextQuestion;
-    prevBtn.onclick = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } };
-    hintBtn.onclick = () => { hintBox.innerText = questions[currentQuestionIndex].hint; hintBox.classList.toggle('hidden'); };
-    document.getElementById('review-btn').onclick = () => { isReviewMode = true; currentQuestionIndex = 0; resultsScreen.classList.add('hidden'); renderQuestion(); };
+    function reviewMistakes() {
+        isReviewMode = true;
+        currentQuestionIndex = 0;
+        resultsScreen.classList.add('hidden');
+        renderQuestion();
+    }
 
-    startTimer();
-    renderQuestion();
+    nextBtn.onclick = nextQuestion;
+    prevBtn.onclick = prevQuestion;
+    hintBtn.onclick = showHint;
+    document.getElementById('review-btn').onclick = reviewMistakes;
+
+    window.onload = () => {
+        startTimer();
+        renderQuestion();
+    };
 </script>
 </body>
 </html>
