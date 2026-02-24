@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EGCIS Test Software - TOEFL iBT Reading Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>EGCIS Test Software - TOEFL iBT Reading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Montserrat', sans-serif; }
         .hidden { display: none; }
@@ -13,21 +15,20 @@
         .incorrect { background-color: #fee2e2; border: 2px solid #ef4444; }
         .selected { border: 2px solid #3b82f6; background-color: #eff6ff; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .passage-text p { margin-bottom: 1.5rem; line-height: 1.8; }
-        .highlight { background-color: #fef08a; padding: 0 2px; font-weight: 600; }
+        .prose p { margin-bottom: 1.25rem; line-height: 1.75; font-size: 1.05rem; text-align: justify; }
+        .highlight { background-color: #fef08a; padding: 2px 4px; border-radius: 2px; font-weight: 500; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased">
 
-<div id="app" class="max-w-7xl mx-auto p-4 md:p-6">
+<div id="app" class="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
     <!-- Header -->
     <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 border-slate-200">
         <div>
             <h1 class="text-3xl font-black text-slate-800 tracking-tight">EGCIS Test Software</h1>
-            <p class="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">TOEFL iBT® Mastery Simulator</p>
-            <p class="text-[10px] text-slate-400 mt-2 italic font-medium">TOEFL® is a registered trademark of ETS. This product is not endorsed or approved by ETS.</p>
+            <p class="text-slate-500 font-semibold text-sm">TOEFL® is a registered trademark of ETS. This product is not endorsed or approved by ETS.</p>
         </div>
-        <div id="timer-display" class="mt-4 md:mt-0 px-6 py-3 bg-blue-900 text-white rounded-xl font-mono text-2xl font-bold shadow-lg">
+        <div id="timer-display" class="mt-4 md:mt-0 px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-xl tracking-widest">
             00:00:00
         </div>
     </header>
@@ -35,52 +36,52 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-220px)]">
         <!-- Left Column: Reading Passage -->
         <div id="passage-container" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 overflow-y-auto scrollbar-hide">
-            <div id="passage-content" class="passage-text text-slate-700 text-lg">
-                <!-- Content dynamically injected here -->
+            <div id="passage-content" class="prose prose-slate max-w-none">
+                <!-- Content dynamically injected -->
             </div>
         </div>
 
         <!-- Right Column: Question Interface -->
         <div id="quiz-container" class="bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden">
             <!-- Progress Tracker -->
-            <div class="p-5 border-b border-slate-100 bg-slate-50/80">
-                <div class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">
+            <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                <div class="flex justify-between text-xs font-black text-slate-400 uppercase tracking-widest mb-3">
                     <span id="progress-text">Question 1 of 30</span>
-                    <span id="topic-badge" class="bg-blue-600 text-white px-3 py-1 rounded-full">SECTION START</span>
+                    <span id="topic-badge" class="bg-indigo-600 text-white px-3 py-1 rounded-full">LIFE SCIENCE</span>
                 </div>
                 <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                    <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-700 ease-in-out" style="width: 3.33%"></div>
                 </div>
             </div>
 
             <!-- Question Content -->
             <div id="question-area" class="p-8 flex-grow overflow-y-auto">
-                <div id="hint-box" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-sm text-blue-900 font-medium leading-relaxed hidden">
+                <div id="hint-box" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-sm text-blue-900 hidden italic">
                     <!-- Hint text -->
                 </div>
                 
-                <h2 id="question-text" class="text-xl font-bold text-slate-800 mb-8 leading-tight"></h2>
+                <h2 id="question-text" class="text-xl font-extrabold text-slate-800 mb-8 leading-tight"></h2>
 
                 <div id="options-list" class="space-y-4">
                     <!-- Options injected here -->
                 </div>
 
                 <!-- Feedback Area (Only in Review Mode) -->
-                <div id="feedback-area" class="mt-10 p-6 rounded-xl bg-slate-100 border border-slate-200 hidden">
-                    <h3 class="font-black text-xs mb-3 uppercase text-slate-400 tracking-widest">Logic & Explanation</h3>
-                    <p id="explanation-text" class="text-sm leading-relaxed font-medium"></p>
+                <div id="feedback-area" class="mt-10 p-6 rounded-2xl border-2 hidden transition-all duration-300">
+                    <h3 class="font-black text-xs mb-3 uppercase tracking-widest text-slate-400">Rational Explanation</h3>
+                    <p id="explanation-text" class="text-sm font-medium leading-relaxed"></p>
                 </div>
             </div>
 
             <!-- Footer Controls -->
             <div class="p-6 border-t border-slate-100 bg-white flex justify-between items-center">
-                <button id="prev-btn" class="px-6 py-3 text-sm font-extrabold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                <button id="prev-btn" class="px-6 py-3 text-sm font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-30 transition-all">
                     PREVIOUS
                 </button>
-                <button id="hint-btn" class="text-xs font-black text-blue-600 hover:underline tracking-tighter uppercase transition">
-                    Paragraph Reference
+                <button id="hint-btn" class="text-xs font-black text-indigo-600 hover:text-indigo-800 uppercase tracking-widest underline decoration-2 underline-offset-4">
+                    Reference
                 </button>
-                <button id="next-btn" class="px-8 py-3 text-sm font-black text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-md shadow-blue-200 transition-all uppercase">
+                <button id="next-btn" class="px-8 py-3 text-sm font-black text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all">
                     NEXT
                 </button>
             </div>
@@ -88,96 +89,94 @@
     </div>
 
     <!-- Results Screen -->
-    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center border border-white/20">
-            <div class="mb-8 inline-flex p-6 bg-emerald-50 text-emerald-600 rounded-full">
+    <div id="results-screen" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center transform scale-95 animate-in fade-in zoom-in duration-300">
+            <div class="mb-8 inline-flex p-6 bg-indigo-50 text-indigo-600 rounded-full">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
             </div>
-            <h2 class="text-4xl font-black text-slate-800 mb-2">Simulation Complete</h2>
-            <p class="text-slate-500 font-medium mb-10 italic">Academic proficiency analysis finished.</p>
+            <h2 class="text-4xl font-black text-slate-800 mb-3">Diagnostic Complete</h2>
+            <p class="text-slate-500 mb-10 font-medium">You have navigated through the EGCIS high-density reading assessment.</p>
             
             <div class="grid grid-cols-2 gap-6 mb-10">
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <span class="block text-5xl font-black text-blue-600" id="final-score">0</span>
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Overall Score / 30</span>
+                    <span class="block text-5xl font-black text-indigo-600 mb-1" id="final-score">0</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Total Accuracy</span>
                 </div>
                 <div id="section-breakdown" class="text-left space-y-3 py-2 px-6 border-l-2 border-slate-100">
                     <!-- Section scores -->
                 </div>
             </div>
 
-            <button id="review-btn" class="w-full py-5 bg-slate-800 text-white rounded-2xl font-black text-lg hover:bg-slate-900 transition-all shadow-xl hover:scale-[1.02] active:scale-95">
-                REVIEW INCORRECT ANSWERS
+            <button id="review-btn" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
+                REVIEW PERFORMANCE
             </button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- PASSAGE DATA ---
     const passages = {
-        "Life Science": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">The Mycelial Network: The "Wood Wide Web"</h2>
-            <p><strong>[Paragraph 1]</strong> Beneath the terrestrial surface of temperate forests lies an intricate and high-density lattice of fungal filaments known as mycelia. While fungi have traditionally been categorized primarily as decomposers, recent advancements in mycology reveal a far more sophisticated ecological role: the facilitation of a symbiotic inter-organismal communication network. This "mycorrhizal network" connects the roots of disparate tree species through a subterranean web of hyphae. Rather than operating as isolated biological units, forest trees are integrated into a collective system that manages resource distribution, including water, nitrogen, and phosphorus. This revelation fundamentally challenges the "survival of the fittest" paradigm, suggesting that forest ecosystems rely as much on mutualism and cooperation as they do on individual competition.</p>
-            <p><strong>[Paragraph 2]</strong> The physiological mechanics of this exchange are <span class="highlight">governed</span> by a complex chemical signaling protocol. Mycorrhizal fungi serve as the conduits, receiving carbon-rich sugars from trees (produced via photosynthesis) in exchange for essential soil minerals. However, the network's function extends beyond mere nutrient bartering. Studies utilizing isotopic tracers have demonstrated that older "Mother Trees" can identify their own kin and prioritize them for nutrient delivery, particularly in low-light understory conditions where sapling survival is tenuous. Furthermore, when a host tree is under attack by pathogens or insect infestations, it releases volatile organic compounds and chemical distress signals into the mycelial web. These "early warning" signals allow neighboring trees to preemptively activate their immune responses, synthesizing defensive tannins and enzymes before the threat reaches them.</p>
-            <p><strong>[Paragraph 3]</strong> Despite the apparent altruism of the Wood Wide Web, the relationship is not devoid of exploitation. Some plant species, such as the ghost pipe (<em>Monotropa uniflora</em>), have evolved to become "myco-heterotrophs." These plants lack chlorophyll and therefore cannot photosynthesize; instead, they "hack" into the mycelial network to siphon nutrients without contributing any carbon in return. This parasitic behavior indicates that the network is a contested space, subject to biological subversion. Additionally, the network's efficiency is highly sensitive to anthropogenic disruptions. Nitrogen-rich fertilizers and heavy soil compaction can degrade fungal health, potentially severing the lines of communication and rendering forest stands more vulnerable to climate-induced stressors.</p>
-            <p><strong>[Paragraph 4]</strong> The implications of mycelial connectivity extend to forest resilience and carbon sequestration. A healthy network stabilizes the soil architecture, preventing erosion and enhancing the forest's capacity to store carbon in the ground rather than releasing it into the atmosphere. As global temperatures rise, the ability of trees to communicate and share resources may be the determining factor in whether a forest can adapt to shifting precipitation patterns or succumb to desertification. Understanding the hidden architecture of the forest floor is no longer a niche biological pursuit; it is central to developing robust conservation strategies for the 21st century.</p>
+        "LIFE SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">Paleoclimatology: The Paleocene-Eocene Thermal Maximum (PETM)</h2>
+            <p><strong>[Paragraph 1]</strong> Roughly 56 million years ago, the Earth underwent one of the most rapid and extreme global warming events in the geologic record: the Paleocene-Eocene Thermal Maximum (PETM). During this interval, global temperatures surged by 5 to 8 degrees Celsius in as little as a few thousand years. This hyperthermal event was triggered by a massive injection of carbon into the ocean-atmosphere system, leading to widespread ocean acidification and a drastic shift in biological distributions. While the exact source of the carbon remains a subject of intense debate, the consensus suggests a synergistic release from seafloor methane clathrates, volcanic activity in the North Atlantic, and the combustion of terrestrial peatlands.</p>
+            <p><strong>[Paragraph 2]</strong> The biological response to this heat spike was profound and varied across different ecosystems. In the marine realm, benthic foraminifera—tiny organisms dwelling on the seafloor—suffered a catastrophic extinction event, losing nearly 50% of their species diversity. Scientists hypothesize that this was not caused by temperature alone but by the <span class="highlight text-slate-900">concomitant</span> deoxygenation of deep-sea waters and the corrosive nature of acidified oceans. Conversely, surface-dwelling planktonic species thrived or migrated toward higher latitudes, where previously frigid waters had become temperate. This geographic reshuffling suggests that while some lineages were pushed to the brink, others utilized the warming as a catalyst for range expansion.</p>
+            <p><strong>[Paragraph 3]</strong> On land, the PETM facilitated a critical turning point in mammalian evolution. The warming allowed for the intercontinental migration of "modern" mammal groups, including primates, artiodactyls (even-toed ungulates), and perissodactyls (odd-toed ungulates), across high-latitude land bridges that were formerly impassable due to ice or extreme cold. Curiously, many terrestrial mammals underwent a temporary reduction in body size, a phenomenon known as "dwarfing." Paleontologists argue that this was an adaptive response to nutrient scarcity, as high CO2 levels often lead to faster plant growth but lower nutritional density in foliage, forcing herbivores to survive on less efficient food sources.</p>
+            <p><strong>[Paragraph 4]</strong> The recovery phase of the PETM provides insight into the Earth's natural capacity for carbon sequestration. Over approximately 100,000 to 200,000 years, temperatures gradually returned to pre-event levels. This cooling was primarily driven by the "silicate weathering" feedback loop: increased rainfall and warmth accelerated the chemical breakdown of silicate rocks, which consumes atmospheric CO2 and deposits it as carbonate minerals on the seafloor. Additionally, the proliferation of organic-rich sediments acted as a biological pump, locking away carbon in the deep ocean. The PETM serves as a sobering historical analogue for modern anthropogenic climate change, illustrating both the fragility of biological systems and the immense timescales required for planetary stabilization.</p>
         `,
-        "Social Science": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">The Architecture of Surveillance: The Panopticon</h2>
-            <p><strong>[Paragraph 1]</strong> In the late 18th century, philosopher Jeremy Bentham conceptualized a revolutionary architectural model for institutional control: the Panopticon. Designed originally as a prison, the structure features a circular building with individual cells around the perimeter, all facing a central observation tower. The ingenuity of the design lies in the "asymmetry of visibility." While the supervisor in the tower can observe any prisoner at any time, the prisoners—shielded by blinds or lighting effects—cannot see into the tower. This constant possibility of being watched forces individuals to regulate their own behavior, internalizing the gaze of authority. Bentham argued that this was the most efficient way to manage large populations, transitioning from the "spectacle of punishment" to the "discipline of surveillance."</p>
-            <p><strong>[Paragraph 2]</strong> Michel Foucault later expanded upon Bentham's physical architecture to describe the broader "disciplinary society." Foucault posited that the Panopticon was not just a prison layout but a <span class="highlight">template</span> for modern social institutions, including schools, factories, and hospitals. In these spaces, individuals are categorized, examined, and documented. This data-driven approach creates a "norm" against which all behavior is measured. Deviance is no longer punished through physical violence but corrected through "normalization"—the subtle pressure to conform to societal expectations. The Panoptic model thus serves as a mechanism for producing "docile bodies" that are both economically productive and politically obedient.</p>
-            <p><strong>[Paragraph 3]</strong> The digital age has birthed a new iteration of this concept: the "Electronic Panopticon." In the contemporary landscape, surveillance is no longer tethered to a physical tower but is distributed across digital networks. Every interaction—social media posts, credit card transactions, and GPS data—is logged and analyzed. Unlike Bentham's model, where the observer was a singular human authority, the digital Panopticon utilizes algorithms and "Big Data" to predict and influence behavior. The invisibility of the observer remains, but the scope of the surveillance has expanded from the walls of a prison to the entirety of human existence. The psychological effect is identical: individuals self-censor their digital presence to avoid social or professional repercussions.</p>
-            <p><strong>[Paragraph 4]</strong> Critics of Panoptic surveillance argue that it erodes the fundamental right to privacy and stifles creativity. The constant pressure of the "gaze" encourages a culture of conformity, where radical ideas or unconventional lifestyles are viewed as risks to be mitigated. Furthermore, the centralization of such vast amounts of data creates a power imbalance between the state (or private corporations) and the citizenry. However, proponents argue that digital surveillance is essential for national security and the efficient delivery of public services. The tension between security and privacy remains one of the defining ethical dilemmas of the modern era, as society grapples with an architectural legacy that has moved from stone walls to lines of code.</p>
+        "SOCIAL SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">The Paradox of Urban Density: The "Lonely Crowd" Phenomenon</h2>
+            <p><strong>[Paragraph 1]</strong> The rise of the megalopolis in the 21st century has brought about a unique sociological contradiction: the more densely populated a city becomes, the more social isolation its residents frequently report. This "urban paradox" suggests that physical proximity does not inherently translate into social cohesion. Early 20th-century sociologists, such as Georg Simmel, argued that the sensory overload of the city forces individuals to develop a "blasé outlook"—a psychological defense mechanism of detachment—to cope with the relentless barrage of stimuli. In this environment, the individual becomes a face in a crowd, anonymous and transient, leading to a state of hyper-individualism that erodes traditional communal bonds.</p>
+            <p><strong>[Paragraph 2]</strong> Modern research into "Third Places"—social environments separate from the two primary spheres of home and work—highlights the structural causes of urban loneliness. In many contemporary cities, the "commodification" of public space has replaced free communal gathering spots with commercialized venues like high-end cafes or malls. When social interaction requires a financial transaction, the barrier to spontaneous community building increases. Furthermore, the design of modern high-rise residential complexes often prioritizes private luxury and security over shared corridors or communal gardens, <span class="highlight text-slate-900">exacerbating</span> the physical and social compartmentalization of the citizenry.</p>
+            <p><strong>[Paragraph 3]</strong> The digital revolution has added a complex layer to this urban isolation. While social media platforms promise connectivity, they often facilitate "weak ties" at the expense of "strong ties." In a dense urban setting, a resident may have thousands of digital interactions but lack a single neighbor they can rely on in a crisis. This discrepancy creates a "phantom community," where the illusion of sociality masks a lack of substantive, local support networks. Sociologists note that this digital displacement is particularly acute in younger demographics, who may navigate the city physically but remain tethered to a digital reality that is detached from their immediate physical surroundings.</p>
+            <p><strong>[Paragraph 4]</strong> To combat this trend, urban planners are increasingly advocating for "placemaking" strategies that prioritize human-centric design. By reclaiming streets for pedestrians, investing in public parks, and encouraging mixed-use developments, cities can foster incidental social encounters. These "micro-interactions"—brief exchanges with a shopkeeper or a neighbor in a park—are the essential building blocks of social capital. While they may seem trivial, they provide the "social glue" that prevents the dense city from devolving into a collection of isolated silos. The challenge for future urbanism lies in balancing the economic efficiency of density with the fundamental human need for authentic, localized belonging.</p>
         `,
-        "Physical Science": `
-            <h2 class="text-3xl font-black mb-6 text-slate-800">The Quantum Zeno Effect</h2>
-            <p><strong>[Paragraph 1]</strong> In the counterintuitive realm of quantum mechanics, the mere act of observation can fundamentally alter the state of a physical system. One of the most striking examples of this phenomenon is the Quantum Zeno Effect (QZE). Named after the Greek philosopher Zeno of Elea, whose paradoxes challenged the nature of motion, the QZE suggests that a quantum system can be "frozen" in its current state if it is observed with sufficient frequency. In essence, a continuously observed unstable particle will never decay. This occurs because the act of measurement forces the system into an "eigenstate"—a specific, definite condition—effectively resetting the clock on its probability-driven evolution.</p>
-            <p><strong>[Paragraph 2]</strong> To understand this, one must first <span class="highlight">grasp</span> the concept of wave-function collapse. According to the Copenhagen interpretation, a quantum system exists in a "superposition" of all possible states until a measurement is performed. Measurement "collapses" the wave function into a single state. Between measurements, the system's state begins to "evolve" or spread out again according to the Schrödinger equation. However, if the interval between measurements is extremely short, the system has virtually no time to evolve away from its initial state. Each measurement finds the system in its original condition, thus inhibiting any transition or decay that would otherwise occur naturally over time.</p>
-            <p><strong>[Paragraph 3]</strong> Experimental verification of the QZE was first achieved in 1989 using laser-cooled ions. By repeatedly pulsing a laser to "check" the state of the ions, researchers were able to prevent them from transitioning to a different energy level. Since then, the QZE has moved from a theoretical curiosity to a practical tool in quantum computing and precision metrology. In quantum computers, maintaining "coherence"—the delicate state of superposition required for calculations—is a primary challenge. The QZE offers a potential method for "error correction" by preventing qubits from decohering due to environmental noise, effectively pinning the quantum information in place through strategic observation.</p>
-            <p><strong>[Paragraph 4]</strong> Conversely, the "Anti-Zeno Effect" (AZE) has also been observed, where frequent measurements actually accelerate the decay of a quantum system. The outcome—whether the system is frozen or forced to change faster—depends on the specific structure of the environment and the frequency of the measurements. These effects demonstrate that at the most fundamental level, the universe is not a static collection of objects waiting to be discovered, but a dynamic web of interactions where the observer is an active participant. The boundary between the "viewer" and the "viewed" is not a clear line, but a blurred zone of probabilistic entanglement.</p>
+        "PHYSICAL SCIENCE": `
+            <h2 class="text-3xl font-black mb-6 text-slate-800">Geodynamics: The Mechanics of Mantle Plumes</h2>
+            <p><strong>[Paragraph 1]</strong> For decades, plate tectonics provided a comprehensive framework for understanding the movement of the Earth's lithospheric plates and the formation of volcanic activity at plate boundaries. However, certain volcanic regions, such as Hawaii and Yellowstone, exist far from any plate margin. To explain these anomalies, the "Mantle Plume Hypothesis" was proposed. It suggests that narrow columns of hot, buoyant rock rise from the core-mantle boundary, roughly 2,900 kilometers below the surface. These plumes act like "thermal blowtorches," melting the overlying lithosphere as it moves above them, creating a linear chain of volcanoes that tracks the plate's motion over millions of years.</p>
+            <p><strong>[Paragraph 2]</strong> The internal structure of a mantle plume is traditionally divided into two parts: a large, bulbous "head" and a long, slender "tail." When the plume head first reaches the base of the lithosphere, it triggers massive "flood basalt" eruptions—catastrophic volcanic events that can cover entire continents in lava. Over time, the head dissipates, and the plume settles into a steady-state "tail" phase. This tail provides a consistent source of magma for "hotspots." The <span class="highlight text-slate-900">persistence</span> of these hotspots is remarkable; the Hawaiian-Emperor seamount chain, for instance, records nearly 80 million years of continuous volcanic activity, providing a permanent reference point for reconstructing the past movements of the Pacific Plate.</p>
+            <p><strong>[Paragraph 3]</strong> Despite its widespread acceptance, the plume hypothesis faces challenges from the "Plate Hypothesis" (or Top-Down model). Skeptics argue that these intraplate volcanic centers are not caused by deep-seated thermal anomalies but by localized "stress-induced" cracks in the lithosphere that allow magma from the upper mantle to escape. This model posits that plate-scale stresses, such as the subduction of oceanic crust elsewhere, can stretch the lithosphere until it fractures. Proponents of this view point out that seismic imaging of deep plumes is often ambiguous, with some hotspots appearing to have no discernible root reaching into the lower mantle.</p>
+            <p><strong>[Paragraph 4]</strong> Modern geophysics is attempting to reconcile these two views through high-resolution seismic tomography. This technology uses earthquake waves to create 3D maps of the Earth's interior, similar to a CT scan. Recent findings suggest a more complex reality: "superplumes" in the lower mantle may feed smaller, secondary plumes that interact with upper mantle convection currents. This "multiscale" approach acknowledges that while deep thermal buoyancy is a primary driver, the physical state of the lithosphere determines where and how that heat eventually reaches the surface. As our imaging capabilities improve, the debate continues to refine our understanding of the Earth as a dynamic, interconnected heat engine.</p>
         `
     };
 
-    // --- QUESTIONS DATA (30 TOTAL) ---
     const questions = [
-        // Life Science: 1-10
-        { topic: "Life Science", text: "According to paragraph 1, what is the primary function of the 'mycorrhizal network'?", options: ["To facilitate the decomposition of dead organic matter.", "To serve as an isolated biological unit for each tree.", "To connect tree roots for the exchange of resources and information.", "To protect the soil from being colonized by invasive fungi."], answer: 2, hint: "Check Paragraph 1: 'connects the roots of disparate tree species'." , explanation: "The text states the network connects roots to manage resource distribution like water and minerals." },
-        { topic: "Life Science", text: "The word 'governed' in paragraph 2 is closest in meaning to:", options: ["Challenged", "Controlled", "Interrupted", "Replaced"], answer: 1, hint: "Context: 'The physiological mechanics... are governed by a complex chemical signaling protocol.'", explanation: "In this context, 'governed' means the mechanics are directed or controlled by the signaling protocol." },
-        { topic: "Life Science", text: "According to paragraph 2, how do trees react when they receive a distress signal through the mycelial network?", options: ["They immediately stop the production of carbon-rich sugars.", "They prioritize nutrient delivery to non-kin saplings.", "They begin synthesizing defensive chemicals before being attacked.", "They disconnect their roots from the hyphae to prevent infection."], answer: 2, hint: "Paragraph 2: 'activate their immune responses, synthesizing defensive tannins...'", explanation: "The text explains neighbor trees preemptively activate immunity using defensive enzymes." },
-        { topic: "Life Science", text: "Which of the following is NOT mentioned in paragraph 3 as a threat to the mycelial network?", options: ["The presence of parasitic plants like the ghost pipe.", "The application of fertilizers rich in nitrogen.", "Soil compaction caused by human activity.", "An increase in the diversity of tree species in the forest."], answer: 3, hint: "Paragraph 3 lists 'myco-heterotrophs', 'nitrogen-rich fertilizers', and 'heavy soil compaction'.", explanation: "Tree diversity is not mentioned as a threat; in fact, the passage implies diversity is part of the system." },
-        { topic: "Life Science", text: "Why does the author mention the 'ghost pipe' in paragraph 3?", options: ["To illustrate how the network can be exploited by non-contributing species.", "To provide an example of a tree species that benefits the most from the web.", "To show that chlorophyll is necessary for a plant to join the network.", "To explain how fungi are protected from parasitic plants."], answer: 0, hint: "Paragraph 3: 'hack into the mycelial network to siphon nutrients without contributing any carbon'.", explanation: "The ghost pipe is used as an example of 'biological subversion' or exploitation." },
-        { topic: "Life Science", text: "In paragraph 4, the author suggests that the mycelial network is crucial for climate change because:", options: ["It prevents forests from growing too quickly in warmer weather.", "It helps trees adapt to changing rain patterns through resource sharing.", "It allows trees to migrate to cooler environments more efficiently.", "It reduces the amount of oxygen released by the forest into the atmosphere."], answer: 1, hint: "Paragraph 4: 'determine... whether a forest can adapt to shifting precipitation patterns'.", explanation: "The text links the ability to share resources to forest survival during shifts in precipitation." },
-        { topic: "Life Science", text: "What can be inferred from paragraph 1 about the 'survival of the fittest' theory?", options: ["It is the only correct way to view forest evolution.", "It may not fully account for the role of cooperation in ecosystems.", "It was originally proposed by mycologists studying fungi.", "It explains why Mother Trees prioritize their own offspring."], answer: 1, hint: "Paragraph 1: 'fundamentally challenges the survival of the fittest paradigm'.", explanation: "The text suggests mutualism is just as important as individual competition, challenging the exclusivity of that paradigm." },
-        { topic: "Life Science", text: "Which of the following best describes the rhetorical purpose of the phrase 'Wood Wide Web'?", options: ["To mock the idea that trees can communicate.", "To provide a scientific name for the hyphae filaments.", "To create a familiar analogy for a complex biological system.", "To argue that forests should be used for telecommunications."], answer: 2, hint: "Paragraph 1: Introduction of the term in quotes.", explanation: "It is a metaphor used to help readers understand the connectivity of the forest through an analogy to the internet." },
-        { topic: "Life Science", text: "Sentence Insertion: 'This underground system acts as a biological buffer against environmental volatility.' Where would this fit best?", options: ["After the first sentence of Para 4.", "Before the mention of 'Mother Trees' in Para 2.", "At the very beginning of Para 1.", "After the mention of 'desertification' in Para 4."], answer: 0, hint: "Look for context regarding 'resilience' and 'volatility'.", explanation: "Paragraph 4 discusses forest resilience and adaptation, making it the logical home for a sentence about environmental buffers." },
-        { topic: "Life Science", text: "According to the passage, what do fungi receive from trees in this relationship?", options: ["Essential soil minerals like phosphorus.", "Distress signals from other plants.", "Sugars created through photosynthesis.", "Protection from heavy soil compaction."], answer: 2, hint: "Paragraph 2: 'receiving carbon-rich sugars from trees... in exchange for... minerals'.", explanation: "Trees provide carbon-rich sugars (food) to the fungi in exchange for the minerals the fungi harvest from the soil." },
+        // Life Science (1-10)
+        { topic: "LIFE SCIENCE", text: "What was the primary cause of the PETM according to the passage?", options: ["A sudden increase in solar radiation levels.", "A massive injection of carbon into the atmosphere.", "The expansion of polar ice caps.", "A decrease in volcanic activity in the North Atlantic."], answer: 1, hint: "See Paragraph 1: 'triggered by a massive injection of carbon...'", explanation: "The text explicitly links the PETM to a 'massive injection of carbon' into the ocean-atmosphere system." },
+        { topic: "LIFE SCIENCE", text: "The word 'concomitant' in paragraph 2 is closest in meaning to:", options: ["Unexpected", "Accompanying", "Dangerous", "Temporary"], answer: 1, hint: "Context: 'concomitant deoxygenation...'", explanation: "'Concomitant' means naturally accompanying or associated with something else." },
+        { topic: "LIFE SCIENCE", text: "According to paragraph 2, how did seafloor organisms (benthic foraminifera) react to the PETM?", options: ["They migrated to higher latitudes.", "They underwent a significant extinction event.", "They evolved into larger body sizes.", "They became more diverse due to warmer waters."], answer: 1, hint: "Para 2: 'suffered a catastrophic extinction event...'", explanation: "The passage notes they lost 'nearly 50% of their species diversity'." },
+        { topic: "LIFE SCIENCE", text: "Which of the following is NOT mentioned in paragraph 3 as a group of 'modern' mammals that migrated during the PETM?", options: ["Primates", "Artiodactyls", "Benthic foraminifera", "Perissodactyls"], answer: 2, hint: "Compare the list in Para 3 with Para 2.", explanation: "Benthic foraminifera are seafloor organisms mentioned in Para 2, not modern mammals from Para 3." },
+        { topic: "LIFE SCIENCE", text: "Why did many mammals undergo 'dwarfing' during the PETM?", options: ["To escape predators more easily.", "As an adaptation to lower-quality food sources.", "Because of the lack of oxygen in the air.", "To navigate dense tropical forests."], answer: 1, hint: "Para 3: 'adaptive response to nutrient scarcity'.", explanation: "High CO2 led to faster-growing plants with lower nutritional density, causing mammals to shrink." },
+        { topic: "LIFE SCIENCE", text: "It can be inferred from paragraph 4 that the silicate weathering process:", options: ["Is a rapid process that cools the planet in decades.", "Requires high temperatures and moisture to function efficiently.", "Is the primary cause of ocean acidification.", "Occurs only during volcanic eruptions."], answer: 1, hint: "Para 4: 'increased rainfall and warmth accelerated...'", explanation: "The text says warmth and rain 'accelerated' the process, implying it needs these conditions." },
+        { topic: "LIFE SCIENCE", text: "According to paragraph 4, what role did organic-rich sediments play in the recovery?", options: ["They released carbon back into the air.", "They acted as a pump to store carbon deep in the ocean.", "They blocked the sun's rays, cooling the planet.", "They prevented silicate rocks from weathering."], answer: 1, hint: "Para 4: 'locking away carbon in the deep ocean'.", explanation: "The passage describes them as a 'biological pump' that sequestered carbon." },
+        { topic: "LIFE SCIENCE", text: "The author mentions 'silicate weathering' in order to:", options: ["Explain how the Earth naturally removes excess CO2.", "Argue that rocks are the main source of carbon.", "Contrast geologic cooling with biological cooling.", "Show why the PETM was so destructive."], answer: 0, hint: "Para 4: 'cooling was primarily driven by...'", explanation: "It is introduced as the feedback loop that drove the recovery/cooling phase." },
+        { topic: "LIFE SCIENCE", text: "In paragraph 1, all of the following are cited as potential carbon sources EXCEPT:", options: ["Seafloor methane clathrates", "Volcanic activity", "Terrestrial peatlands", "High-latitude land bridges"], answer: 3, hint: "Look at the list in the final sentence of Para 1.", explanation: "Land bridges are mentioned in Para 3 as migration routes, not carbon sources." },
+        { topic: "LIFE SCIENCE", text: "Sentence Insertion: 'This biological storage effectively removed carbon from the active cycle for millions of years.' Where would it best fit?", options: ["After the first sentence of Paragraph 4.", "After the description of 'silicate weathering'.", "After the mention of 'biological pump' in Paragraph 4.", "Before the final sentence of Paragraph 4."], answer: 2, hint: "Look for 'biological storage' referring back to 'biological pump'.", explanation: "The sentence clarifies the impact of the 'biological pump' mentioned immediately before." },
 
-        // Social Science: 11-20
-        { topic: "Social Science", text: "What is the 'asymmetry of visibility' mentioned in paragraph 1?", options: ["The idea that prisoners can see the tower, but the tower is empty.", "The fact that the observer can see the subjects, but the subjects cannot see the observer.", "The circular design of the cells that makes all prisoners see each other.", "A lighting effect that makes the central tower invisible to the public."], answer: 1, hint: "Paragraph 1: 'supervisor... can observe any prisoner... prisoners... cannot see into the tower'.", explanation: "The text defines it as the central supervisor seeing everyone while remaining unobserved." },
-        { topic: "Social Science", text: "The word 'template' in paragraph 2 is closest in meaning to:", options: ["Building", "Model", "Barrier", "Requirement"], answer: 1, hint: "Context: '...was not just a prison layout but a template for modern social institutions'.", explanation: "In this context, 'template' refers to a blueprint or model that other institutions follow." },
-        { topic: "Social Science", text: "According to Foucault in paragraph 2, how is deviance primarily handled in a 'disciplinary society'?", options: ["Through public spectacles of physical punishment.", "By ignoring it until the individual conforms naturally.", "Through 'normalization' and the pressure to meet societal standards.", "By removing individuals from the data-driven systems entirely."], answer: 2, hint: "Paragraph 2: 'Deviance is no longer punished through physical violence but corrected through normalization'.", explanation: "Foucault argues that subtle pressure to conform (normalization) replaces physical violence." },
-        { topic: "Social Science", text: "Which of the following is NOT a feature of the 'Electronic Panopticon' mentioned in paragraph 3?", options: ["The use of GPS data to track location.", "The physical presence of a central observation tower.", "The analysis of social media interactions.", "The utilization of predictive algorithms."], answer: 1, hint: "Paragraph 3: 'surveillance is no longer tethered to a physical tower'.", explanation: "The text explicitly states the digital version is 'distributed' and lacks the physical tower of the original." },
-        { topic: "Social Science", text: "Why does the author use the phrase 'docile bodies' in paragraph 2?", options: ["To describe prisoners who have lost the will to live.", "To refer to individuals who are obedient and economically productive.", "To explain why hospitals are designed with circular corridors.", "To argue that modern citizens are physically weaker than their ancestors."], answer: 1, hint: "Paragraph 2: 'producing docile bodies that are both economically productive and politically obedient'.", explanation: "The term describes the intended outcome of disciplinary surveillance: obedience and productivity." },
-        { topic: "Social Science", text: "According to paragraph 4, what do proponents of digital surveillance argue?", options: ["It is the primary cause of social conformity.", "It is necessary for maintaining national security.", "It helps individuals express their creativity.", "It reduces the power imbalance between state and citizen."], answer: 1, hint: "Paragraph 4: 'proponents argue that digital surveillance is essential for national security'.", explanation: "The passage notes that security is the main justification used by supporters of surveillance." },
-        { topic: "Social Science", text: "The author implies that the 'Electronic Panopticon' is more pervasive than Bentham's model because:", options: ["It uses light and blinds more effectively.", "It is managed by a single human authority in a tower.", "It covers nearly every aspect of human life through data tracking.", "It is only used in prisons and factories."], answer: 2, hint: "Paragraph 3: 'scope... has expanded... to the entirety of human existence'.", explanation: "The digital version tracks all digital interactions, making its reach much broader than a single building." },
-        { topic: "Social Science", text: "The word 'regulation' (implied as regulate) in paragraph 1 refers to:", options: ["The creation of new laws by the government.", "The self-control exercised by individuals who feel they are being watched.", "The technical maintenance of the central tower's lighting.", "The distribution of food and supplies to prisoners."], answer: 1, hint: "Paragraph 1: 'forces individuals to regulate their own behavior'.", explanation: "In the Panopticon, 'regulation' refers to internal self-censorship and self-discipline." },
-        { topic: "Social Science", text: "What is the rhetorical purpose of paragraph 4?", options: ["To provide a final decision on which side is correct.", "To present the conflicting viewpoints regarding surveillance and privacy.", "To list the specific algorithms used in digital tracking.", "To describe the physical destruction of the original Panopticon."], answer: 1, hint: "Paragraph 4: 'Critics... argue... However, proponents argue...'.", explanation: "The paragraph outlines the ethical debate between privacy/creativity and security/efficiency." },
-        { topic: "Social Science", text: "Sentence Insertion: 'This internal self-discipline is far more cost-effective than constant physical force.' Where would this fit best?", options: ["After the sentence mentioning 'asymmetry of visibility' in Para 1.", "At the end of Para 1.", "Before the definition of 'norm' in Para 2.", "After the mention of 'GPS data' in Para 3."], answer: 1, hint: "Look for where Bentham's efficiency argument is discussed.", explanation: "It concludes the logic of Paragraph 1, where Bentham argues for efficiency through internalized surveillance." },
+        // Social Science (11-20)
+        { topic: "SOCIAL SCIENCE", text: "What is the 'urban paradox' mentioned in paragraph 1?", options: ["Cities are cleaner but more crowded.", "Physical proximity does not lead to social closeness.", "Higher density reduces the cost of living.", "Technology makes cities feel larger than they are."], answer: 1, hint: "Para 1: 'the more densely populated... the more social isolation'.", explanation: "The paradox is that being physically close to others doesn't guarantee social connection." },
+        { topic: "SOCIAL SCIENCE", text: "The word 'exacerbating' in paragraph 2 is closest in meaning to:", options: ["Improving", "Worsening", "Clarifying", "Finishing"], answer: 1, hint: "Context: 'exacerbating the physical and social compartmentalization'.", explanation: "'Exacerbate' means to make a problem, bad situation, or negative feeling worse." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 2, why is the 'commodification' of public space a problem?", options: ["It makes the city too expensive to live in.", "It creates barriers to spontaneous community building.", "It leads to the destruction of historical buildings.", "It reduces the amount of luxury housing available."], answer: 1, hint: "Para 2: 'barrier to spontaneous community building increases'.", explanation: "When social spaces require money, people are less likely to interact freely." },
+        { topic: "SOCIAL SCIENCE", text: "Why does the author mention 'high-rise residential complexes' in paragraph 2?", options: ["To praise their architectural innovation.", "To show how they prioritize privacy over community.", "To explain why cities are becoming more vertical.", "To argue that security is the most important urban need."], answer: 1, hint: "Para 2: 'prioritizes private luxury... over shared corridors'.", explanation: "They are cited as an example of design that increases compartmentalization." },
+        { topic: "SOCIAL SCIENCE", text: "In paragraph 3, the term 'phantom community' refers to:", options: ["A city with no residents.", "A digital network that lacks real-world support.", "A group of people who live in the same building.", "A historical neighborhood that has been demolished."], answer: 1, hint: "Para 3: 'illusion of sociality masks a lack of substantive... support'.", explanation: "It describes the gap between online popularity and real-life isolation." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 3, what is a characteristic of 'weak ties' compared to 'strong ties'?", options: ["Weak ties are only found in physical environments.", "Weak ties do not provide reliable support in a crisis.", "Strong ties are easier to form in a megalopolis.", "Younger demographics prefer strong ties over weak ties."], answer: 1, hint: "Para 3: 'lack a single neighbor they can rely on in a crisis'.", explanation: "The text implies digital 'weak ties' are superficial compared to dependable 'strong ties'." },
+        { topic: "SOCIAL SCIENCE", text: "The word 'acute' in paragraph 3 is closest in meaning to:", options: ["Sudden", "Sharp or intense", "Boring", "Unknown"], answer: 1, hint: "Context: 'particularly acute in younger demographics'.", explanation: "In this context, 'acute' means sharp, intense, or strongly felt." },
+        { topic: "SOCIAL SCIENCE", text: "According to paragraph 4, what are 'micro-interactions'?", options: ["Conversations via social media apps.", "Brief, incidental social encounters.", "Large-scale community protests.", "Financial transactions in commercial spaces."], answer: 1, hint: "Para 4: 'brief exchanges with a shopkeeper...'", explanation: "The text defines them as small, brief face-to-face exchanges." },
+        { topic: "SOCIAL SCIENCE", text: "What is the rhetorical purpose of paragraph 4?", options: ["To warn that cities will eventually collapse.", "To propose solutions to the problem of urban isolation.", "To criticize urban planners for their past mistakes.", "To explain the economic benefits of city density."], answer: 1, hint: "Para 4: 'combat this trend... placemaking strategies'.", explanation: "The paragraph focuses on 'placemaking' as a way to solve the loneliness described earlier." },
+        { topic: "SOCIAL SCIENCE", text: "It can be inferred from paragraph 1 that Georg Simmel's 'blasé outlook' is:", options: ["An intentional choice to be rude.", "A subconscious reaction to too much information.", "A sign of superior intelligence.", "A result of living in small rural villages."], answer: 1, hint: "Para 1: 'psychological defense mechanism... cope with the relentless barrage'.", explanation: "It is described as a 'defense mechanism' against sensory overload, implying a reaction rather than a simple choice." },
 
-        // Physical Science: 21-30
-        { topic: "Physical Science", text: "According to paragraph 1, what happens to an unstable particle if it is observed continuously?", options: ["It will decay faster than usual.", "It will transform into a stable element like iron.", "It will remain in its current state and never decay.", "It will vanish from the physical system entirely."], answer: 2, hint: "Paragraph 1: 'a continuously observed unstable particle will never decay'.", explanation: "The QZE suggests that frequent observation 'freezes' the particle's state." },
-        { topic: "Physical Science", text: "The word 'grasp' in paragraph 2 is closest in meaning to:", options: ["Hold", "Understand", "Reject", "Observe"], answer: 1, hint: "Context: 'To understand this, one must first grasp the concept of wave-function collapse.'", explanation: "In this context, to 'grasp' a concept means to comprehend or understand it." },
-        { topic: "Physical Science", text: "According to the 'Copenhagen interpretation' in paragraph 2, what causes the wave function to collapse?", options: ["The natural evolution of the Schrödinger equation.", "The passage of a specific amount of time.", "The act of performing a measurement.", "The cooling of ions with a laser."], answer: 2, hint: "Paragraph 2: 'Measurement collapses the wave function into a single state.'", explanation: "The text defines collapse as the result of a measurement/observation." },
-        { topic: "Physical Science", text: "How can the Quantum Zeno Effect be useful in quantum computing?", options: ["By speeding up the decay of unstable qubits.", "By allowing computers to operate at room temperature.", "By preventing qubits from losing their quantum information due to environmental noise.", "By creating a perfect vacuum for the ions."], answer: 2, hint: "Paragraph 3: 'preventing qubits from decohering due to environmental noise'.", explanation: "The QZE can pin quantum states in place, protecting them from 'decoherence'." },
-        { topic: "Physical Science", text: "The word 'inhibiting' in paragraph 2 is closest in meaning to:", options: ["Allowing", "Encouraging", "Preventing", "Predicting"], answer: 2, hint: "Context: '...thus inhibiting any transition or decay...'", explanation: "Inhibiting means slowing down or preventing a process." },
-        { topic: "Physical Science", text: "What determines whether the Zeno Effect or the Anti-Zeno Effect occurs?", options: ["The type of laser used for cooling.", "The environmental structure and measurement frequency.", "The age of the quantum system being measured.", "The specific philosopher who named the effect."], answer: 1, hint: "Paragraph 4: 'depends on the specific structure of the environment and the frequency of the measurements'.", explanation: "The text states the outcome is environment and frequency dependent." },
-        { topic: "Physical Science", text: "According to paragraph 3, what was used in the 1989 experiment to 'check' the state of the ions?", options: ["A mechanical probe.", "A continuous stream of water.", "Repeated pulses of a laser.", "A magnetic field."], answer: 2, hint: "Paragraph 3: 'repeatedly pulsing a laser to check the state of the ions'.", explanation: "Laser pulses were the method of measurement in the first QZE experiment." },
-        { topic: "Physical Science", text: "Which of the following is NOT true about the Anti-Zeno Effect (AZE)?", options: ["It can accelerate the decay of a quantum system.", "It was observed as a contrast to the QZE.", "It only occurs in the absence of an observer.", "It depends on the frequency of measurements."], answer: 2, hint: "Paragraph 4: discusses the AZE as a result of 'frequent measurements'.", explanation: "AZE requires measurements, so saying it occurs in the 'absence of an observer' is incorrect." },
-        { topic: "Physical Science", text: "What can be inferred about the 'eigenstate' from paragraph 1?", options: ["It is a state of constant change.", "It is a definite and specific condition forced by measurement.", "It only exists in the presence of heat.", "It is the state a particle reaches after it has fully decayed."], answer: 1, hint: "Paragraph 1: 'forces the system into an eigenstate—a specific, definite condition'.", explanation: "The text directly defines an eigenstate as a specific condition resulting from measurement." },
-        { topic: "Physical Science", text: "Sentence Insertion: 'This effectively creates a feedback loop where the observer and the system are inseparable.' Where would this fit best?", options: ["At the end of Para 4.", "Before the first sentence of Para 1.", "After the mention of '1989' in Para 3.", "Before the mention of 'Anti-Zeno Effect' in Para 4."], answer: 0, hint: "Look for themes of participation and blurred boundaries.", explanation: "Paragraph 4 discusses the blurred line between viewer and viewed, making this an ideal concluding thought." }
+        // Physical Science (21-30)
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 1, how do 'mantle plumes' differ from standard plate tectonics?", options: ["They occur at plate boundaries.", "They explain volcanic activity in the middle of plates.", "They are caused by the cooling of the Earth's core.", "They move faster than the lithospheric plates."], answer: 1, hint: "Para 1: 'exist far from any plate margin'.", explanation: "Plumes explain intraplate volcanism, whereas standard tectonics explains boundary volcanism." },
+        { topic: "PHYSICAL SCIENCE", text: "The word 'persistence' in paragraph 2 is closest in meaning to:", options: ["Size", "Endurance", "Difficulty", "Hotness"], answer: 1, hint: "Context: 'persistence of these hotspots is remarkable'.", explanation: "'Persistence' refers to the long-lasting nature or endurance of the hotspots." },
+        { topic: "PHYSICAL SCIENCE", text: "What happens when a 'plume head' first hits the lithosphere?", options: ["It creates a long chain of small islands.", "It triggers massive flood basalt eruptions.", "It cools down immediately and turns into granite.", "It pushes the plate into the mantle."], answer: 1, hint: "Para 2: 'When the plume head first reaches... it triggers massive flood basalt'.", explanation: "The head phase is associated with catastrophic, continent-wide lava flows." },
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 2, what is the 'tail' phase of a plume?", options: ["A period of no volcanic activity.", "A steady-state supply of magma for hotspots.", "The moment the plume sinks back to the core.", "The part of the volcano that is underwater."], answer: 1, hint: "Para 2: 'settles into a steady-state tail phase'.", explanation: "The tail provides the consistent magma source for persistent hotspots." },
+        { topic: "PHYSICAL SCIENCE", text: "The 'Plate Hypothesis' mentioned in paragraph 3 suggests that:", options: ["Magma comes from the core-mantle boundary.", "Volcanoes are caused by cracks in the crust due to stress.", "Plumes are much wider than previously thought.", "The Pacific Plate is not actually moving."], answer: 1, hint: "Para 3: 'caused by localized stress-induced cracks'.", explanation: "This 'top-down' model blames surface stresses rather than deep thermal plumes." },
+        { topic: "PHYSICAL SCIENCE", text: "Why do some scientists remain skeptical of the Mantle Plume Hypothesis?", options: ["They believe Hawaii is not a volcano.", "Seismic imaging of deep plumes is often unclear.", "They think the Earth's core is cold.", "Volcanoes only exist on land."], answer: 1, hint: "Para 3: 'seismic imaging of deep plumes is often ambiguous'.", explanation: "The lack of clear 3D 'roots' in seismic data is a primary point of skepticism." },
+        { topic: "PHYSICAL SCIENCE", text: "What is 'seismic tomography' compared to in the passage?", options: ["A microscope", "A CT scan", "A telescope", "A compass"], answer: 1, hint: "Para 4: 'similar to a CT scan'.", explanation: "The author uses the medical analogy to explain how 3D maps of the interior are created." },
+        { topic: "PHYSICAL SCIENCE", text: "According to paragraph 4, what is the 'multiscale' approach?", options: ["A way to measure the height of volcanoes.", "A model where deep superplumes interact with upper mantle currents.", "A theory that only considers the crust.", "The use of multiple scales to weigh lava."], answer: 1, hint: "Para 4: 'superplumes... feed smaller, secondary plumes'.", explanation: "It combines deep-source buoyancy with upper-mantle dynamics." },
+        { topic: "PHYSICAL SCIENCE", text: "The word 'reconcile' in paragraph 4 is closest in meaning to:", options: ["Separate", "Harmonize", "Reject", "Discover"], answer: 1, hint: "Context: 'attempting to reconcile these two views'.", explanation: "'Reconcile' means to find a way in which two competing ideas can both be true." },
+        { topic: "PHYSICAL SCIENCE", text: "Sentence Insertion: 'By contrast, the tail is much narrower and can last for tens of millions of years.' Where would this fit best?", options: ["Before the description of the 'head' in Paragraph 2.", "After the mention of 'flood basalt' in Paragraph 2.", "After the definition of 'steady-state tail phase' in Paragraph 2.", "At the end of Paragraph 3."], answer: 2, hint: "Look for the transition between the head and the tail description.", explanation: "It provides a direct comparison of the 'tail' characteristics to the previously described 'head'." }
     ];
 
     let currentQuestionIndex = 0;
@@ -186,7 +185,7 @@
     let timerInterval;
     let secondsElapsed = 0;
 
-    // DOM Elements
+    // DOM
     const passageContent = document.getElementById('passage-content');
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
@@ -212,90 +211,68 @@
         }, 1000);
     }
 
-    function initQuiz() {
-        startTimer();
-        renderQuestion();
-    }
-
     function renderQuestion() {
         const q = questions[currentQuestionIndex];
         
-        // Update Metadata
-        progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        progressText.innerText = `ITEM ${currentQuestionIndex + 1} OF ${questions.length}`;
         progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
-        topicBadge.innerText = q.topic.toUpperCase();
+        topicBadge.innerText = q.topic;
         
-        // Update Passage Side
         passageContent.innerHTML = passages[q.topic];
         
-        // Scroll to top of passage when topic changes
+        // Scroll passage if topic changed
         if (currentQuestionIndex === 0 || questions[currentQuestionIndex].topic !== questions[currentQuestionIndex-1]?.topic) {
             document.getElementById('passage-container').scrollTop = 0;
         }
 
-        // Reset Hint
         hintBox.classList.add('hidden');
-        
-        // Update Question
         questionText.innerText = q.text;
         optionsList.innerHTML = '';
         
         q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
-            btn.className = `w-full text-left p-5 rounded-2xl border border-slate-200 transition-all flex items-start group shadow-sm hover:border-blue-300`;
+            btn.className = `w-full text-left p-5 rounded-2xl border-2 border-slate-100 transition-all flex items-start group hover:border-indigo-200`;
             
-            const label = String.fromCharCode(65 + index); // A, B, C, D
+            const label = String.fromCharCode(65 + index);
             btn.innerHTML = `
-                <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-black text-slate-400 mr-5 group-hover:bg-blue-600 group-hover:text-white transition-all text-sm shrink-0">${label}</span> 
-                <span class="flex-grow pt-2 text-sm font-semibold leading-relaxed">${opt}</span>
+                <span class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-400 mr-5 group-hover:bg-indigo-600 group-hover:text-white transition-all">${label}</span> 
+                <span class="flex-grow pt-2 font-medium text-slate-700">${opt}</span>
             `;
             
-            // Handle Selection
             if (userAnswers[currentQuestionIndex] === index) {
-                btn.classList.add('selected');
-                const span = btn.querySelector('span');
-                span.classList.remove('bg-slate-100', 'text-slate-400');
-                span.classList.add('bg-blue-600', 'text-white');
+                btn.classList.add('selected', 'border-indigo-500');
+                btn.querySelector('span').classList.replace('bg-slate-100', 'bg-indigo-600');
+                btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
             }
 
             if (isReviewMode) {
                 if (index === q.answer) {
                     btn.classList.add('correct');
-                    const span = btn.querySelector('span');
-                    span.classList.remove('bg-slate-100', 'text-slate-400', 'bg-blue-600');
-                    span.classList.add('bg-emerald-600', 'text-white');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-emerald-500');
+                    btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
                 } else if (userAnswers[currentQuestionIndex] === index) {
                     btn.classList.add('incorrect');
-                    const span = btn.querySelector('span');
-                    span.classList.remove('bg-slate-100', 'text-slate-400', 'bg-blue-600');
-                    span.classList.add('bg-rose-600', 'text-white');
+                    btn.querySelector('span').classList.replace('bg-slate-100', 'bg-rose-500');
+                    btn.querySelector('span').classList.replace('text-slate-400', 'text-white');
                 }
                 btn.disabled = true;
-                btn.classList.remove('hover:border-blue-300');
             } else {
-                btn.onclick = () => selectOption(index);
+                btn.onclick = () => {
+                    userAnswers[currentQuestionIndex] = index;
+                    renderQuestion();
+                };
             }
-            
             optionsList.appendChild(btn);
         });
 
-        // Show Feedback in Review Mode
         if (isReviewMode) {
             feedbackArea.classList.remove('hidden');
             explanationText.innerHTML = q.explanation;
-            explanationText.className = "text-sm leading-relaxed font-medium " + (userAnswers[currentQuestionIndex] === q.answer ? "text-emerald-800" : "text-slate-700");
-        } else {
-            feedbackArea.classList.add('hidden');
+            feedbackArea.className = "mt-10 p-6 rounded-2xl border-2 " + (userAnswers[currentQuestionIndex] === q.answer ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900");
         }
 
-        // Nav Buttons
         prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "RESTART" : "FINISH") : "NEXT";
-    }
-
-    function selectOption(index) {
-        userAnswers[currentQuestionIndex] = index;
-        renderQuestion();
+        nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? (isReviewMode ? "END REVIEW" : "SUBMIT") : "NEXT";
     }
 
     function nextQuestion() {
@@ -313,73 +290,36 @@
         }
     }
 
-    function prevQuestion() {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            renderQuestion();
-            document.getElementById('question-area').scrollTop = 0;
-        }
-    }
-
-    function showHint() {
-        hintBox.innerText = questions[currentQuestionIndex].hint;
-        hintBox.classList.toggle('hidden');
-    }
-
     function showResults() {
         resultsScreen.classList.remove('hidden');
-        
         let score = 0;
-        userAnswers.forEach((ans, i) => {
-            if (ans === questions[i].answer) score++;
-        });
+        userAnswers.forEach((ans, i) => { if (ans === questions[i].answer) score++; });
+        document.getElementById('final-score').innerText = Math.round((score/30)*100) + "%";
         
-        document.getElementById('final-score').innerText = score;
-        
-        // Breakdown
         const breakdown = document.getElementById('section-breakdown');
         breakdown.innerHTML = `
             <div class="space-y-2">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Performance Breakdown</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-600">LIFE SCIENCE</span>
-                    <span class="text-sm font-black text-blue-600">${calculateSection(0, 9)} / 10</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-600">SOCIAL SCIENCE</span>
-                    <span class="text-sm font-black text-blue-600">${calculateSection(10, 19)} / 10</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-600">PHYSICAL SCIENCE</span>
-                    <span class="text-sm font-black text-blue-600">${calculateSection(20, 29)} / 10</span>
-                </div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Competency Breakdown</p>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Life Science</span><span class="font-bold">${calculateSection(0, 9)}/10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Social Science</span><span class="font-bold">${calculateSection(10, 19)}/10</span></div>
+                <div class="flex justify-between items-center"><span class="text-slate-500 text-sm">Physical Science</span><span class="font-bold">${calculateSection(20, 29)}/10</span></div>
             </div>
         `;
     }
 
     function calculateSection(start, end) {
         let s = 0;
-        for(let i=start; i<=end; i++) {
-            if(userAnswers[i] === questions[i].answer) s++;
-        }
+        for(let i=start; i<=end; i++) if(userAnswers[i] === questions[i].answer) s++;
         return s;
     }
 
-    function reviewMistakes() {
-        isReviewMode = true;
-        currentQuestionIndex = 0;
-        resultsScreen.classList.add('hidden');
-        renderQuestion();
-    }
-
-    // Event Listeners
     nextBtn.onclick = nextQuestion;
-    prevBtn.onclick = prevQuestion;
-    hintBtn.onclick = showHint;
-    document.getElementById('review-btn').onclick = reviewMistakes;
+    prevBtn.onclick = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } };
+    hintBtn.onclick = () => { hintBox.innerText = questions[currentQuestionIndex].hint; hintBox.classList.toggle('hidden'); };
+    document.getElementById('review-btn').onclick = () => { isReviewMode = true; currentQuestionIndex = 0; resultsScreen.classList.add('hidden'); renderQuestion(); };
 
-    // Start
-    initQuiz();
+    startTimer();
+    renderQuestion();
 </script>
 </body>
 </html>
