@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EGCIS Vocabulary Book</title>
+
+<!--
+  ============================================================
+  FONT: Montserrat — SIL Open Font License 1.1 (commercial OK)
+  CODE: All original — commercially unrestricted
+  ============================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   EGCIS COLOR PALETTE
+   ============================================================ */
+:root {
+  --brand-navy:    #1a3557;
+  --brand-navy-dk: #122540;
+  --brand-blue:    #2563a8;
+  --brand-blue-lt: #e8f0fb;
+
+  --bg:            #f1f3f6;
+  --surface:       #ffffff;
+  --surface-alt:   #f8f9fc;
+
+  --text-primary:  #1f2937;
+  --text-secondary:#4b5563;
+  --text-muted:    #9ca3af;
+
+  --border:        #e2e6ea;
+  --border-dk:     #cbd5e1;
+
+  --accent:        #2563a8;
+  --accent-hover:  #1d4f8c;
+  --success:       #166534;
+  --danger:        #991b1b;
+  --danger-bg:     #fee2e2;
+
+  --tag-year-bg:   #dbeafe;
+  --tag-year-text: #1e40af;
+  --tag-sub-bg:    #e0f2fe;
+  --tag-sub-text:  #0369a1;
+
+  --radius:    6px;
+  --radius-sm: 4px;
+  --shadow:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ── HEADER ── */
+.site-banner {
+  background: var(--brand-navy);
+  color: #fff;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.banner-left { display: flex; align-items: center; gap: 14px; }
+.banner-logo {
+  width: 36px; height: 36px;
+  background: #fff;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800;
+  color: var(--brand-navy);
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+.banner-title { display: flex; flex-direction: column; gap: 1px; }
+.banner-title-main { font-size: 15px; font-weight: 700; color: #fff; }
+.banner-title-sub  { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 0.07em; text-transform: uppercase; }
+.banner-right { display: flex; align-items: center; gap: 8px; }
+.banner-btn {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 7px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.banner-btn:hover { background: rgba(255,255,255,0.24); }
+.banner-btn.primary { background: #fff; color: var(--brand-navy); border-color: #fff; }
+.banner-btn.primary:hover { background: #e8f0fb; }
+
+/* ── LOADING BAR ── */
+#loading-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-navy), #60a5fa, var(--brand-navy));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  display: none;
+  position: sticky; top: 64px; z-index: 199;
+}
+#loading-bar.active { display: block; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+/* ── LAYOUT ── */
+.app-layout {
+  display: grid;
+  grid-template-columns: 252px 1fr;
+  min-height: calc(100vh - 64px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky; top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+.sidebar-label {
+  display: block;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 6px 18px;
+}
+.sidebar-all {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-primary);
+  border-left: 3px solid transparent;
+  border-top: none; border-right: none; border-bottom: none;
+  background: none; width: 100%; text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.12s;
+}
+.sidebar-all:hover { background: var(--surface-alt); }
+.sidebar-all.active {
+  border-left-color: var(--accent);
+  background: var(--brand-blue-lt);
+  color: var(--accent);
+  font-weight: 700;
+}
+.sidebar-divider { height: 1px; background: var(--border); margin: 12px 18px; }
+.sidebar-count {
+  font-size: 10px; font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.sidebar-all.active .sidebar-count { background: var(--brand-blue-lt); color: var(--accent); }
+
+.year-group { margin-bottom: 2px; }
+.year-toggle {
+  width: 100%; background: none; border: none;
+  display: flex; align-items: center;
+  padding: 8px 18px; cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-primary);
+  gap: 8px; text-align: left;
+  transition: background 0.12s;
+}
+.year-toggle:hover { background: var(--surface-alt); }
+.yr-arrow { font-size: 8px; margin-left: auto; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+.year-toggle.open .yr-arrow { transform: rotate(90deg); }
+.subject-list { display: none; }
+.subject-list.open { display: block; }
+.subject-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 18px 6px 36px;
+  cursor: pointer; font-size: 12px; font-weight: 400;
+  color: var(--text-secondary);
+  border-left: 3px solid transparent;
+  transition: all 0.12s;
+}
+.subject-item:hover { background: var(--surface-alt); color: var(--text-primary); }
+.subject-item.active {
+  border-left-color: var(--accent);
+  background: var(--brand-blue-lt);
+  color: var(--accent); font-weight: 600;
+}
+.subject-item.active .sidebar-count { background: var(--brand-blue-lt); color: var(--accent); }
+
+/* ── MAIN ── */
+.main { padding: 28px 32px; }
+
+.page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.page-title { font-size: 22px; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.02em; }
+.page-meta  { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 3px; }
+
+.stats-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 20px;
+  display: flex; flex-direction: column; gap: 3px;
+  min-width: 110px; box-shadow: var(--shadow);
+}
+.stat-value { font-size: 24px; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.03em; line-height: 1; }
+.stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+
+.toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none; }
+.search-input {
+  width: 100%; border: 1px solid var(--border-dk); background: var(--surface);
+  padding: 9px 12px 9px 34px;
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 400;
+  border-radius: var(--radius); outline: none; color: var(--text-primary);
+  transition: border-color 0.15s, box-shadow 0.15s; box-shadow: var(--shadow);
+}
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,168,0.12); }
+.search-input::placeholder { color: var(--text-muted); }
+.sort-select {
+  border: 1px solid var(--border-dk); background: var(--surface);
+  padding: 9px 14px; font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 500; border-radius: var(--radius);
+  color: var(--text-primary); outline: none; cursor: pointer; box-shadow: var(--shadow);
+}
+
+/* ── CARDS ── */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+
+.vocab-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  box-shadow: var(--shadow); transition: box-shadow 0.2s, transform 0.2s;
+  animation: fadeUp 0.3s ease both; position: relative;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.vocab-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.vocab-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--brand-navy), var(--brand-blue));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.card-tags { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 20px; }
+.tag.year { background: var(--tag-year-bg); color: var(--tag-year-text); }
+.tag.subj { background: var(--tag-sub-bg);  color: var(--tag-sub-text); }
+
+.card-word-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 2px; }
+.card-jp      { font-size: 22px; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.01em; }
+.card-reading { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+.card-en      { font-size: 14px; font-weight: 600; font-style: italic; color: var(--brand-blue); margin-bottom: 14px; }
+
+.card-section { border-top: 1px solid var(--border); padding-top: 11px; margin-top: 11px; }
+.card-section-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.card-def-jp  { font-size: 12px; font-weight: 500; color: var(--text-primary); line-height: 1.7; margin-bottom: 3px; }
+.card-def-en  { font-size: 12px; font-weight: 400; color: var(--text-secondary); line-height: 1.7; }
+.card-sent-jp { font-size: 12px; font-weight: 500; color: var(--brand-navy); line-height: 1.8; margin-bottom: 3px; }
+.card-sent-en { font-size: 12px; font-weight: 400; font-style: italic; color: var(--text-secondary); line-height: 1.7; }
+
+/* ── EMPTY STATE ── */
+.empty-state { grid-column: 1/-1; text-align: center; padding: 80px 40px; color: var(--text-muted); }
+.empty-icon  { font-size: 52px; font-weight: 800; color: var(--border); margin-bottom: 14px; letter-spacing: -0.04em; }
+.empty-title { font-size: 17px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+.empty-sub   { font-size: 12px; }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 24px; right: 24px; background: var(--text-primary); color: #fff; padding: 11px 18px; font-size: 12px; font-weight: 600; border-radius: var(--radius); box-shadow: var(--shadow-md); z-index: 1000; opacity: 0; transform: translateY(16px); transition: all 0.25s; pointer-events: none; max-width: 360px; }
+#toast.show    { opacity: 1; transform: translateY(0); }
+#toast.success { background: var(--success); }
+#toast.error   { background: var(--danger); }
+
+/* ══════════════════════════════════════════════
+   QUIZ OVERLAY
+   ══════════════════════════════════════════════ */
+
+/* Full-screen takeover */
+#quiz-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 600;
+  flex-direction: column;
+  overflow-y: auto;
+}
+#quiz-overlay.open { display: flex; }
+
+/* Quiz top bar */
+.quiz-topbar {
+  background: var(--brand-navy);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.quiz-topbar-title { font-size: 15px; font-weight: 700; color: #fff; }
+.quiz-topbar-right { display: flex; align-items: center; gap: 12px; }
+.quiz-progress-text { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75); }
+.quiz-close-btn {
+  background: rgba(255,255,255,0.15); border: none; color: #fff;
+  padding: 7px 16px; border-radius: var(--radius-sm);
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.quiz-close-btn:hover { background: rgba(255,255,255,0.28); }
+
+/* Progress bar under topbar */
+.quiz-progress-bar-track {
+  height: 4px; background: rgba(255,255,255,0.15); flex-shrink: 0;
+  background: #dde3ec;
+}
+.quiz-progress-bar-fill {
+  height: 100%; background: var(--brand-blue);
+  transition: width 0.4s ease; width: 0%;
+}
+
+/* Scrollable quiz body */
+.quiz-body {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.quiz-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 620px;
+  overflow: hidden;
+}
+
+/* ── SETUP SCREEN ── */
+.quiz-setup-header {
+  background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 100%);
+  padding: 36px 36px 28px;
+  color: #fff;
+}
+.quiz-setup-header h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.02em; }
+.quiz-setup-header p  { font-size: 13px; font-weight: 400; opacity: 0.75; }
+
+.quiz-setup-body { padding: 28px 36px 32px; }
+.quiz-option-group { margin-bottom: 22px; }
+.quiz-option-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; display: block;
+}
+.quiz-option-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.quiz-pill {
+  border: 2px solid var(--border-dk); background: var(--surface-alt);
+  color: var(--text-secondary); padding: 8px 18px;
+  border-radius: 30px; font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+}
+.quiz-pill:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+.quiz-pill.selected { border-color: var(--brand-navy); background: var(--brand-navy); color: #fff; }
+
+.quiz-count-row { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.quiz-count-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid var(--border-dk); background: var(--surface);
+  font-size: 18px; font-weight: 700; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+.quiz-count-btn:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+.quiz-count-val {
+  font-size: 22px; font-weight: 800; color: var(--brand-navy);
+  min-width: 40px; text-align: center; letter-spacing: -0.02em;
+}
+.quiz-count-max { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
+.quiz-source-note {
+  font-size: 11px; font-weight: 500; color: var(--text-muted);
+  background: var(--surface-alt); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  margin-top: 6px; line-height: 1.6;
+}
+
+.quiz-start-btn {
+  width: 100%; background: var(--brand-navy); color: #fff;
+  border: none; padding: 14px; border-radius: var(--radius);
+  font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s; margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+.quiz-start-btn:hover { background: var(--brand-navy-dk); }
+.quiz-start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── QUESTION SCREEN — MULTIPLE CHOICE ── */
+.quiz-question-meta {
+  padding: 20px 28px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.quiz-q-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+.quiz-q-score { font-size: 12px; font-weight: 700; color: var(--success); }
+
+.quiz-prompt-area {
+  padding: 24px 28px 20px;
+  text-align: center;
+}
+.quiz-prompt-direction {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px;
+}
+.quiz-prompt-word {
+  font-size: 36px; font-weight: 800; color: var(--brand-navy);
+  letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 4px;
+}
+.quiz-prompt-hint {
+  font-size: 13px; font-weight: 400; color: var(--text-muted); font-style: italic;
+}
+.quiz-prompt-sentence {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  background: var(--brand-blue-lt); border-radius: var(--radius-sm);
+  padding: 10px 16px; margin-top: 14px; line-height: 1.7; display: none;
+}
+
+.quiz-choices {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; padding: 0 28px 28px;
+}
+.quiz-choice {
+  border: 2px solid var(--border-dk); background: var(--surface-alt);
+  border-radius: var(--radius); padding: 14px 16px;
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--text-primary); cursor: pointer; text-align: center;
+  transition: all 0.15s; line-height: 1.4;
+}
+.quiz-choice:hover:not(:disabled) { border-color: var(--brand-blue); background: var(--brand-blue-lt); color: var(--brand-blue); }
+.quiz-choice:disabled { cursor: default; }
+.quiz-choice.correct { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+.quiz-choice.wrong   { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.quiz-choice.reveal  { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+
+.quiz-feedback {
+  margin: 0 28px 20px; padding: 12px 16px;
+  border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
+  display: none; line-height: 1.5; text-align: center;
+}
+.quiz-feedback.correct { background: #f0fdf4; color: #15803d; display: block; }
+.quiz-feedback.wrong   { background: var(--danger-bg); color: var(--danger); display: block; }
+
+.quiz-next-btn {
+  display: block; width: calc(100% - 56px); margin: 0 28px 28px;
+  background: var(--brand-navy); color: #fff; border: none;
+  padding: 12px; border-radius: var(--radius);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s; display: none;
+}
+.quiz-next-btn.visible { display: block; }
+.quiz-next-btn:hover { background: var(--brand-navy-dk); }
+
+/* ── QUESTION SCREEN — FLASHCARD ── */
+.flashcard-area {
+  padding: 20px 28px 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.flashcard {
+  width: 100%; min-height: 200px;
+  perspective: 1000px; cursor: pointer;
+}
+.flashcard-inner {
+  width: 100%; min-height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+.flashcard-face {
+  position: absolute; inset: 0;
+  background: var(--surface); border: 2px solid var(--border-dk);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px; text-align: center;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  min-height: 200px;
+}
+.flashcard-back { transform: rotateY(180deg); background: var(--brand-blue-lt); border-color: var(--brand-blue); }
+.flashcard-face-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+}
+.flashcard-face.flashcard-back .flashcard-face-label { color: var(--brand-blue); }
+.flashcard-word { font-size: 32px; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.02em; }
+.flashcard-subword { font-size: 18px; font-weight: 700; font-style: italic; color: var(--brand-blue); margin-top: 4px; }
+.flashcard-hint { font-size: 13px; font-weight: 400; color: var(--text-muted); margin-top: 4px; }
+.flashcard-tap { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 16px; opacity: 0.7; }
+.flashcard-def {
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  margin-top: 10px; line-height: 1.7; max-width: 340px;
+}
+
+.flashcard-btns { display: flex; gap: 10px; width: 100%; }
+.fc-btn {
+  flex: 1; padding: 12px;
+  border: 2px solid; border-radius: var(--radius);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  display: none;
+}
+.fc-btn.visible { display: block; }
+.fc-btn.got-it  { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+.fc-btn.got-it:hover { background: #dcfce7; }
+.fc-btn.missed  { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.fc-btn.missed:hover { background: #fecaca; }
+
+/* ── RESULTS SCREEN ── */
+.quiz-results-header {
+  background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 100%);
+  padding: 36px; text-align: center; color: #fff;
+}
+.results-emoji { font-size: 52px; margin-bottom: 10px; }
+.results-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.02em; }
+.results-sub   { font-size: 13px; font-weight: 400; opacity: 0.75; }
+
+.results-score-circle {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin: 16px auto 0;
+}
+.results-score-pct { font-size: 28px; font-weight: 800; line-height: 1; }
+.results-score-lbl { font-size: 10px; font-weight: 600; opacity: 0.75; letter-spacing: 0.05em; }
+
+.quiz-results-body { padding: 24px 28px; }
+.results-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+.results-stat {
+  flex: 1; text-align: center; padding: 12px;
+  background: var(--surface-alt); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.results-stat-val { font-size: 22px; font-weight: 800; color: var(--brand-navy); letter-spacing: -0.02em; }
+.results-stat-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+
+.results-missed-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
+}
+.missed-word-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; max-height: 260px; overflow-y: auto; }
+.missed-word-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: var(--danger-bg);
+  border: 1px solid #fca5a5; border-radius: var(--radius-sm);
+}
+.missed-word-jp { font-size: 16px; font-weight: 800; color: var(--brand-navy); }
+.missed-word-en { font-size: 13px; font-weight: 600; font-style: italic; color: var(--text-secondary); }
+
+.results-btns { display: flex; gap: 10px; }
+.results-btn-retry {
+  flex: 1; background: var(--brand-navy); color: #fff; border: none;
+  padding: 12px; border-radius: var(--radius);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.results-btn-retry:hover { background: var(--brand-navy-dk); }
+.results-btn-back {
+  flex: 1; background: none; border: 2px solid var(--border-dk);
+  color: var(--text-secondary); padding: 12px; border-radius: var(--radius);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.results-btn-back:hover { background: var(--bg); }
+
+@media (max-width: 560px) {
+  .quiz-choices { grid-template-columns: 1fr; }
+  .quiz-prompt-word { font-size: 26px; }
+  .quiz-setup-header { padding: 24px 20px; }
+  .quiz-setup-body   { padding: 20px 20px 24px; }
+  .quiz-results-header { padding: 24px 20px; }
+  .quiz-results-body   { padding: 20px 20px 24px; }
+  .quiz-question-meta, .quiz-prompt-area, .quiz-choices, .quiz-feedback, .quiz-next-btn { padding-left: 16px; padding-right: 16px; }
+  .quiz-next-btn { width: calc(100% - 32px); margin-left: 16px; margin-right: 16px; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 16px; }
+  .site-banner { padding: 0 16px; }
+  .banner-title-sub { display: none; }
+  .vocab-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-banner">
+  <div class="banner-left">
+    <div class="banner-logo">EC</div>
+    <div class="banner-title">
+      <div class="banner-title-main">EGCIS Student Resources</div>
+      <div class="banner-title-sub">Vocabulary Book</div>
+    </div>
+  </div>
+  <div class="banner-right">
+    <button class="banner-btn" onclick="openQuiz()">&#9998; Quiz</button>
+    <button class="banner-btn" onclick="refreshData()">&#8635; Sync</button>
+  </div>
+</header>
+
+<div id="loading-bar"></div>
+
+<!-- LAYOUT -->
+<div class="app-layout">
+
+  <nav class="sidebar">
+    <span class="sidebar-label">Browse</span>
+    <button class="sidebar-all active" id="filter-all" onclick="filterAll(this)">
+      All Words <span class="sidebar-count" id="count-all">0</span>
+    </button>
+    <div class="sidebar-divider"></div>
+    <span class="sidebar-label">Year Level</span>
+    <div id="year-tree"></div>
+  </nav>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="page-title">All Words</div>
+        <div class="page-meta"  id="page-meta">Loading&hellip;</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><span class="stat-value" id="stat-total">—</span><span class="stat-label">Words</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-years">—</span><span class="stat-label">Year Levels</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-subjects">—</span><span class="stat-label">Subjects</span></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">&#128269;</span>
+        <input class="search-input" type="text" id="search-input"
+               placeholder="Search in English or Japanese…" oninput="renderCards()">
+      </div>
+      <select class="sort-select" id="sort-select" onchange="renderCards()">
+        <option value="default">Order: Default</option>
+        <option value="en">Sort: A&#8594;Z (English)</option>
+        <option value="jp">Sort: A&#8594;Z (Japanese)</option>
+        <option value="year">Sort: Year Level</option>
+      </select>
+    </div>
+
+    <div class="vocab-grid" id="vocab-grid">
+      <div class="empty-state">
+        <div class="empty-icon">語</div>
+        <div class="empty-title">Loading vocabulary&hellip;</div>
+        <div class="empty-sub">Connecting to Google Sheets</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     QUIZ OVERLAY
+     ═══════════════════════════════════════════════════════ -->
+<div id="quiz-overlay">
+
+  <!-- Top bar -->
+  <div class="quiz-topbar">
+    <div class="quiz-topbar-title" id="quiz-topbar-title">&#9998; Quiz</div>
+    <div class="quiz-topbar-right">
+      <span class="quiz-progress-text" id="quiz-progress-text"></span>
+      <button class="quiz-close-btn" onclick="closeQuiz()">&#10005; Exit Quiz</button>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="quiz-progress-bar-track">
+    <div class="quiz-progress-bar-fill" id="quiz-progress-fill"></div>
+  </div>
+
+  <!-- Body -->
+  <div class="quiz-body">
+    <div class="quiz-panel" id="quiz-panel">
+
+      <!-- ── SETUP SCREEN ── -->
+      <div id="quiz-screen-setup">
+        <div class="quiz-setup-header">
+          <h2>Vocabulary Quiz</h2>
+          <p>Test your knowledge of EGCIS vocabulary words</p>
+        </div>
+        <div class="quiz-setup-body">
+
+          <div class="quiz-option-group">
+            <span class="quiz-option-label">Quiz Mode</span>
+            <div class="quiz-option-pills">
+              <button class="quiz-pill selected" data-group="mode" data-val="mc" onclick="selectPill(this)">Multiple Choice</button>
+              <button class="quiz-pill" data-group="mode" data-val="fc" onclick="selectPill(this)">Flashcard</button>
+            </div>
+          </div>
+
+          <div class="quiz-option-group">
+            <span class="quiz-option-label">Direction</span>
+            <div class="quiz-option-pills">
+              <button class="quiz-pill selected" data-group="dir" data-val="jp-en" onclick="selectPill(this)">Japanese &#8594; English</button>
+              <button class="quiz-pill" data-group="dir" data-val="en-jp" onclick="selectPill(this)">English &#8594; Japanese</button>
+              <button class="quiz-pill" data-group="dir" data-val="mixed" onclick="selectPill(this)">Mixed</button>
+            </div>
+          </div>
+
+          <div class="quiz-option-group">
+            <span class="quiz-option-label">Word Pool</span>
+            <div class="quiz-option-pills">
+              <button class="quiz-pill selected" data-group="pool" data-val="all" onclick="selectPill(this)">All Words</button>
+              <button class="quiz-pill" data-group="pool" data-val="filtered" onclick="selectPill(this)">Current Filter</button>
+            </div>
+            <div class="quiz-source-note" id="quiz-source-note" style="margin-top:10px"></div>
+          </div>
+
+          <div class="quiz-option-group">
+            <span class="quiz-option-label">Number of Questions</span>
+            <div class="quiz-count-row">
+              <button class="quiz-count-btn" onclick="adjustCount(-5)">&#8722;</button>
+              <div class="quiz-count-val" id="quiz-count-display">10</div>
+              <button class="quiz-count-btn" onclick="adjustCount(5)">+</button>
+              <span class="quiz-count-max" id="quiz-count-max"></span>
+            </div>
+          </div>
+
+          <button class="quiz-start-btn" id="quiz-start-btn" onclick="startQuiz()">Start Quiz &#8594;</button>
+        </div>
+      </div>
+
+      <!-- ── MULTIPLE CHOICE QUESTION SCREEN ── -->
+      <div id="quiz-screen-mc" style="display:none">
+        <div class="quiz-question-meta">
+          <span class="quiz-q-tag" id="mc-tag"></span>
+          <span class="quiz-q-score" id="mc-score"></span>
+        </div>
+        <div class="quiz-prompt-area">
+          <div class="quiz-prompt-direction" id="mc-direction"></div>
+          <div class="quiz-prompt-word" id="mc-word"></div>
+          <div class="quiz-prompt-hint"  id="mc-hint"></div>
+          <div class="quiz-prompt-sentence" id="mc-sentence"></div>
+        </div>
+        <div class="quiz-choices" id="mc-choices"></div>
+        <div class="quiz-feedback" id="mc-feedback"></div>
+        <button class="quiz-next-btn" id="mc-next" onclick="nextQuestion()"></button>
+      </div>
+
+      <!-- ── FLASHCARD QUESTION SCREEN ── -->
+      <div id="quiz-screen-fc" style="display:none">
+        <div class="quiz-question-meta">
+          <span class="quiz-q-tag" id="fc-tag"></span>
+          <span class="quiz-q-score" id="fc-score"></span>
+        </div>
+        <div class="flashcard-area">
+          <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner">
+              <div class="flashcard-face">
+                <div class="flashcard-face-label" id="fc-front-label"></div>
+                <div class="flashcard-word" id="fc-front-word"></div>
+                <div class="flashcard-hint"  id="fc-front-hint"></div>
+                <div class="flashcard-tap">Tap to reveal &#8594;</div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="flashcard-face-label" id="fc-back-label"></div>
+                <div class="flashcard-word"    id="fc-back-word"></div>
+                <div class="flashcard-subword" id="fc-back-subword"></div>
+                <div class="flashcard-def"     id="fc-back-def"></div>
+              </div>
+            </div>
+          </div>
+          <div class="flashcard-btns">
+            <button class="fc-btn missed"  id="fc-missed" onclick="fcAnswer(false)">&#10007; Missed it</button>
+            <button class="fc-btn got-it"  id="fc-gotit"  onclick="fcAnswer(true)">&#10003; Got it!</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESULTS SCREEN ── -->
+      <div id="quiz-screen-results" style="display:none">
+        <div class="quiz-results-header">
+          <div class="results-emoji" id="results-emoji">&#127881;</div>
+          <div class="results-title" id="results-title"></div>
+          <div class="results-sub"   id="results-sub"></div>
+          <div class="results-score-circle">
+            <div class="results-score-pct" id="results-pct"></div>
+            <div class="results-score-lbl">Score</div>
+          </div>
+        </div>
+        <div class="quiz-results-body">
+          <div class="results-stats">
+            <div class="results-stat"><div class="results-stat-val" id="r-correct">0</div><div class="results-stat-lbl">Correct</div></div>
+            <div class="results-stat"><div class="results-stat-val" id="r-wrong">0</div><div class="results-stat-lbl">Missed</div></div>
+            <div class="results-stat"><div class="results-stat-val" id="r-total">0</div><div class="results-stat-lbl">Total</div></div>
+          </div>
+          <div id="results-missed-section">
+            <div class="results-missed-title">Words to Review</div>
+            <div class="missed-word-list" id="missed-word-list"></div>
+          </div>
+          <div class="results-btns">
+            <button class="results-btn-back"  onclick="backToSetup()">&#8592; Setup</button>
+            <button class="results-btn-retry" onclick="startQuiz()">&#8635; Retry</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /quiz-panel -->
+  </div><!-- /quiz-body -->
+</div><!-- /quiz-overlay -->
+
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════
+     JAVASCRIPT
+     ════════════════════════════════════════════════════ -->
+<script>
+
+// ╔══════════════════════════════════════════════════════════╗
+// ║                  ★  CONFIGURATION  ★                   ║
+// ║  Edit the two lines below, then save and open the file. ║
+// ╚══════════════════════════════════════════════════════════╝
+
+const GOOGLE_API_KEY = 'AIzaSyBZ-ib3wwjCpc0F-IzvpNUmnevva733Hwo';
+// ↑ Replace with your Google Sheets API key (keep the quotes).
+//   How to get one:
+//   1. Go to https://console.cloud.google.com/apis/credentials
+//   2. Click "Create Credentials" → "API Key"
+//   3. Click "Edit API Key" → restrict it to "Google Sheets API"
+//   4. Copy the key and paste it above between the quotes.
+
+const GOOGLE_SPREADSHEET_ID = '12BXrGaoaMxl3TJqaJbifXjZLhtYqsWDfVXKudQf85dA';
+// ↑ Replace with your Google Spreadsheet ID (keep the quotes).
+//   Find it in your sheet's URL:
+//   https://docs.google.com/spreadsheets/d/ ►COPY THIS PART◄ /edit
+//
+//   REQUIRED SHEET SETUP:
+//   ┌─────────────────────────────────────────────────────────┐
+//   │ 1. Name the first tab (sheet):   Vocabulary             │
+//   │ 2. Row 1 must be this exact header (copy-paste it):     │
+//   │    word_jp, reading, word_en, definition_jp,            │
+//   │    definition_en, sentence_jp, sentence_en,             │
+//   │    year_level, subject, id                              │
+//   │ 3. Share: Share → Anyone with the link → Editor         │
+//   └─────────────────────────────────────────────────────────┘
+
+// ════════════════════════════════════════════════════════════
+// Nothing below this line needs to be edited.
+// ════════════════════════════════════════════════════════════
+
+const SHEET_NAME = 'Vocabulary';
+const HEADERS    = ['word_jp','reading','word_en','definition_jp','definition_en',
+                    'sentence_jp','sentence_en','year_level','subject','id'];
+
+const YEAR_LABELS = {
+  K:'Kindergarten','1':'Grade 1','2':'Grade 2','3':'Grade 3','4':'Grade 4',
+  '5':'Grade 5','6':'Grade 6','7':'Grade 7','8':'Grade 8','9':'Grade 9',
+  '10':'Grade 10','11':'Grade 11','12':'Grade 12'
+};
+const YEAR_ORDER = ['K','1','2','3','4','5','6','7','8','9','10','11','12'];
+
+const DEMO_DATA = [
+  { id:'d1', word_jp:'学校', reading:'がっこう', word_en:'School',
+    definition_jp:'生徒が勉強する場所', definition_en:'A place where students study and learn.',
+    sentence_jp:'私は毎日学校に行きます。', sentence_en:'I go to school every day.',
+    year_level:'1', subject:'Japanese' },
+  { id:'d2', word_jp:'友達', reading:'ともだち', word_en:'Friend',
+    definition_jp:'仲の良い人', definition_en:'A person you like and enjoy spending time with.',
+    sentence_jp:'彼女は私の一番の友達です。', sentence_en:'She is my best friend.',
+    year_level:'1', subject:'Japanese' },
+  { id:'d3', word_jp:'数学', reading:'すうがく', word_en:'Mathematics',
+    definition_jp:'数と計算の学問', definition_en:'The study of numbers, shapes, and calculations.',
+    sentence_jp:'数学は難しいですが面白いです。', sentence_en:'Mathematics is difficult but interesting.',
+    year_level:'3', subject:'Math' },
+  { id:'d4', word_jp:'光合成', reading:'こうごうせい', word_en:'Photosynthesis',
+    definition_jp:'植物が光エネルギーを使って栄養を作るプロセス',
+    definition_en:'The process by which plants use sunlight to produce food.',
+    sentence_jp:'植物は光合成によって生きています。', sentence_en:'Plants survive through photosynthesis.',
+    year_level:'6', subject:'Science' },
+  { id:'d5', word_jp:'民主主義', reading:'みんしゅしゅぎ', word_en:'Democracy',
+    definition_jp:'国民が政治に参加する政治制度',
+    definition_en:'A system of government where citizens vote and participate.',
+    sentence_jp:'日本は民主主義の国です。', sentence_en:'Japan is a democratic country.',
+    year_level:'9', subject:'Social Studies' },
+  { id:'d6', word_jp:'微分', reading:'びぶん', word_en:'Differentiation',
+    definition_jp:'関数の変化率を求める数学的操作',
+    definition_en:'A mathematical method for finding the rate of change of a function.',
+    sentence_jp:'微分は高校数学の重要な概念です。', sentence_en:'Differentiation is key in high school math.',
+    year_level:'11', subject:'Math' },
+  { id:'d7', word_jp:'桜', reading:'さくら', word_en:'Cherry Blossom',
+    definition_jp:'春に咲く日本の代表的な花', definition_en:"Japan's iconic flower that blooms in spring.",
+    sentence_jp:'桜の花が美しく咲いています。', sentence_en:'The cherry blossoms are blooming beautifully.',
+    year_level:'2', subject:'Japanese' },
+  { id:'d8', word_jp:'元素', reading:'げんそ', word_en:'Element',
+    definition_jp:'物質を構成する基本的な物質', definition_en:'A pure substance that cannot be broken down chemically.',
+    sentence_jp:'水は水素と酸素からできています。', sentence_en:'Water is made of hydrogen and oxygen.',
+    year_level:'7', subject:'Science' },
+];
+
+// ── STATE ──
+let ALL_WORDS = [];
+let FILTER    = { year: null, subject: null };
+
+let DEMO_MODE = false;
+
+// ── INIT ──
+window.onload = () => {
+  const notConfigured =
+    GOOGLE_API_KEY      === 'YOUR_API_KEY_HERE' ||
+    GOOGLE_SPREADSHEET_ID === 'YOUR_SPREADSHEET_ID_HERE' ||
+    !GOOGLE_API_KEY || !GOOGLE_SPREADSHEET_ID;
+
+  if (notConfigured) {
+    DEMO_MODE = true;
+    ALL_WORDS = DEMO_DATA.map(d => ({ ...d }));
+    showToast('Demo mode active — set GOOGLE_API_KEY and GOOGLE_SPREADSHEET_ID at the top of the script to connect your sheet.', '');
+    finishLoad();
+  } else {
+    loadData();
+  }
+};
+
+// ── API ──
+async function loadData() {
+  setLoading(true);
+  try {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SPREADSHEET_ID}/values/${SHEET_NAME}!A:J?key=${GOOGLE_API_KEY}`;
+    const res  = await fetch(url);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const rows = data.values || [];
+    ALL_WORDS = rows.length <= 1 ? [] :
+      rows.slice(1)
+          .map(row => { const o = {}; rows[0].forEach((h,i) => { o[h] = row[i] || ''; }); return o; })
+          .filter(w => w.word_jp || w.word_en);
+    showToast(`Loaded ${ALL_WORDS.length} words`, 'success');
+    finishLoad();
+  } catch (e) {
+    console.error(e);
+    showToast('Load failed: ' + e.message, 'error');
+    document.getElementById('page-meta').textContent = 'Connection error — check config at top of script.';
+    document.getElementById('vocab-grid').innerHTML = `<div class="empty-state"><div class="empty-icon">!</div><div class="empty-title">Connection failed</div><div class="empty-sub">Check GOOGLE_API_KEY and GOOGLE_SPREADSHEET_ID in the &lt;script&gt; block.</div></div>`;
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function refreshData() {
+  if (DEMO_MODE) { showToast('Demo mode — configure GOOGLE_API_KEY & GOOGLE_SPREADSHEET_ID to sync.', ''); return; }
+  await loadData();
+}
+
+function finishLoad() { updateStats(); buildSidebar(); filterAll(document.getElementById('filter-all')); }
+
+// ── SIDEBAR ──
+function buildSidebar() {
+  const tree = document.getElementById('year-tree');
+  tree.innerHTML = '';
+  const structure = {};
+  ALL_WORDS.forEach(w => {
+    const y = w.year_level || 'General';
+    const s = w.subject    || 'General';
+    if (!structure[y]) structure[y] = {};
+    structure[y][s] = (structure[y][s] || 0) + 1;
+  });
+  const years = YEAR_ORDER.filter(y => structure[y])
+    .concat(Object.keys(structure).filter(y => !YEAR_ORDER.includes(y)));
+  years.forEach(year => {
+    const subs  = structure[year];
+    const total = Object.values(subs).reduce((a,b)=>a+b,0);
+    const lbl   = YEAR_LABELS[year] || `Year ${year}`;
+    const g = document.createElement('div');
+    g.className = 'year-group';
+    g.innerHTML = `
+      <button class="year-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+        <span>${lbl}</span>
+        <span class="sidebar-count" style="margin-left:auto;margin-right:6px">${total}</span>
+        <span class="yr-arrow">&#9658;</span>
+      </button>
+      <div class="subject-list">
+        ${Object.entries(subs).sort((a,b)=>a[0].localeCompare(b[0])).map(([sub,cnt])=>`
+          <div class="subject-item" onclick="filterByYearSubject('${esc(year)}','${esc(sub)}',this)">
+            <span>${esc(sub)}</span><span class="sidebar-count">${cnt}</span>
+          </div>`).join('')}
+      </div>`;
+    tree.appendChild(g);
+  });
+  document.getElementById('count-all').textContent = ALL_WORDS.length;
+}
+
+function clearActive() { document.querySelectorAll('.sidebar-all,.subject-item').forEach(el=>el.classList.remove('active')); }
+function filterAll(el) { clearActive(); el.classList.add('active'); FILTER={year:null,subject:null}; document.getElementById('page-title').textContent='All Words'; renderCards(); }
+function filterByYearSubject(year,subject,el) { clearActive(); el.classList.add('active'); FILTER={year,subject}; document.getElementById('page-title').textContent=`${YEAR_LABELS[year]||'Year '+year} — ${subject}`; renderCards(); }
+
+// ── RENDER ──
+function getFilteredWords() {
+  let w = [...ALL_WORDS];
+  if (FILTER.year)    w = w.filter(x => x.year_level===FILTER.year);
+  if (FILTER.subject) w = w.filter(x => x.subject===FILTER.subject);
+  const q = (document.getElementById('search-input').value||'').toLowerCase().trim();
+  if (q) w = w.filter(x =>
+    (x.word_jp||'').toLowerCase().includes(q) ||
+    (x.word_en||'').toLowerCase().includes(q) ||
+    (x.reading||'').toLowerCase().includes(q) ||
+    (x.definition_en||'').toLowerCase().includes(q) ||
+    (x.definition_jp||'').toLowerCase().includes(q)
+  );
+  const s = document.getElementById('sort-select').value;
+  if (s==='jp')   w.sort((a,b)=>(a.word_jp||'').localeCompare(b.word_jp||'','ja'));
+  if (s==='en')   w.sort((a,b)=>(a.word_en||'').localeCompare(b.word_en||''));
+  if (s==='year') w.sort((a,b)=>{ const ai=YEAR_ORDER.indexOf(a.year_level),bi=YEAR_ORDER.indexOf(b.year_level); return(ai===-1?99:ai)-(bi===-1?99:bi); });
+  return w;
+}
+
+function renderCards() {
+  const grid  = document.getElementById('vocab-grid');
+  const words = getFilteredWords();
+  document.getElementById('page-meta').textContent = `${words.length} word${words.length!==1?'s':''}`;
+  if (!words.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">語</div><div class="empty-title">No words found</div><div class="empty-sub">Try a different filter or add a new word.</div></div>`;
+    return;
+  }
+  grid.innerHTML = words.map((w,i) => `
+    <div class="vocab-card" style="animation-delay:${Math.min(i*0.04,0.5)}s">
+      <div class="card-tags">
+        ${w.year_level?`<span class="tag year">${YEAR_LABELS[w.year_level]||'Year '+w.year_level}</span>`:''}
+        ${w.subject?`<span class="tag subj">${esc(w.subject)}</span>`:''}
+      </div>
+      <div class="card-word-row">
+        <span class="card-jp">${esc(w.word_en)}</span>
+      </div>
+      <div class="card-en">${esc(w.word_jp)}${w.reading ? ` (${esc(w.reading)})` : ''}</div>
+      ${(w.definition_jp||w.definition_en)?`
+      <div class="card-section">
+        <div class="card-section-lbl">Definition</div>
+        ${w.definition_jp?`<div class="card-def-jp">${esc(w.definition_jp)}</div>`:''}
+        ${w.definition_en?`<div class="card-def-en">${esc(w.definition_en)}</div>`:''}
+      </div>`:''}
+      ${(w.sentence_jp||w.sentence_en)?`
+      <div class="card-section">
+        <div class="card-section-lbl">Sample Sentence</div>
+        ${w.sentence_jp?`<div class="card-sent-jp">${esc(w.sentence_jp)}</div>`:''}
+        ${w.sentence_en?`<div class="card-sent-en">${esc(w.sentence_en)}</div>`:''}
+      </div>`:''}
+    </div>`).join('');
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent    = ALL_WORDS.length;
+  document.getElementById('stat-years').textContent    = new Set(ALL_WORDS.map(w=>w.year_level).filter(Boolean)).size;
+  document.getElementById('stat-subjects').textContent = new Set(ALL_WORDS.map(w=>w.subject).filter(Boolean)).size;
+}
+
+// ── UTILS ──
+function esc(s) { if(s==null)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function setLoading(on) { document.getElementById('loading-bar').classList.toggle('active',on); }
+function showToast(msg,type) { const t=document.getElementById('toast'); t.textContent=msg; t.className=type?`show ${type}`:'show'; clearTimeout(t._t); t._t=setTimeout(()=>{t.className='';},3500); }
+
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ ENGINE
+// ══════════════════════════════════════════════════════════════
+
+// ── Quiz state ──
+const QS = {
+  mode:      'mc',      // 'mc' | 'fc'
+  dir:       'jp-en',   // 'jp-en' | 'en-jp' | 'mixed'
+  pool:      'all',     // 'all' | 'filtered'
+  count:     10,
+  questions: [],        // shuffled question objects
+  idx:       0,         // current question index
+  correct:   0,
+  missed:    [],        // array of word objects the user got wrong
+  cardFlipped: false,
+};
+
+// ── Open / close ──
+function openQuiz() {
+  if (ALL_WORDS.length < 2) { showToast('Add at least 2 words before quizzing!','error'); return; }
+  updateQuizSetupUI();
+  showQuizScreen('setup');
+  document.getElementById('quiz-overlay').classList.add('open');
+  document.getElementById('quiz-progress-text').textContent = '';
+  document.getElementById('quiz-progress-fill').style.width = '0%';
+  document.getElementById('quiz-topbar-title').textContent  = '✎ Quiz';
+}
+
+function closeQuiz() {
+  document.getElementById('quiz-overlay').classList.remove('open');
+}
+
+function showQuizScreen(name) {
+  ['setup','mc','fc','results'].forEach(s => {
+    document.getElementById(`quiz-screen-${s}`).style.display = s === name ? '' : 'none';
+  });
+}
+
+// ── Setup UI ──
+function selectPill(btn) {
+  const group = btn.dataset.group;
+  document.querySelectorAll(`.quiz-pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+  btn.classList.add('selected');
+  QS[group] = btn.dataset.val;
+  updateQuizSetupUI();
+}
+
+function adjustCount(delta) {
+  const pool = getQuizPool();
+  const max  = Math.min(pool.length, 50);
+  QS.count   = Math.max(5, Math.min(max, QS.count + delta));
+  document.getElementById('quiz-count-display').textContent = QS.count;
+}
+
+function updateQuizSetupUI() {
+  const pool = getQuizPool();
+  const max  = Math.min(pool.length, 50);
+  QS.count   = Math.min(QS.count, max);
+  if (QS.count < 5 && max >= 5) QS.count = 5;
+  document.getElementById('quiz-count-display').textContent = QS.count;
+  document.getElementById('quiz-count-max').textContent     = `(max ${max})`;
+  const note = QS.pool === 'filtered'
+    ? `Using ${pool.length} word${pool.length!==1?'s':''} from current filter`
+    : `Using all ${pool.length} word${pool.length!==1?'s':''}`;
+  document.getElementById('quiz-source-note').textContent = note;
+  document.getElementById('quiz-start-btn').disabled = pool.length < 2;
+}
+
+function getQuizPool() {
+  return QS.pool === 'filtered' ? getFilteredWords() : [...ALL_WORDS];
+}
+
+function backToSetup() {
+  showQuizScreen('setup');
+  updateQuizSetupUI();
+  document.getElementById('quiz-progress-text').textContent = '';
+  document.getElementById('quiz-progress-fill').style.width = '0%';
+  document.getElementById('quiz-topbar-title').textContent  = '✎ Quiz';
+}
+
+// ── Start quiz ──
+function startQuiz() {
+  const pool = getQuizPool();
+  if (pool.length < 2) { showToast('Not enough words in pool.','error'); return; }
+
+  // Build questions
+  const shuffled = shuffle([...pool]).slice(0, Math.min(QS.count, pool.length));
+  QS.questions = shuffled.map((word, i) => {
+    // Determine direction for this question
+    let dir = QS.dir;
+    if (dir === 'mixed') dir = i % 2 === 0 ? 'jp-en' : 'en-jp';
+    return { word, dir };
+  });
+  QS.idx     = 0;
+  QS.correct = 0;
+  QS.missed  = [];
+
+  document.getElementById('quiz-topbar-title').textContent = QS.mode === 'mc' ? 'Multiple Choice' : 'Flashcard';
+  showQuestion();
+}
+
+function showQuestion() {
+  const total   = QS.questions.length;
+  const current = QS.idx + 1;
+  const pct     = Math.round(((current - 1) / total) * 100);
+
+  document.getElementById('quiz-progress-text').textContent = `${QS.idx}/${total}`;
+  document.getElementById('quiz-progress-fill').style.width = pct + '%';
+
+  if (QS.mode === 'mc') showMCQuestion();
+  else                   showFCQuestion();
+}
+
+// ── MULTIPLE CHOICE ──
+function showMCQuestion() {
+  showQuizScreen('mc');
+  const { word, dir } = QS.questions[QS.idx];
+  const total  = QS.questions.length;
+  const isJpEn = dir === 'jp-en';
+
+  document.getElementById('mc-tag').textContent   = `Question ${QS.idx + 1} of ${total}`;
+  document.getElementById('mc-score').textContent = QS.correct > 0 ? `✓ ${QS.correct} correct` : '';
+  document.getElementById('mc-direction').textContent = isJpEn ? 'Japanese → English' : 'English → Japanese';
+  document.getElementById('mc-word').textContent  = isJpEn ? word.word_jp : word.word_en;
+  document.getElementById('mc-hint').textContent  = isJpEn && word.reading ? word.reading : '';
+  document.getElementById('mc-feedback').className = 'quiz-feedback';
+  document.getElementById('mc-next').className    = 'quiz-next-btn';
+
+  // Show sentence as subtle clue (optional — currently hidden, reveals on wrong answer)
+  const sent = isJpEn ? word.sentence_en : word.sentence_jp;
+  const sentEl = document.getElementById('mc-sentence');
+  sentEl.textContent = sent || '';
+  sentEl.style.display = 'none';
+
+  // Build 4 choices: 1 correct + 3 distractors
+  const pool = getQuizPool().filter(w => w.id !== word.id);
+  const distractors = shuffle(pool).slice(0, 3);
+  const choices = shuffle([word, ...distractors]);
+
+  const container = document.getElementById('mc-choices');
+  container.innerHTML = choices.map(c => {
+    const label = isJpEn ? c.word_en : c.word_jp;
+    return `<button class="quiz-choice" onclick="checkMCAnswer(this,'${esc(c.id)}','${esc(word.id)}')">${esc(label)}</button>`;
+  }).join('');
+}
+
+function checkMCAnswer(btn, chosenId, correctId) {
+  // Disable all buttons
+  document.querySelectorAll('.quiz-choice').forEach(b => b.disabled = true);
+
+  const isCorrect = chosenId === correctId;
+  const { word, dir } = QS.questions[QS.idx];
+  const isJpEn = dir === 'jp-en';
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    QS.correct++;
+    const fb = document.getElementById('mc-feedback');
+    fb.textContent = '✓ Correct!';
+    fb.className = 'quiz-feedback correct';
+  } else {
+    btn.classList.add('wrong');
+    QS.missed.push(word);
+    // Reveal the correct answer button
+    document.querySelectorAll('.quiz-choice').forEach(b => {
+      if (b.getAttribute('onclick').includes(`'${correctId}'`)) b.classList.add('reveal');
+    });
+    // Show sentence clue
+    document.getElementById('mc-sentence').style.display = 'block';
+    const correctWord = ALL_WORDS.find(w => w.id === correctId) || word;
+    const correctLabel = isJpEn ? correctWord.word_en : correctWord.word_jp;
+    const fb = document.getElementById('mc-feedback');
+    fb.textContent = `✗ The correct answer was: ${correctLabel}`;
+    fb.className = 'quiz-feedback wrong';
+  }
+
+  const nextBtn = document.getElementById('mc-next');
+  const isLast  = QS.idx >= QS.questions.length - 1;
+  nextBtn.textContent = isLast ? 'See Results →' : 'Next Question →';
+  nextBtn.className = 'quiz-next-btn visible';
+  document.getElementById('mc-score').textContent = `✓ ${QS.correct} correct`;
+}
+
+// ── FLASHCARD ──
+function showFCQuestion() {
+  showQuizScreen('fc');
+  QS.cardFlipped = false;
+  const { word, dir } = QS.questions[QS.idx];
+  const isJpEn = dir === 'jp-en';
+  const total  = QS.questions.length;
+
+  document.getElementById('fc-tag').textContent   = `Card ${QS.idx + 1} of ${total}`;
+  document.getElementById('fc-score').textContent = QS.correct > 0 ? `✓ ${QS.correct} correct` : '';
+
+  // Front face
+  document.getElementById('fc-front-label').textContent = isJpEn ? 'Japanese' : 'English';
+  document.getElementById('fc-front-word').textContent  = isJpEn ? word.word_jp : word.word_en;
+  document.getElementById('fc-front-hint').textContent  = isJpEn && word.reading ? word.reading : (word.subject||'');
+
+  // Back face
+  document.getElementById('fc-back-label').textContent   = isJpEn ? 'English' : 'Japanese';
+  document.getElementById('fc-back-word').textContent    = isJpEn ? word.word_en : word.word_jp;
+  document.getElementById('fc-back-subword').textContent = isJpEn && word.word_jp ? '' : (word.reading||'');
+  document.getElementById('fc-back-def').textContent     = isJpEn ? (word.definition_en||'') : (word.definition_jp||'');
+
+  // Reset card state
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  document.getElementById('fc-missed').className = 'fc-btn missed';
+  document.getElementById('fc-gotit').className  = 'fc-btn got-it';
+}
+
+function flipCard() {
+  const card = document.getElementById('flashcard');
+  QS.cardFlipped = !QS.cardFlipped;
+  card.classList.toggle('flipped', QS.cardFlipped);
+  if (QS.cardFlipped) {
+    document.getElementById('fc-missed').className = 'fc-btn missed visible';
+    document.getElementById('fc-gotit').className  = 'fc-btn got-it visible';
+  }
+}
+
+function fcAnswer(gotIt) {
+  const { word } = QS.questions[QS.idx];
+  if (gotIt) QS.correct++;
+  else        QS.missed.push(word);
+  document.getElementById('fc-score').textContent = `✓ ${QS.correct} correct`;
+  nextQuestion();
+}
+
+// ── NAV ──
+function nextQuestion() {
+  QS.idx++;
+  if (QS.idx >= QS.questions.length) showResults();
+  else                                showQuestion();
+}
+
+// ── RESULTS ──
+function showResults() {
+  showQuizScreen('results');
+  const total   = QS.questions.length;
+  const pct     = Math.round((QS.correct / total) * 100);
+  const wrong   = total - QS.correct;
+
+  document.getElementById('quiz-progress-fill').style.width = '100%';
+  document.getElementById('quiz-progress-text').textContent = `${total}/${total}`;
+
+  // Emoji + title based on score
+  let emoji = '🎉', title = 'Excellent work!', sub = "You're mastering this vocabulary!";
+  if (pct < 40)      { emoji = '📚'; title = 'Keep studying!';    sub = 'Review these words and try again.'; }
+  else if (pct < 70) { emoji = '👍'; title = 'Good effort!';      sub = 'A bit more practice and you\'ll have it!'; }
+  else if (pct < 90) { emoji = '⭐'; title = 'Well done!';        sub = 'Almost perfect — keep it up!'; }
+
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent   = sub;
+  document.getElementById('results-pct').textContent   = pct + '%';
+  document.getElementById('r-correct').textContent     = QS.correct;
+  document.getElementById('r-wrong').textContent       = wrong;
+  document.getElementById('r-total').textContent       = total;
+
+  // Missed words list
+  const missedSection = document.getElementById('results-missed-section');
+  const missedList    = document.getElementById('missed-word-list');
+  if (QS.missed.length === 0) {
+    missedSection.style.display = 'none';
+  } else {
+    missedSection.style.display = '';
+    // Deduplicate (flashcard mode can add same word twice in mixed)
+    const seen = new Set();
+    const uniqueMissed = QS.missed.filter(w => { if(seen.has(w.id)) return false; seen.add(w.id); return true; });
+    missedList.innerHTML = uniqueMissed.map(w => `
+      <div class="missed-word-item">
+        <span class="missed-word-jp">${esc(w.word_jp)}</span>
+        <span class="missed-word-en">${esc(w.word_en)}</span>
+      </div>`).join('');
+  }
+}
+
+// ── HELPERS ──
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();document.getElementById('search-input').focus();} });
+</script>
+</body>
+</html>
