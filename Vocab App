@@ -842,7 +842,7 @@ body {
 // ║  Edit the two lines below, then save and open the file. ║
 // ╚══════════════════════════════════════════════════════════╝
 
-const GOOGLE_API_KEY = 'AIzaSyBZ-ib3wwjCpc0F-IzvpNUmnevva733Hwo';
+const GOOGLE_API_KEY = '';
 // ↑ Replace with your Google Sheets API key (keep the quotes).
 //   How to get one:
 //   1. Go to https://console.cloud.google.com/apis/credentials
@@ -850,7 +850,7 @@ const GOOGLE_API_KEY = 'AIzaSyBZ-ib3wwjCpc0F-IzvpNUmnevva733Hwo';
 //   3. Click "Edit API Key" → restrict it to "Google Sheets API"
 //   4. Copy the key and paste it above between the quotes.
 
-const GOOGLE_SPREADSHEET_ID = '12BXrGaoaMxl3TJqaJbifXjZLhtYqsWDfVXKudQf85dA';
+const GOOGLE_SPREADSHEET_ID = '';
 // ↑ Replace with your Google Spreadsheet ID (keep the quotes).
 //   Find it in your sheet's URL:
 //   https://docs.google.com/spreadsheets/d/ ►COPY THIS PART◄ /edit
